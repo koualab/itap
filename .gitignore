@@ -1,8 +1,8 @@
-# databases
-db/*
-# results
-ITAP/*
-# tests
-test/*
 # Perl::Tidy files
+# databases
+# results
+# tests
 .tidyall.d/*
+ITAP/*
+db/*
+test/*
