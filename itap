@@ -1,0 +1,531 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use Config;
+use Carp qw( croak );
+use English qw( -no_match_vars ); # Avoids regex performance penalty in perl 5.18 and earlier
+use IPC::System::Simple qw( capture );
+use Getopt::Long 'HelpMessage';
+use FindBin;
+use Cwd qw(abs_path);
+use File::Temp qw(tempfile);
+use File::Basename;
+use Time::Piece;
+use Time::Seconds;
+use Text::CSV;
+use List::Util qw(uniq);
+use Scalar::Util qw(openhandle);
+use Bio::Root::Version;
+use Bio::SeqIO;
+use Bio::SearchIO;
+use Bio::Seq;
+use Bio::SeqFeature::Generic;
+use Bio::Tools::GuessSeqFormat;
+use Bio::DB::Fasta;
+use version 0.77;
+
+# Global variables
+my @CMDLINE = ($0, @ARGV);
+my $OPSYS = $Config{'osname'};
+my $BINDIR = "$FindBin::RealBin/../binaries/$OPSYS";
+my $EXE = $FindBin::RealScript;
+my $VERSION = '0.1';
+my $AUTHOR = 'Anicet Ebou <anicet.ebou@gmail.com>';
+my $URL = 'https://github.com/koualab/itap.git';
+my @LOG; # buffer up log lines before we have log file ready
+my $EMPTY = q{};
+
+my $starttime = localtime;
+
+# Parse command line options
+GetOptions ('t=s'       => \my $transcripts,
+			'f=s'       => \my $forward_reads,
+			'r=s'       => \my $reverse_reads,
+			'o=s'       => \(my $outdir = 'ITAP'),
+			'd=s'       => \my $dbdir,
+			'force'     => \my $force,
+			'hmm=s'     => \(my $hmm = 'ekenda.hmm'), # default hmm classifier
+			'quiet'     => \my $quiet,
+			'cpus=i'    => \(my $cpus = 2), # default num of cpus
+			'version|v' => sub {version()},
+			'help|h'    => sub {HelpMessage(0)},
+) or HelpMessage(1);
+
+$dbdir = $ENV{'ITAPDB'} || abs_path("$FindBin::RealBin/./db");
+
+# Required args presence check
+if (not $transcripts){
+	# You use die when the error is something you or your code didn't do right.
+	# You use croak when it's something your caller isn't doing right.
+	print {*STDERR} "Missing -t argument, did you forget to add transcriptome file?\n" or croak "print failed: $ERRNO";
+	HelpMessage(1);
+} elsif (not $forward_reads){
+	print {*STDERR} "Missing -f argument, did you forget to add forward reads file?\n" or croak "print failed: $ERRNO";
+	HelpMessage(1);
+} elsif (not $reverse_reads){
+	print {*STDERR} "Missing -r argument, did you forget to add reverse reads file?\n" or croak "print failed: $ERRNO";
+	HelpMessage(1);
+}
+
+# Check existence of output folder 
+if (-d $outdir) {
+  if ($force) {
+    msg("Re-using existing -o $outdir")
+  }
+  else {
+   err("Folder '$outdir' already exists! Please change -o or use --force");
+  }
+}
+else {
+  msg("Creating new output folder: $outdir");
+  runcmd("mkdir -p $outdir");
+}
+
+#-------------START------------------#
+msg("This is $EXE $VERSION");
+msg("Written by $AUTHOR");
+msg("Homepage is $URL");
+msg("Local time is $starttime");
+msg('You are', $ENV{USER} || 'not telling me who you are!');
+msg("Operating system is $OPSYS");
+
+# Check BioPerl version 
+my $minbpver = version->parse('1.006002'); # for Bio::SearchIO::hmmer3
+my $bpver = version->parse($Bio::Root::Version::VERSION);
+msg("You have BioPerl $bpver");
+if ($bpver < $minbpver){
+	err("Please install BioPerl $minbpver or higher");
+}
+
+# Determine num of cpus
+my $num_cores = num_cpu();
+msg("System has $num_cores cores.");
+if (!defined $cpus || $cpus < 0) {
+  $cpus = 1;
+}
+elsif ($cpus == 0) {
+  $cpus = $num_cores;
+}
+elsif ($cpus > $num_cores) {
+  msg("Option --cpu asked for $cpus cores, but system only has $num_cores");
+  $cpus = $num_cores;
+}
+msg("Will use maximum of $cpus cores.");
+
+# Set up log file
+my $logfile = "$outdir/itap.log";
+msg("Writing log to: $logfile");
+open LOG, '>', $logfile or err('Cannot open logfile');
+
+msg("Command: @CMDLINE");
+
+#----------Check needed tools------------------------------#
+my @needed_exe = qw(kallisto signalp blastp blastx diamond hmmcompete gunzip);
+foreach my $ne (@needed_exe){
+	my $tool = find_exe($ne);
+	if ($tool) {
+		msg("Found $ne");
+	} else {
+		err("itap need $ne. Please install it and continue");
+	}
+}
+my $kallisto_version = capture('kallisto version');
+my $hmmcompete_version = capture('hmmcompete -v');
+my $signalp_version = capture('signalp -V');
+
+#----------STEP 1: Quantify raw reads with all transcripts--#
+# Build all contigs index
+msg('Builing transcripts index');
+msg("Use $kallisto_version");
+runcmd("kallisto index -i $outdir/all_transcripts.index $transcripts");
+msg('Done creating index');
+
+# Quantifying reads
+msg('Quantifying reads');
+msg("Use $kallisto_version");
+runcmd("kallisto quant -t $cpus -i $outdir/all_transcripts.index -o $outdir/kallisto_1 $forward_reads $reverse_reads");
+msg('Done quantifying reads');
+
+#-----------STEP 2: Translate transcriptome to proteins-----#
+my ($seqin, $alphabet);
+my $tmpfh = tempfile();
+if ($transcripts =~ /.gz$/){
+	msg('Your transcript file is gziped. Decompressing it!');
+	runcmd("/bin/gunzip -c $transcripts > $outdir/$tmpfh");
+	msg('Done');
+	$seqin = Bio::SeqIO->new(-file => "$outdir/$tmpfh",
+	                         -format => 'fasta');
+
+	# Guess alphabet before translating.
+	$alphabet = defined($seqin->alphabet) ? $alphabet : $EMPTY; # init to "" if not defined
+	if ($alphabet eq 'proteins'){
+    	msg('Sequences aready in proteins. Skip translation.');
+    	last;
+	} else {
+		msg('Translating transcripts');
+		translate($seqin);
+		msg('Done translating');
+	}
+} else {
+	$seqin = Bio::SeqIO->new(-file => $transcripts,
+	                         -format => 'fasta');
+	$alphabet = defined($seqin->alphabet) ? $alphabet : $EMPTY;
+	if ($alphabet eq 'proteins'){
+    	msg('Sequences aready in proteins. Skip translation.');
+    	last;
+	} else {
+		msg('Translating transcripts');
+		translate($seqin);
+		msg('Done translating');
+	}
+}
+close $tmpfh or croak "close file failed: $ERRNO";
+
+#-----------STEP 3: Putative toxins identification----------#
+# For now this step rely only on hmmcompete and
+# ekenda.hmm. 
+# TODO: See how to improve this step with alignment-free techniques.
+msg('Putative toxins prediction');
+msg('Use diamond');
+# First diamond
+runcmd("diamond blastp --query $outdir/transcripts.prot.fas --db $dbdir/spidertox.dmnd --out $outdir/diamond1.out --outfmt 6 qseqid sseqid evalue bitscore --al $outdir/putative_diamonds1.fas --alfmt fasta --unal 0 --ultra-sensitive --quiet");
+# Second diamond
+runcmd("diamond blastp --query $outdir/putative_diamonds1.fas --db $dbdir/swissprot.dmnd --out $outdir/diamond2.out --outfmt 6 qseqid sseqid evalue bitscore --ultra-sensitive --quiet");
+
+msg('Done with diamond');
+
+#-----------STEP 4: Extract/extend matching sequences-------#
+#msg("Extracting matching sequences");
+#extend($transcripts, "$outdir/hmmcompete.out");
+#msg("Done extracting sequences");
+
+#-----------STEP 5: Annotating sequences--------------------#
+msg('Annotating sequences');
+msg("Use $signalp_version");
+runcmd("signalp -t euk $outdir/putative_diamonds1.fas > $outdir/signalp.out");
+msg('Done annotating sequences');
+
+#-----------STEP 6: Retrieve DNA of precursors--------------#
+msg('Retrieve dna of precursors');
+my $prec = Bio::SeqIO->new(-file => "$outdir/putative_diamonds1.fas", -format => 'fasta');
+my @ids;
+while(my $rec = $prec->next_seq){
+	my @fields = split m{\Q|\E}, $rec->id;
+	push @ids, $fields[0]; # Seq ids are >ab_dc_ef|orf1 so split them around | to have the original id
+}
+my $inx = Bio::DB::Fasta->new($transcripts);
+
+open my $precdna, '>', "$outdir/precdna.fas" or croak "open file failed: $ERRNO";
+
+my @uniques = uniq @ids; # Remove repeated ids
+
+# Retrieving dna seq for each prot id
+foreach my $id (@uniques) {
+	print {$precdna} ">$id", "\n", $inx->get_Seq_by_id($id)->seq, "\n" or croak "print failed: $ERRNO";
+}
+msg('Done retrieving sequences');
+
+
+#------------STEP 7: Compute TPM for precursors--------------#
+msg('Computing expression level for precursors');
+# Build new index from putative transcripts 
+msg('Building putative transcripts index');
+runcmd("kallisto index -i $outdir/putative_transcripts.index $outdir/precdna.fas");
+msg('Done');
+# Quantify raw reads using putative transcripts index
+msg('Quantifying putative transcripts');
+runcmd("kallisto quant -t $cpus -i $outdir/putative_transcripts.index -o $outdir/kallisto_2 $forward_reads $reverse_reads");
+msg('Done');
+msg('Done computing expression level for precursors');
+
+
+#------------STEP 8: Writing output stats---------------------#
+msg('Writing output stats');
+
+open my $ffo, '<', "$outdir/itap_output.tsv" or croak "open file failed: $ERRNO";
+print $ffo, 'sequence_id raw_tpm transcripts_tpm first_seq_match first_match_evalue first_match_bitscore sec_seq_match sec_match_evalue sec_match_bitscore' or croak "print failed: $ERRNO";
+
+msg('Done writing files');
+
+# TODO: Add graph of stats like venn diagram or sequences annotations
+
+# Some final log output
+msg('Output files:');
+foreach (capture("find $outdir -type f -name '*'")) {
+  chomp;
+  msg($_);
+}
+msg('Annotation finished successfully.');
+my $endtime = localtime;
+my $walltime = $endtime - $starttime;
+my $pretty = sprintf '%.2f minutes', $walltime->minutes;
+msg("Walltime used: $pretty");
+msg($walltime % 2 ? 'Share and enjoy!' : 'Thank you, come again.');
+
+
+#------------Subroutines section-----------------------#
+
+# $hashref = csv2hash($csv_in,$sep,$hasheaderline,$idpos);
+# Extract a csv file content and build a two dimensional hash with data.
+# $csv_in: csv file to be parsed
+# $sep: field separator used in the file, default separator is ';'
+# $hasheaderline : if set to a true value, the first line will be consider as column headers. default=0 (No header line) ;
+# $idpos: position of the column to be used as first dimension hash key (Caution: values of this column should be unique in the file). Default=0 : a numerical counter will be used.
+
+sub csv2hash{
+	my ($csv_in,$sep,$hasheaderline,$idpos) = @_;
+	open IN, $csv_in or croak "Cannot open $csv_in: $ERRNO\n";
+	$idpos = defined($idpos)?$idpos : 'number';
+	$sep = $sep || q{;};
+	my $hashref;
+	my $countline = 0 ;
+	my @colheader;
+
+	if($hasheaderline){
+		chomp (my $headline = <IN>);
+		if (! $headline){
+			croak 'The first line should not be empty!! Remove empty line at the top of your file!';
+		}
+		@colheader = split $sep, $headline;
+		if(! scalar @colheader){
+			croak 'The first line should not be empty!! Remove empty line at the top of your file or specify the right data separator!';
+		}
+	}else{
+		chomp (my $firstdataline = <IN>);
+		my %datainline;
+		if (! $firstdataline){
+			croak 'The first line should not be empty!! Remove empty line at the top of your file!';
+		}
+		my @dat = split $sep, $firstdataline;
+		my $nr = scalar @dat;
+		if(! $nr){
+			croak 'The first line should not be empty!! Remove empty line at the top of your file or specify the right data separator!';
+		}
+		@colheader = (1..$nr);
+		foreach my $i (0..$#colheader){
+			$datainline{$colheader[$i]}=$dat[$i];
+		}
+		$hashref->{$countline}= \%datainline;
+		$countline++;
+	}
+
+	while (<IN>){
+		chomp;
+		my @dat = split $sep;
+		my %datainline;
+		foreach my $i (0..$#colheader){
+			$datainline{$colheader[$i]}=$dat[$i];
+		}
+		if($idpos eq 'number'){
+			$hashref->{$countline}= \%datainline;
+			$countline++;
+		}else{
+			my $indval = $datainline{$idpos};
+			$hashref->{$indval}= \%datainline;
+		}
+	}
+	return $hashref;
+
+}
+
+# Join two files by certain col sub
+sub join_files {
+	open my $fh1, '<', shift or die $!;
+	open my $fh2, '<', shift or die $!;
+	open my $fo, '>', shift or die $!;
+	my $k1 = shift;
+	my $k2 = shift;
+	while (my $line1 = <$fh1> and my $line2 = <$fh2>) {
+		chomp $line1 if defined $line1;
+		chomp $line2 if defined $line2;
+		my @lines1 = split /\t/, $line1;
+		my @lines2 = split /\t/, $line2;
+
+		if ($lines2[0] eq $lines1[0]) {
+			print {$fo} join("\t", @lines1[0,$k1,$k2], @lines2[$k1,$k2]), "\n" or croak "print failed: $ERRNO";
+		}
+	}
+	close $fo or croak "close file failed: $ERRNO";
+	close $fh1 or croak "close file failed: $ERRNO";
+	close $fh2 or croak "close file failed: $ERRNO";
+}
+
+# Find executable sub
+sub find_exe {
+	my($bin) = shift;
+  	for my $dir (File::Spec->path) {
+    	my $exe = File::Spec->catfile($dir, $bin);
+    	return $exe if -x $exe;
+  	}
+  	return;
+}
+
+# Translate subroutine
+sub translate{
+    # input is a Bio::Seq object
+    use Bio::SeqIO;
+    use Bio::Seq;
+    my $seqobj = shift;
+    open my $seqout, '>', "$outdir/transcripts.prot.fas" or croak "open file failed: $ERRNO";
+    while (my $seqio = $seqobj->next_seq) {
+    	# orf1
+    	print {$seqout} '>', $seqio->id, '|orf1', "\n", $seqio->translate()->seq, "\n" or croak "print failed: $ERRNO";
+    	# orf2
+    	print {$seqout} '>', $seqio->id, '|orf2', "\n", $seqio->translate(-frame => 1)->seq, "\n" or croak "print failed: $ERRNO";
+    	# orf3
+    	print {$seqout} '>', $seqio->id, '|orf3', "\n", $seqio->translate(-frame => 2)->seq, "\n"or croak "print failed: $ERRNO";
+    	# calculate sequence rev comp
+    	my $revcomp = $seqio->revcom;
+    	# orf 4
+    	print {$seqout} '>', $seqio->id, '|orf4', "\n", $revcomp->translate()->seq, "\n" or croak "print failed: $ERRNO";
+    	# orf 5
+    	print {$seqout} '>', $seqio->id, '|orf5', "\n", $revcomp->translate(-frame => 1)->seq, "\n" or croak "print failed: $ERRNO";
+    	# orf 6
+    	print {$seqout} '>', $seqio->id, '|orf6', "\n", $revcomp->translate(-frame => 2)->seq, "\n" or croak "print failed: $ERRNO";
+    }
+	close $seqout or croak "close file failed: $ERRNO";
+	return;
+}
+
+# msg subroutine
+sub msg {
+	my $t = localtime;
+	my $line = '['.$t->hms."] @_\n";
+	if(! $quiet){
+		print {*STDERR} $line or croak "print failed: $ERRNO";
+  	}
+  	if (openhandle(\*LOG)) {
+    	# write out any buffered log lines
+    	if (@LOG) {
+      		print {*LOG} @LOG or croak "print to log failed: $ERRNO";
+      		@LOG=();
+    	}
+    	# write out the current log line
+    	print {*LOG} $line or croak "print to log failed: $ERRNO";
+  	} else {
+    	# buffer this log line for later
+    	push @LOG, $line;
+  	}
+  	return;
+}
+
+# err subroutine
+sub err {
+	my $text = @_;
+  	$quiet=0;
+  	msg($text);
+  	exit 2; #???
+}
+
+# runcmd subroutine
+sub runcmd {
+	my $txt = @_;
+	msg('Running:', $txt);
+	system($txt) == 0 or err('Could not run command:', $txt);
+}
+
+
+# Automatic detection of num of cpu subroutine
+sub num_cpu {
+  if ( $^O =~ m/linux/i ) {
+    my($num) = capture('grep -c ^processor /proc/cpuinfo');
+    return $1 if $num =~ m/^(\d+)/;
+  }
+  elsif ( $^O =~ m/darwin/i ) {
+    my($num) = capture('system_profiler SPHardwareDataType | grep Cores');
+    return $1 if $num =~ /.*Cores: (\d+)/s;
+  }
+  return 1;
+}
+
+# Show version subroutine
+sub version {
+	print {*STDERR} "$EXE $VERSION\n" or croak "print version failed: $ERRNO";
+	exit;
+}
+
+
+__END__
+
+#---------------Help POD------------------------#
+
+=head1 NAME
+
+itap - fast and accurate annotation of venom gland transcriptome
+
+=head1 USAGE
+
+itap [options] -t transcripts.fas -f reads_R1.fq -r reads_R2.fq
+
+=head1 REQUIRED ARGUMENTS
+
+	-t		Transcripts
+	-f		Forward reads
+	-r		Reverse reads 
+
+=head1 OPTIONS
+
+	-o		Output folder
+	--hmm		HMM file for putative toxin classification, default is ekenda.hmm
+	--quiet,-q		Decrease program verbosity, default set to false  
+	--version,-v		Print current program version and exit
+	--help,-h		Print this help and exit
+
+=head1 DESCRIPTION
+
+  Required arguments:
+  -t		Transcripts   (required)
+  -f		Forward reads (required)
+  -r		Reverse reads (required)
+	
+  Optional argument:
+  -o		Output folder
+  --hmm 	HMM file for putative toxin classification, default is ekenda.hmm
+  --quiet,-q	Decrease program verbosity, default set to false  
+  --version,-v	Print current program version and exit
+  --help,-h	Print this help and exit	
+
+=head1 DEPENDENCIES
+
+	kallisto signalp blastp blastx diamond hmmcompete gunzip
+
+=head1 LICENSE AND COPYRIGHT
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+	Copyright 2019- ANICET EBOU, DOMINIQUE KOUA
+
+=head1 DIAGNOSTICS
+
+=head1 EXIT STATUS
+
+=head1 BUGS AND LIMITATIONS
+	
+	Currently no bug reported. If you find one please let me know.
+	
+=head1 CONFIGURATION
+
+=head1 INCOMPATIBILITIES
+
+=head1 AUTHOR
+
+ANICET EBOU, DOMINIQUE KOUA
+
+=head1 VERSION
+
+0.1.0
+
+=cut
