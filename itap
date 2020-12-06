@@ -3,13 +3,13 @@
 use strict;
 use warnings;
 
+use Bio::DB::Fasta;
 use Bio::Root::Version;
 use Bio::SeqIO;
 use Bio::SearchIO;
 use Bio::Seq;
 use Bio::SeqFeature::Generic;
 use Bio::Tools::GuessSeqFormat;
-use Bio::DB::Fasta;
 use Carp qw( croak );
 use Compress::Zlib;
 use Config;
@@ -18,21 +18,23 @@ use English qw( -no_match_vars );
 use File::Temp qw(tempfile);
 use File::Basename;
 use FindBin qw( $Script $RealBin );
-use Getopt::Long 'HelpMessage';
+use Getopt::Declare;
 use IPC::System::Simple qw( capture );
 use List::Util qw(uniq);
+use Pod::Usage;
 use Scalar::Util qw(openhandle);
 use Time::Piece;
 use Time::Seconds;
 use Text::CSV;
 use version 0.77;
 
+$::VERSION = '0.1.0';
+
 # Global variables
 my @CMDLINE = ( $Script, @ARGV );
 my $OPSYS   = $Config{'osname'};
 my $BINDIR  = "$FindBin::RealBin/../binaries/$OPSYS";
 my $EXE     = $FindBin::RealScript;
-my $VERSION = '0.1';
 my $AUTHOR  = 'Anicet Ebou <anicet.ebou@gmail.com>';
 my $URL     = 'https://github.com/koualab/itap.git';
 my @LOG;    # buffer up log lines before we have log file ready
@@ -40,50 +42,41 @@ my $EMPTY     = q{};
 my $starttime = localtime;
 
 # Parse command line options
-my $options_okay = GetOptions(
+my $args = Getopt::Declare->new(<<'EOSPEC') || exit 1;
+    
+	[strict]
 
-	# Application-specific options
-	'tsc|t=s' => \my $transcripts,              # --tsc or -t expects a string
-	'fwd|f=s' => \my $forward_reads,            # --fwd or -f expects a string
-	'rev|r=s' => \my $reverse_reads,            # --rev or -r expects a string
-	'out|o=s' => \( my $outdir = 'ITAP' ),      # --out or -o expects a string
-	'db|d=s'  => \my $dbdir,                    # --db or -d expects a string
-	'force'   => \my $force,                    # --force flag is boolean
-	'hmm=s'   => \( my $hmm = 'ekenda.hmm' ),   # --hmm expects a string
-	'quiet'   => \my $quiet,                    # --quiet flag is boolean
-	'cpus=i'  => \( my $cpus = 2 ),             # --cpus expects an integer
+	-t[sc] <transcripts:if>		Specify transcriptome file [required]
+	-f[wd] <forward_reads:if>	Specify forward reads file [required]
+	-r[ev] <reverse_reads:if>	Specify reverse reads file [required]
+	-o[ut] <outdir:of>		Specify output folder name
+	--db <dbdir:of>			Specify path to databases folder
+	--force				Force reuse of output folder
+	--hmm <hmm:of>			Specify the path to personal hmm lib
+	--quiet				Decrease verbosity
+	--cpus <cpus:+i>		Specify number of threads
 
 	# Standard meta-options
-	'version|v' => sub { version() },
-	'usage|u'   => sub { usage() },
-	'help|h'    => sub { HelpMessage(0) },
-) or HelpMessage(1);
+	-v[ersion]			Print program version and exit
+	                		{ $self->version(0); }
+	-u[sage]			Print program usage and exit
+	                		{ $self->usage(0); }
+	--man				Print man page
+	            			{ pod2usage( -exitval => 0, -verbose => 2 ); }
+	-h[elp]				Print help and exit
+EOSPEC
+
+my $transcripts   = $args->{'<transcripts>'};
+my $forward_reads = $args->{'<forward_reads>'};
+my $reverse_reads = $args->{'<reverse_reads>'};
+my $outdir        = $args->{'<outdir>'};
+my $force         = $args->{'--force'};
+my $dbdir         = $args->{'dbdir'};
+my $quiet         = $args->{'--quiet'};
+my $cpus          = $args->{'cpus'};
 
 # Set an ENV variable for database path or ./db/ path of program root folder
 $dbdir = $ENV{'ITAPDB'} || abs_path("$FindBin::RealBin/./db");
-
-# Required args presence check
-if ( not $transcripts ) {
-
-   # You use die when the error is something you or your code didn't do right.
-   # You use croak when it's something your caller isn't doing right.
-	print {*STDERR}
-		"Missing -t argument, did you forget to add transcriptome file?\n"
-		or croak "Print to STDERR failed: $ERRNO";
-	HelpMessage(1);
-}
-elsif ( not $forward_reads ) {
-	print {*STDERR}
-		"Missing -f argument, did you forget to add forward reads file?\n"
-		or croak "Print to STDERR failed: $ERRNO";
-	HelpMessage(1);
-}
-elsif ( not $reverse_reads ) {
-	print {*STDERR}
-		"Missing -r argument, did you forget to add reverse reads file?\n"
-		or croak "Print to STDERR failed: $ERRNO";
-	HelpMessage(1);
-}
 
 # Check existence of output folder
 if ( -d $outdir ) {
@@ -102,7 +95,7 @@ else {
 }
 
 #-------------START------------------#
-msg("This is $EXE $VERSION");
+msg("This is $EXE $::VERSION");
 msg("Written by $AUTHOR");
 msg("Homepage is $URL");
 msg("Local time is $starttime");
@@ -120,11 +113,8 @@ if ( $bpver < $minbpver ) {
 # Determine num of cpus
 my $num_cores = num_cpu();
 msg("System has $num_cores cores.");
-if ( !defined $cpus || $cpus < 0 ) {
+if ( !defined $cpus ) {
 	$cpus = 1;
-}
-elsif ( $cpus == 0 ) {
-	$cpus = $num_cores;
 }
 elsif ( $cpus > $num_cores ) {
 	msg("Option --cpu asked for $cpus cores, but system only has $num_cores");
@@ -159,7 +149,6 @@ msg('Done creating index');
 
 # Quantifying reads
 msg('Quantifying reads');
-msg("Use $kallisto_version");
 runcmd(
 	"kallisto quant -t $cpus -i $outdir/all_transcripts.index -o $outdir/kallisto_1 $forward_reads $reverse_reads"
 );
@@ -548,34 +537,34 @@ sub num_cpu {
 	return 1;
 }
 
-# Show version subroutine
-sub version {
-	print {*STDERR} "$EXE $VERSION\n" or croak "Print version failed: $ERRNO";
-	exit;
-}
-
-# Show usage subroutine
-sub usage {
-	print {*STDERR}
-		'itap [options] -tsc transcripts.fas -fwd reads_R1.fq -rev reads_R2.fq'
-		or croak "Print usage failed: $ERRNO";
-	exit;
-}
-
 __END__
 
 =head1 NAME
 
 itap - Fast and accurate annotation of venom gland transcriptome
 
-=head1 VERSION
+=head1 SYNOPSIS
 
-This documentation refers to itap version 0.1.0
+itap --tsc trans.fa.gz --fwd reads_R1.fq.gz --rev reads_R2.fq.gz -out itap_out
 
+itap -tsc trans.fa.gz -fwd reads_R1.fq.gz -rev reads_R2.fq.gz --hmm myhmm.hmm
+
+
+
+=head1 DESCRIPTION
+
+The I<itap> program provides fast and robust annotation of venom 
+gland transcriptome.
+
+It takes as input the nucleotides or amino acid sequences of the 
+transcriptome and the raw reads obtained from NGS sequencing.
+
+It ouput the annotations and a summary of the annotated contigs to
+for manual validation.
 
 =head1 USAGE
 
-    itap [options] -tsc transcripts.fas -fwd reads_R1.fq -rev reads_R2.fq
+itap [options] -tsc transcripts.fas -fwd reads_R1.fq -rev reads_R2.fq
 
 =head1 REQUIRED ARGUMENTS
 
@@ -595,8 +584,6 @@ Specify input reverse reads file
 
 =back
 
-=begin
-
 =head1 OPTIONS
 
 =over
@@ -609,32 +596,23 @@ Specify output directory
 
 HMM file for putative toxin classification, default is ekenda.hmm
 
-=item  -q[uiet]
+=item  --quiet
 
 Decrease program verbosity, default set to false
 
-=item  --v[ersion]    
+=item  -v[ersion]    
 
 Print current program version and exit
 
-=item  --h[elp]
+=item  -h[elp]
 
 Print this help and exit
 
 =back
 
-=begin
+=head1 VERSION
 
-=head1 DESCRIPTION
-
-The I<itap> program provides fast and robust annotation of venom 
-gland transcriptome.
-
-It takes as input the nucleotides or amino acid sequences of the 
-transcriptome and the raw reads obtained from NGS sequencing.
-
-It ouput the annotations and a summary of the annotated contigs to
-for manual validation.
+This documentation refers to itap version 0.1.0
 
 =head1 DEPENDENCIES
 
@@ -660,7 +638,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 =head1 DIAGNOSTICS
 
+Not applicable.
+
 =head1 EXIT STATUS
+
+Not applicable.
 
 =head1 BUGS AND LIMITATIONS
 	
@@ -668,11 +650,15 @@ Probably plenty but nothing I know of. Please report them to the author.
 	
 =head1 CONFIGURATION
 
+Please find on the program page <https://github.com/koualab/itap> 
+the steps for the program configuration.
+
 =head1 INCOMPATIBILITIES
+
+None known to the best of my knowledge. Please report them to the author.
 
 =head1 AUTHOR
 
 Anicet Ebou <anicet.ebou@gmail.com>
-Dominique Koua
 
 =cut
