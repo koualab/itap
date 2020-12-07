@@ -5,9 +5,9 @@ use warnings;
 
 use Bio::DB::Fasta;
 use Bio::Root::Version;
-use Bio::SeqIO;
 use Bio::SearchIO;
 use Bio::Seq;
+use Bio::SeqIO;
 use Bio::SeqFeature::Generic;
 use Bio::Tools::GuessSeqFormat;
 use Carp qw( croak );
@@ -26,7 +26,6 @@ use Scalar::Util qw(openhandle);
 use Time::Piece;
 use Time::Seconds;
 use Text::CSV;
-use version 0.77;
 
 $::VERSION = '0.1.0';
 
@@ -46,11 +45,11 @@ my $args = Getopt::Declare->new(<<'EOSPEC') || exit 1;
     
 	[strict]
 
-	-t[sc] <transcripts:if>		Specify transcriptome file [required]
-	-f[wd] <forward_reads:if>	Specify forward reads file [required]
-	-r[ev] <reverse_reads:if>	Specify reverse reads file [required]
-	-o[ut] <outdir:of>		Specify output folder name
-	--db <dbdir:of>			Specify path to databases folder
+	-t <transcripts:if>		Specify transcriptome file [required]
+	-f <forward_reads:if>	Specify forward reads file [required]
+	-r <reverse_reads:if>	Specify reverse reads file [required]
+	-o <outdir:s>		Specify output folder name
+	--dbdir <dbdir:s>			Specify path to databases folder
 	--force				Force reuse of output folder
 	--hmm <hmm:of>			Specify the path to personal hmm lib
 	--quiet				Decrease verbosity
@@ -66,17 +65,24 @@ my $args = Getopt::Declare->new(<<'EOSPEC') || exit 1;
 	-h[elp]				Print help and exit
 EOSPEC
 
-my $transcripts   = $args->{'<transcripts>'};
-my $forward_reads = $args->{'<forward_reads>'};
-my $reverse_reads = $args->{'<reverse_reads>'};
-my $outdir        = $args->{'<outdir>'};
+my $transcripts   = $args->{'-t'};
+my $forward_reads = $args->{'-f'};
+my $reverse_reads = $args->{'-r'};
 my $force         = $args->{'--force'};
-my $dbdir         = $args->{'dbdir'};
+my $dbdir         = $args->{'--dbdir'};
 my $quiet         = $args->{'--quiet'};
-my $cpus          = $args->{'cpus'};
+my $cpus          = $args->{'--cpus'};
+my $outdir        = $args->{'-o'};
+my $hmm           = $args->{'--hmm'};
 
 # Set an ENV variable for database path or ./db/ path of program root folder
-$dbdir = $ENV{'ITAPDB'} || abs_path("$FindBin::RealBin/./db");
+if (! defined($dbdir = $args->{'--dbdir'})){
+	$dbdir = $ENV{'ITAPDB'} || abs_path("$FindBin::RealBin/./db");
+}
+
+if (! defined $outdir) {
+	$outdir = 'ITAP';
+}
 
 # Check existence of output folder
 if ( -d $outdir ) {
@@ -102,19 +108,11 @@ msg("Local time is $starttime");
 msg( 'You are', $ENV{USER} || 'not telling me who you are!' );
 msg("Operating system is $OPSYS");
 
-# Check BioPerl version
-my $minbpver = version->parse('1.006002');    # for Bio::SearchIO::hmmer3
-my $bpver    = version->parse($Bio::Root::Version::VERSION);
-msg("You have BioPerl $bpver");
-if ( $bpver < $minbpver ) {
-		err ("Please install BioPerl $minbpver or higher");
-}
-
 # Determine num of cpus
 my $num_cores = num_cpu();
 msg("System has $num_cores cores.");
-if ( !defined $cpus ) {
-	$cpus = 1;
+if ( ! defined $cpus ) {
+	$cpus = $num_cores;
 }
 elsif ( $cpus > $num_cores ) {
 	msg("Option --cpu asked for $cpus cores, but system only has $num_cores");
@@ -125,7 +123,7 @@ msg("Will use maximum of $cpus cores.");
 msg("Command: @CMDLINE");
 
 #----------Check needed tools------------------------------#
-my @needed_exe = qw(kallisto signalp blastp blastx diamond hmmcompete);
+my @needed_exe = qw(kallisto signalp blastp blastx diamond hmmsearch hmmcompete);
 foreach my $ne (@needed_exe) {
 	my $tool = find_exe($ne);
 	if ($tool) {
@@ -214,57 +212,103 @@ close $tmpfh or croak "Close $tmpfh file failed: $ERRNO";
 # ekenda.hmm.
 # TODO: See how to improve this step with alignment-free techniques.
 msg('Putative toxins prediction');
-msg('Use diamond');
 
-# First diamond
 runcmd(
-	"diamond blastp --query $outdir/transcripts.prot.fas --db $dbdir/spidertox.dmnd --out $outdir/diamond1.out --outfmt 6 qseqid sseqid evalue bitscore --al $outdir/putative_diamonds1.fas --alfmt fasta --unal 0 --ultra-sensitive --quiet"
+	"hmmcompete --desc --pepreg --hmm $dbdir/ekenda.hmm --in $outdir/transcripts.prot.fas --out $outdir/hmmcompete.out"
 );
 
-# Second diamond
-runcmd(
-	"diamond blastp --query $outdir/putative_diamonds1.fas --db $dbdir/swissprot.dmnd --out $outdir/diamond2.out --outfmt 6 qseqid sseqid evalue bitscore --ultra-sensitive --quiet"
-);
+# Retrieve DNA sequences of AA contigs having a match in hmmcompete
+my $tsv = Text::CSV->new( { sep_char => "\t" } );
+open my $prec, '<', "$outdir/hmmcompete.out"
+	or croak "Failed opening $outdir/hmmcompete.out: $ERRNO";
+my %fields;
+$tsv->getline($prec);
+while ( my $row = $tsv->getline($prec) ) {
+	$fields{ $row->[0] } = join q{|}, $row->[1], $row->[4], $row->[5];
+}
 
-msg('Done with diamond');
+## Get sequences from ids retrieved
+my $inx = Bio::DB::Fasta->new($transcripts);
+open my $precdna, '>', "$outdir/contigs_dna.fas"
+	or croak "Open $outdir/contigs_dna.fas file failed: $ERRNO";
+foreach my $id ( keys %fields ) {    # Retrieving dna seq for each prot id
+	my @k = split m{[|]}msx, $id;
+	print {$precdna} ">$k[0]", "\n", $inx->get_Seq_by_id($k[0])->seq, "\n"
+		or croak "Print to $precdna failed: $ERRNO";
+}
+close $precdna or croak "Close $precdna failed: $ERRNO";
 
 #-----------STEP 4: Extract/extend matching sequences-------#
-#msg("Extracting matching sequences");
-#extend($transcripts, "$outdir/hmmcompete.out");
-#msg("Done extracting sequences");
+
+# Extract matching region from hmmcompete.out and extend sequence
+my $inprot = Bio::DB::Fasta->new("$outdir/transcripts.prot.fas");
+open my $extseq, '>', "$outdir/contigs.prot.reg"
+	or croak "Open $outdir/contigs.prot.reg file failed: $ERRNO";
+keys %fields;
+while ( my ( $key, $value ) = each %fields ) {
+	my @pats = split m{[|]}msx, $value;
+	my $pat  = $pats[1];
+	print {$extseq} ">", join( q{|}, $key, $pats[0], $pats[2] ), "\n",
+		extend_str( $inprot->get_Seq_by_id($key)->seq, $pat ), "\n",
+		or croak "Print
+# Retrieving id of sequences to $extseq failed: $ERRNO";
+}
+close $extseq or croak "Close $extseq failed: $ERRNO";
 
 #-----------STEP 5: Annotating sequences--------------------#
 msg('Annotating sequences');
 msg("Use $signalp_version");
-runcmd("signalp -t euk $outdir/putative_diamonds1.fas > $outdir/signalp.out");
+runcmd("signalp -t euk $outdir/contigs.prot.reg > $outdir/signalp.out");
 msg('Done annotating sequences');
+
+# Run signalp before alignment and add signal presence to header
+open my $sigpout, '<', "$outdir/signalp.out"
+	or croak "Failed opening $outdir/signal.out: $ERRNO";
+my $protreg = Bio::SeqIO->new(-file => "$outdir/contigs.prot.reg",
+                              -format => 'fasta');
+# Skip first two lines
+$tsv->getline($sigpout);
+$tsv->getline($sigpout);
+
+# Add signal presence info to contig headers
+while( my $regobj = $protreg->next_seq ) {
+	while (my $regrow = $tsv->getline($sigpout)) {
+		if ($regobj->id == $regrow->[0]) {
+			if ($regrow->[9] == 'N'){
+				$regobj->desc = $regobj->desc . '#SIGNO';
+			} elsif ($regrow->[9] == 'Y'){
+				$regobj->desc = $regobj->desc . '#SIGYES';
+			}
+		}
+	}
+}
+
+# Split fasta file into families
+while (my $ro = $protreg-next_seq) {
+	my @idfields = split m{[|]}msx, $regobj->id;
+	my $regid = $idfields[2];
+	Bio::SeqIO->new(-format => 'fasta',
+	                -file   => '>'.$regid.'_fam.fas')->write_seq($ro);
+}
+close $sigpout or croak "Failed closing $sigpout: $ERRNO";
+
+# Make alignment
+my @fam = glob "$outdir/*_fam.fas";
+msg('Aligning sequences');
+foreach $family (@fam){
+	my $filename = basename($family);
+	msg("Aligning family $filename");
+	runcmd("mafft --auto $family > $outdir/$filename.aln");
+	msg('Done');
+}
+msg('Done aligning sequences');
+
+# GetDNA region
+# Compute second kallisto
+# Make stats and final annotate result
 
 #-----------STEP 6: Retrieve DNA of precursors--------------#
 msg('Retrieve DNA of toxin precursors');
-
-# Retrieving id of sequences
-my $prec = Bio::SeqIO->new(
-	-file   => "$outdir/putative_diamonds1.fas",
-	-format => 'fasta'
-);
-my @ids;
-while ( my $rec = $prec->next_seq ) {
-	my @fields = split m{\Q|\E}msx, $rec->id;
-
-   # Seq ids are >ab_dc_ef|orf1 so split them around | to have the original id
-	push @ids, $fields[0];
-}
-
-# Get sequences from ids retrieved
-my $inx = Bio::DB::Fasta->new($transcripts);
-open my $precdna, '>', "$outdir/precdna.fas"
-	or croak "Open $outdir/precdna.fas file failed: $ERRNO";
-my @uniques = uniq @ids;       # Remove repeated ids
-foreach my $id (@uniques) {    # Retrieving dna seq for each prot id
-	print {$precdna} ">$id", "\n", $inx->get_Seq_by_id($id)->seq, "\n"
-		or croak "Print to $precdna failed: $ERRNO";
-}
-close $precdna or croak "Close $precdna faile: $ERRNO";
 
 msg('Done retrieving sequences');
 
@@ -322,106 +366,47 @@ close LOG or croak("Close $logfile file failed: $ERRNO");
 
 #------------Subroutines section-----------------------#
 
-# $hashref = csv2hash($csv_in,$sep,$hasheaderline,$idpos);
-# Extract a csv file content and build a two dimensional hash with data.
-# $csv_in: csv file to be parsed
-# $sep: field separator used in the file, default separator is ';'
-# $hasheaderline : if set to a true value, the first line will be consider as
-#                  column headers. default=0 (No header line) ;
-# $idpos: position of the column to be used as first dimension hash key
-#         (Caution: values of this column should be unique in the file).
-#         Default = 0 : a numerical counter will be used.
+sub extend_str {
 
-sub csv2hash {
-	my ( $csv_in, $sep, $hasheaderline, $idpos ) = @_;
-	open IN, $csv_in or croak "Cannot open $csv_in: $ERRNO\n";
-	$idpos = defined($idpos) ? $idpos : 'number';
-	$sep   = $sep || q{;};
-	my $hashref;
-	my $countline = 0;
-	my @colheader;
+	my ( $seq, $pat ) = @_;
+	my ($l, $r);
 
-	if ($hasheaderline) {
-		chomp( my $headline = <IN> );
-		if ( !$headline ) {
-			croak
-				'The first line should not be empty!! Remove empty line at the top of your file!';
-		}
-		@colheader = split $sep, $headline;
-		if ( !scalar @colheader ) {
-			croak
-				'The first line should not be empty!! Remove empty line at the top of your file or specify the right data separator!';
-		}
+	# Search pattern in sequence
+	my $ind = index $seq, $pat;
+
+	# Create left string to search for M or *
+	my $lstr = substr $seq, 0, $ind;
+
+	# Find right indice to substr right string
+	my $rind = $ind + length $pat;
+	my $rstr = substr $seq, $ind + length($pat), length($seq) - $rind;
+
+	# Look for M and * in left string and * in right string
+	my $rindx = index $rstr, q{*};
+	my $lindm = index $lstr, 'M';
+	my $lindx = rindex $lstr, q{*}; # use rindex to find last occurence of char
+
+	if ( $lindm > $lindx) # Case a Methionine is closer to begin of pattern than a Stop
+	{
+		$l = $lindm;
+	}
+	elsif ($lindm < $lindx) { # Case a Stop is closer to begin of pattern than a Methionine
+		$l = $lindx + 1; # + 1 to avoid display of * in sequence
 	}
 	else {
-		chomp( my $firstdataline = <IN> );
-		my %datainline;
-		if ( !$firstdataline ) {
-			croak
-				'The first line should not be empty!! Remove empty line at the top of your file!';
-		}
-		my @dat = split $sep, $firstdataline;
-		my $nr  = scalar @dat;
-		if ( !$nr ) {
-			croak
-				'The first line should not be empty!! Remove empty line at the top of your file or specify the right data separator!';
-		}
-		@colheader = ( 1 .. $nr );
-		foreach my $i ( 0 .. $#colheader ) {
-			$datainline{ $colheader[$i] } = $dat[$i];
-		}
-		$hashref->{$countline} = \%datainline;
-		$countline++;
+		$l = 0;
 	}
 
-	while (<IN>) {
-		chomp;
-		my @dat = split $sep;
-		my %datainline;
-		foreach my $i ( 0 .. $#colheader ) {
-			$datainline{ $colheader[$i] } = $dat[$i];
-		}
-		if ( $idpos eq 'number' ) {
-			$hashref->{$countline} = \%datainline;
-			$countline++;
-		}
-		else {
-			my $indval = $datainline{$idpos};
-			$hashref->{$indval} = \%datainline;
-		}
+	if ( $rindx ) {
+		$r = $rindx
 	}
-	return $hashref;
-
-}
-
-# Join two files by certain col sub
-sub join_files {
-	open my $fh1, '<', shift or croak $ERRNO;
-	open my $fh2, '<', shift or croak $ERRNO;
-	open my $fo,  '>', shift or croak $ERRNO;
-	my $k1 = shift;
-	my $k2 = shift;
-	while ( defined( my $line1 = <$fh1> ) && defined( my $line2 = <$fh2> ) ) {
-		if ( defined $line1 ) {
-			chomp $line1;
-		}
-		if ( defined $line2 ) {
-			chomp $line2;
-		}
-		my @lines1 = split m{\t}msx, $line1;
-		my @lines2 = split m{\t}msx, $line2;
-
-		if ( $lines2[0] eq $lines1[0] ) {
-			print {$fo}
-				join( "\t", @lines1[ 0, $k1, $k2 ], @lines2[ $k1, $k2 ] ),
-				"\n"
-				or croak "print failed: $ERRNO";
-		}
+	else {
+		$r = length $seq;
 	}
-	close $fo  or croak "close file failed: $ERRNO";
-	close $fh1 or croak "close file failed: $ERRNO";
-	close $fh2 or croak "close file failed: $ERRNO";
-	return 1;
+
+	my $extseq = substr($lstr, $l).$pat.substr $rstr, 0, $r;
+
+	return $extseq;
 }
 
 # Find executable sub
@@ -481,7 +466,42 @@ sub translate {
 	close $seqout or croak "Close file failed: $ERRNO";
 	return;
 }
+=pod
+sub transl1fr{
+	use Bio::SeqIO;
+	use Bio::Seq;
 
+	my ($seq, $frame) = @_;
+	my $seqobj = Bio::Seq->new(-seq => $seq,
+	                           -alphabet => 'dna');
+	my $seqio = $seqobj->next_seq;
+	if ($frame < 1 || $frame > 6){
+		print {*STDERR} "Frame $frame is not valid: $ERRNO" or croak "Print failed: $ERRNO";
+		exit 1;
+	}
+	my $revcomp = $seqio->revcom;
+	given ($frame){
+		when ($frame == 2){
+			return $seqio->translate(-frame => 1)->seq;
+		}
+		when ($frame == 3){
+			return $seqio->translate(-frame => 2)->seq;
+		}
+		when ($frame == 4){
+			return $revcomp->translate()->seq;
+		}
+		when ($frame == 5){
+			return $revcomp->translate(-frame => 1)->seq;
+		}
+		when ($frame == 6){
+			return $revcomp->translate(-frame => 2)->seq;
+		}
+		default {
+			return $seqio->translate()->seq;
+		}
+	}
+}
+=cut
 # msg subroutine
 sub msg {
 	my $t    = localtime;
@@ -517,9 +537,9 @@ sub err {
 
 # runcmd subroutine
 sub runcmd {
-	my $txt = @_;
-	msg( 'Running:', $txt );
-	system($txt) == 0 or err ( 'Could not run command:', $txt );
+	my @cmd = @_;
+	msg( 'Running:', @cmd );
+	system(@cmd) == 0 or err ( 'Could not run command:', @cmd );
 	return 1;
 }
 
