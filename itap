@@ -12,32 +12,36 @@ use Bio::SeqFeature::Generic;
 use Bio::Tools::GuessSeqFormat;
 use Carp qw( croak );
 use Compress::Zlib;
-use Config;
-use Cwd qw(abs_path);
+use Cwd qw( abs_path );
 use English qw( -no_match_vars );
-use File::Temp qw(tempfile);
+use File::Temp qw( tempfile );
 use File::Basename;
-use FindBin qw( $Script $RealBin );
+use FindBin qw( $RealBin );
 use Getopt::Declare;
 use IPC::System::Simple qw( capture );
-use List::Util qw(uniq);
 use Pod::Usage;
-use Scalar::Util qw(openhandle);
+use Readonly;
+use Scalar::Util qw( openhandle );
 use Time::Piece;
 use Time::Seconds;
 use Text::CSV;
+use Text::CSV::Hashify;
 
-$::VERSION = '0.1.0';
+$::VERSION = '0.1.0';    # use $::VERSION for Getopt::Declare
+our $VERSION = 0.1.0;    # use $VERSION to avoid Perl::Critic warns
 
 # Global variables
-my @CMDLINE = ( $Script, @ARGV );
-my $OPSYS   = $Config{'osname'};
-my $BINDIR  = "$FindBin::RealBin/../binaries/$OPSYS";
+my @CMDLINE = ( $PROGRAM_NAME, @ARGV );
+my $BINDIR  = "$FindBin::RealBin/../binaries/$OSNAME";
 my $EXE     = $FindBin::RealScript;
 my $AUTHOR  = 'Anicet Ebou <anicet.ebou@gmail.com>';
 my $URL     = 'https://github.com/koualab/itap.git';
-my @LOG;    # buffer up log lines before we have log file ready
-my $EMPTY     = q{};
+my @LOG;                 # buffer up log lines before we have log file ready
+my $EMPTY = q{};
+Readonly my $HMM_TARGET_REGION   => 4;
+Readonly my $HMM_CLASSIFIER_DESC => 5;
+Readonly my $SIGNAL_PRESENCE     => 9;
+Readonly my $CODON_LENGTH        => 3;
 my $starttime = localtime;
 
 # Parse command line options
@@ -76,11 +80,11 @@ my $outdir        = $args->{'-o'};
 my $hmm           = $args->{'--hmm'};
 
 # Set an ENV variable for database path or ./db/ path of program root folder
-if (! defined($dbdir = $args->{'--dbdir'})){
+if ( !defined( $dbdir = $args->{'--dbdir'} ) ) {
 	$dbdir = $ENV{'ITAPDB'} || abs_path("$FindBin::RealBin/./db");
 }
 
-if (! defined $outdir) {
+if ( !defined $outdir ) {
 	$outdir = 'ITAP';
 }
 
@@ -106,12 +110,12 @@ msg("Written by $AUTHOR");
 msg("Homepage is $URL");
 msg("Local time is $starttime");
 msg( 'You are', $ENV{USER} || 'not telling me who you are!' );
-msg("Operating system is $OPSYS");
+msg("Operating system is $OSNAME");
 
 # Determine num of cpus
 my $num_cores = num_cpu();
 msg("System has $num_cores cores.");
-if ( ! defined $cpus ) {
+if ( !defined $cpus ) {
 	$cpus = $num_cores;
 }
 elsif ( $cpus > $num_cores ) {
@@ -123,14 +127,15 @@ msg("Will use maximum of $cpus cores.");
 msg("Command: @CMDLINE");
 
 #----------Check needed tools------------------------------#
-my @needed_exe = qw(kallisto signalp blastp blastx diamond hmmsearch hmmcompete);
+my @needed_exe
+	= qw(kallisto signalp blastp blastx diamond hmmsearch hmmcompete);
 foreach my $ne (@needed_exe) {
 	my $tool = find_exe($ne);
 	if ($tool) {
 		msg("Found $ne");
 	}
 	else {
-			err ("itap need $ne. Please install it and continue");
+		err ("itap need $ne. Please install it and continue");
 	}
 }
 my $kallisto_version   = capture('kallisto version');
@@ -205,7 +210,7 @@ else {
 		msg('Done translating');
 	}
 }
-close $tmpfh or croak "Close $tmpfh file failed: $ERRNO";
+close $tmpfh or croak "Close $tmpfh file failed: $OS_ERROR";
 
 #-----------STEP 3: Putative toxins identification----------#
 # For now this step rely only on hmmcompete and
@@ -220,82 +225,93 @@ runcmd(
 # Retrieve DNA sequences of AA contigs having a match in hmmcompete
 my $tsv = Text::CSV->new( { sep_char => "\t" } );
 open my $prec, '<', "$outdir/hmmcompete.out"
-	or croak "Failed opening $outdir/hmmcompete.out: $ERRNO";
+	or croak "Failed opening $outdir/hmmcompete.out: $OS_ERROR";
 my %fields;
 $tsv->getline($prec);
 while ( my $row = $tsv->getline($prec) ) {
-	$fields{ $row->[0] } = join q{|}, $row->[1], $row->[4], $row->[5];
+	$fields{ $row->[0] } = join q{|}, $row->[1], $row->[$HMM_TARGET_REGION],
+		$row->[$HMM_CLASSIFIER_DESC];
 }
+close $prec or croak " Close failed: $OS_ERROR";
 
 ## Get sequences from ids retrieved
 my $inx = Bio::DB::Fasta->new($transcripts);
 open my $precdna, '>', "$outdir/contigs_dna.fas"
-	or croak "Open $outdir/contigs_dna.fas file failed: $ERRNO";
+	or croak "Open $outdir/contigs_dna.fas file failed: $OS_ERROR";
 foreach my $id ( keys %fields ) {    # Retrieving dna seq for each prot id
 	my @k = split m{[|]}msx, $id;
-	print {$precdna} ">$k[0]", "\n", $inx->get_Seq_by_id($k[0])->seq, "\n"
-		or croak "Print to $precdna failed: $ERRNO";
+	print {$precdna} ">$k[0]", "\n", $inx->get_Seq_by_id( $k[0] )->seq, "\n"
+		or croak "Print to $precdna failed: $OS_ERROR";
 }
-close $precdna or croak "Close $precdna failed: $ERRNO";
+close $precdna or croak "Close $precdna failed: $OS_ERROR";
 
 #-----------STEP 4: Extract/extend matching sequences-------#
 
 # Extract matching region from hmmcompete.out and extend sequence
 my $inprot = Bio::DB::Fasta->new("$outdir/transcripts.prot.fas");
 open my $extseq, '>', "$outdir/contigs.prot.reg"
-	or croak "Open $outdir/contigs.prot.reg file failed: $ERRNO";
+	or croak "Open $outdir/contigs.prot.reg file failed: $OS_ERROR";
 keys %fields;
 while ( my ( $key, $value ) = each %fields ) {
 	my @pats = split m{[|]}msx, $value;
 	my $pat  = $pats[1];
-	print {$extseq} ">", join( q{|}, $key, $pats[0], $pats[2] ), "\n",
+	print {$extseq} '>', join( q{|}, $key, $pats[0], $pats[2] ), "\n",
 		extend_str( $inprot->get_Seq_by_id($key)->seq, $pat ), "\n",
-		or croak "Print
-# Retrieving id of sequences to $extseq failed: $ERRNO";
+		or croak "Print retrieving id of sequences to $extseq failed: $OS_ERROR";
 }
-close $extseq or croak "Close $extseq failed: $ERRNO";
+close $extseq or croak "Close $extseq failed: $OS_ERROR";
 
 #-----------STEP 5: Annotating sequences--------------------#
+# Run signalp before alignment and add signal presence to header
 msg('Annotating sequences');
+msg('Searching signal sequence');
 msg("Use $signalp_version");
 runcmd("signalp -t euk $outdir/contigs.prot.reg > $outdir/signalp.out");
-msg('Done annotating sequences');
+msg('Done searching signal sequences');
 
-# Run signalp before alignment and add signal presence to header
+msg('Adding signal sequence presence to sequence header');
 open my $sigpout, '<', "$outdir/signalp.out"
-	or croak "Failed opening $outdir/signal.out: $ERRNO";
-my $protreg = Bio::SeqIO->new(-file => "$outdir/contigs.prot.reg",
-                              -format => 'fasta');
+	or croak "Failed opening $outdir/signal.out: $OS_ERROR";
+my $protreg = Bio::SeqIO->new(
+	-file   => "$outdir/contigs.prot.reg",
+	-format => 'fasta'
+);
+
 # Skip first two lines
 $tsv->getline($sigpout);
 $tsv->getline($sigpout);
 
 # Add signal presence info to contig headers
-while( my $regobj = $protreg->next_seq ) {
-	while (my $regrow = $tsv->getline($sigpout)) {
-		if ($regobj->id == $regrow->[0]) {
-			if ($regrow->[9] == 'N'){
-				$regobj->desc = $regobj->desc . '#SIGNO';
-			} elsif ($regrow->[9] == 'Y'){
-				$regobj->desc = $regobj->desc . '#SIGYES';
+while ( my $regobj = $protreg->next_seq ) {
+	while ( my $regrow = $tsv->getline($sigpout) ) {
+		if ( $regobj->id eq $regrow->[0] ) {
+			$regobj->id =~ s/\s/-/msx;
+			if ( $regrow->[$SIGNAL_PRESENCE] eq 'N' ) {
+				$regobj->id = $regobj->id . '#SIGNO';
+			}
+			elsif ( $regrow->[$SIGNAL_PRESENCE] eq 'Y' ) {
+				$regobj->id = $regobj->id . '#SIGYES';
 			}
 		}
 	}
 }
+msg('Done adding signal presence');
 
 # Split fasta file into families
-while (my $ro = $protreg-next_seq) {
+while ( my $regobj = $protreg->next_seq ) {
 	my @idfields = split m{[|]}msx, $regobj->id;
-	my $regid = $idfields[2];
-	Bio::SeqIO->new(-format => 'fasta',
-	                -file   => '>'.$regid.'_fam.fas')->write_seq($ro);
+	my $regid    = $idfields[2];
+	Bio::SeqIO->new(
+		-format => 'fasta',
+		-file   => '>' . $regid . '_fam.fas'
+	)->write_seq($regobj);
 }
-close $sigpout or croak "Failed closing $sigpout: $ERRNO";
+close $sigpout or croak "Failed closing $sigpout: $OS_ERROR";
 
 # Make alignment
 my @fam = glob "$outdir/*_fam.fas";
 msg('Aligning sequences');
-foreach $family (@fam){
+foreach my $family (@fam) {
 	my $filename = basename($family);
 	msg("Aligning family $filename");
 	runcmd("mafft --auto $family > $outdir/$filename.aln");
@@ -304,13 +320,25 @@ foreach $family (@fam){
 msg('Done aligning sequences');
 
 # GetDNA region
-# Compute second kallisto
-# Make stats and final annotate result
+# Input is a Bio::SeqIO sequence object
+open my $oregdna, '>', "$outdir/contigs.dna.reg"
+	or croak "Open file failed: $OS_ERROR";
 
-#-----------STEP 6: Retrieve DNA of precursors--------------#
-msg('Retrieve DNA of toxin precursors');
+while ( my $sioprotreg = $protreg->next_seq ) {
 
-msg('Done retrieving sequences');
+	# Strip of Signal presence annotation
+	my @tid = split m{#}msx, $sioprotreg->desc;
+
+	# Uses recovered id to retrieve sequence and look after AA region
+	# into original AA sequence
+	my $tindex = index $inprot->get_Seq_by_id( $tid[0] ), $sioprotreg->seq;
+
+	print {$oregdna} '>', $tid[0], "\n", substr $inx->get_Seq_by_id( $tid[0] ),
+		$tindex * $CODON_LENGTH, length( $sioprotreg->seq ) * $CODON_LENGTH
+		or croak "Print failed: $OS_ERROR";
+
+}
+close $oregdna or croak "Print failed: $OS_ERROR";
 
 #------------STEP 7: Compute TPM for precursors--------------#
 msg('Computing expression level for precursors');
@@ -318,7 +346,7 @@ msg('Computing expression level for precursors');
 # Build new index from putative transcripts
 msg('Building putative transcripts index');
 runcmd(
-	"kallisto index -i $outdir/putative_transcripts.index $outdir/precdna.fas"
+	"kallisto index -i $outdir/putative_transcripts.index $outdir/contigs.dna.reg"
 );
 msg('Done');
 
@@ -333,12 +361,22 @@ msg('Done computing expression level for precursors');
 #------------STEP 8: Writing output stats---------------------#
 msg('Writing output stats');
 
+my $kh1_ref = hashify( "$outdir/kallisto_1/abundance.tsv", 'target_id' );
+my $kh2_ref = hashify( "$outdir/kallisto_2/abundance.tsv", 'target_id' );
 open my $ffo, '<', "$outdir/itap_output.tsv"
-	or croak "Open $outdir/itap_output.tsv file failed: $ERRNO";
-print $ffo,
-	'sequence_id raw_tpm transcripts_tpm first_seq_match first_match_evalue first_match_bitscore sec_seq_match sec_match_evalue sec_match_bitscore'
-	or croak "Print to $ffo failed: $ERRNO";
-
+	or croak "Open $outdir/itap_output.tsv file failed: $OS_ERROR";
+print $ffo, "sequence_id\traw_tpm\ttranscripts_tpm\tsequence"
+	or croak "Print to $ffo failed: $OS_ERROR";
+foreach my $k1 ( keys %{$kh1_ref} ) {
+	foreach my $k2 ( keys %{$kh2_ref} ) {
+		if ( $k1 == $k2 ) {
+			print {$ffo} $k1, "\t", $kh1_ref->{$k1}->{'tpm'}, "\t",
+				$kh2_ref->{$k2}->{'tpm'}, "\n"
+				or croak "Print to stats file failed: $OS_ERROR";
+		}
+	}
+}
+close $ffo or croak "Close failed: $OS_ERROR";
 msg('Done writing files');
 
 # TODO: Add graph of stats like venn diagram or sequences annotations
@@ -362,14 +400,14 @@ my $pretty   = sprintf '%.2f minutes', $walltime->minutes;
 msg("Walltime used: $pretty");
 msg( $walltime % 2 ? 'Share and enjoy!' : 'Thank you, come again.' );
 
-close LOG or croak("Close $logfile file failed: $ERRNO");
+close LOG or croak("Close $logfile file failed: $OS_ERROR");
 
 #------------Subroutines section-----------------------#
 
 sub extend_str {
 
 	my ( $seq, $pat ) = @_;
-	my ($l, $r);
+	my ( $l, $r );
 
 	# Search pattern in sequence
 	my $ind = index $seq, $pat;
@@ -386,25 +424,27 @@ sub extend_str {
 	my $lindm = index $lstr, 'M';
 	my $lindx = rindex $lstr, q{*}; # use rindex to find last occurence of char
 
-	if ( $lindm > $lindx) # Case a Methionine is closer to begin of pattern than a Stop
+	if ( $lindm > $lindx
+		)    # Case a Methionine is closer to begin of pattern than a Stop
 	{
 		$l = $lindm;
 	}
-	elsif ($lindm < $lindx) { # Case a Stop is closer to begin of pattern than a Methionine
-		$l = $lindx + 1; # + 1 to avoid display of * in sequence
+	elsif ( $lindm < $lindx )
+	{        # Case a Stop is closer to begin of pattern than a Methionine
+		$l = $lindx + 1;    # + 1 to avoid display of * in sequence
 	}
 	else {
 		$l = 0;
 	}
 
-	if ( $rindx ) {
-		$r = $rindx
+	if ($rindx) {
+		$r = $rindx;
 	}
 	else {
 		$r = length $seq;
 	}
 
-	my $extseq = substr($lstr, $l).$pat.substr $rstr, 0, $r;
+	my $extseq = substr( $lstr, $l ) . $pat . substr $rstr, 0, $r;
 
 	return $extseq;
 }
@@ -427,23 +467,23 @@ sub translate {
 	use Bio::Seq;
 	my $seqobj = shift;
 	open my $seqout, '>', "$outdir/transcripts.prot.fas"
-		or croak "open file failed: $ERRNO";
+		or croak "open file failed: $OS_ERROR";
 	while ( my $seqio = $seqobj->next_seq ) {
 
 		# orf1
 		print {$seqout} '>', $seqio->id, '|orf1', "\n",
 			$seqio->translate()->seq, "\n"
-			or croak "print failed: $ERRNO";
+			or croak "print failed: $OS_ERROR";
 
 		# orf2
 		print {$seqout} '>', $seqio->id, '|orf2', "\n",
 			$seqio->translate( -frame => 1 )->seq, "\n"
-			or croak "print failed: $ERRNO";
+			or croak "print failed: $OS_ERROR";
 
 		# orf3
 		print {$seqout} '>', $seqio->id, '|orf3', "\n",
 			$seqio->translate( -frame => 2 )->seq, "\n"
-			or croak "print failed: $ERRNO";
+			or croak "print failed: $OS_ERROR";
 
 		# calculate sequence rev comp
 		my $revcomp = $seqio->revcom;
@@ -451,74 +491,39 @@ sub translate {
 		# orf 4
 		print {$seqout} '>', $seqio->id, '|orf4', "\n",
 			$revcomp->translate()->seq, "\n"
-			or croak "print failed: $ERRNO";
+			or croak "print failed: $OS_ERROR";
 
 		# orf 5
 		print {$seqout} '>', $seqio->id, '|orf5', "\n",
 			$revcomp->translate( -frame => 1 )->seq, "\n"
-			or croak "print failed: $ERRNO";
+			or croak "print failed: $OS_ERROR";
 
 		# orf 6
 		print {$seqout} '>', $seqio->id, '|orf6', "\n",
 			$revcomp->translate( -frame => 2 )->seq, "\n"
-			or croak "print failed: $ERRNO";
+			or croak "print failed: $OS_ERROR";
 	}
-	close $seqout or croak "Close file failed: $ERRNO";
+	close $seqout or croak "Close file failed: $OS_ERROR";
 	return;
 }
-=pod
-sub transl1fr{
-	use Bio::SeqIO;
-	use Bio::Seq;
 
-	my ($seq, $frame) = @_;
-	my $seqobj = Bio::Seq->new(-seq => $seq,
-	                           -alphabet => 'dna');
-	my $seqio = $seqobj->next_seq;
-	if ($frame < 1 || $frame > 6){
-		print {*STDERR} "Frame $frame is not valid: $ERRNO" or croak "Print failed: $ERRNO";
-		exit 1;
-	}
-	my $revcomp = $seqio->revcom;
-	given ($frame){
-		when ($frame == 2){
-			return $seqio->translate(-frame => 1)->seq;
-		}
-		when ($frame == 3){
-			return $seqio->translate(-frame => 2)->seq;
-		}
-		when ($frame == 4){
-			return $revcomp->translate()->seq;
-		}
-		when ($frame == 5){
-			return $revcomp->translate(-frame => 1)->seq;
-		}
-		when ($frame == 6){
-			return $revcomp->translate(-frame => 2)->seq;
-		}
-		default {
-			return $seqio->translate()->seq;
-		}
-	}
-}
-=cut
 # msg subroutine
 sub msg {
 	my $t    = localtime;
 	my $line = '[' . $t->hms . "] @_\n";
 	if ( !$quiet ) {
-		print {*STDERR} $line or croak "print failed: $ERRNO";
+		print {*STDERR} $line or croak "print failed: $OS_ERROR";
 	}
 	if ( openhandle( \*LOG ) ) {
 
 		# write out any buffered log lines
 		if (@LOG) {
-			print {*LOG} @LOG or croak "print to log failed: $ERRNO";
+			print {*LOG} @LOG or croak "print to log failed: $OS_ERROR";
 			@LOG = ();
 		}
 
 		# write out the current log line
-		print {*LOG} $line or croak "print to log failed: $ERRNO";
+		print {*LOG} $line or croak "print to log failed: $OS_ERROR";
 	}
 	else {
 		# buffer this log line for later
@@ -545,11 +550,11 @@ sub runcmd {
 
 # Automatic detection of num of cpu subroutine
 sub num_cpu {
-	if ( $Config{'osname'} =~ m/linux/msi ) {
+	if ( $OSNAME =~ m/linux/msi ) {
 		my ($num) = capture('grep -c ^processor /proc/cpuinfo');
 		return $1 if $num =~ m/^(\d+)/msx;
 	}
-	elsif ( $Config{'osname'} =~ m/darwin/msi ) {
+	elsif ( $OSNAME =~ m/darwin/msi ) {
 		my ($num)
 			= capture('system_profiler SPHardwareDataType | grep Cores');
 		return $1 if $num =~ /.*Cores: (\d+)/msx;
@@ -559,6 +564,8 @@ sub num_cpu {
 
 __END__
 
+=for stopwords itap transcriptome tsc nucleotides NGS ouput contigs kallisto signalp blastp blastx hmmcompete Anicet Ebou MERCHANTABILITY
+
 =head1 NAME
 
 itap - Fast and accurate annotation of venom gland transcriptome
@@ -567,7 +574,7 @@ itap - Fast and accurate annotation of venom gland transcriptome
 
 itap --tsc trans.fa.gz --fwd reads_R1.fq.gz --rev reads_R2.fq.gz -out itap_out
 
-itap -tsc trans.fa.gz -fwd reads_R1.fq.gz -rev reads_R2.fq.gz --hmm myhmm.hmm
+itap -tsc trans.fa.gz -fwd reads_R1.fq.gz -rev reads_R2.fq.gz --hmm lib.hmm
 
 
 
@@ -584,7 +591,7 @@ for manual validation.
 
 =head1 USAGE
 
-itap [options] -tsc transcripts.fas -fwd reads_R1.fq -rev reads_R2.fq
+itap [options] -tsc transcripts.fasta -fwd reads_R1.fq -rev reads_R2.fq
 
 =head1 REQUIRED ARGUMENTS
 
@@ -614,7 +621,7 @@ Specify output directory
 
 =item  --hmm    <file>
 
-HMM file for putative toxin classification, default is ekenda.hmm
+HMM file for putative toxin classification, default is Ekenda.hmm
 
 =item  --quiet
 
