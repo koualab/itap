@@ -225,14 +225,14 @@ close $tmpfh or croak "Close $tmpfh file failed: $OS_ERROR";
 # STEP 3: Putative toxins identification--------------------------------------
 msg('Putative toxins prediction');
 runcmd(
-	"hmmcompete --desc --pepreg --hmm $dbdir/ekenda.hmm --in $outdir/transcripts.prot.fas --out $outdir/hmmcompete.out"
+	"hmmcompete --desc --pepreg --hmm $dbdir/ekenda.hmm --in $outdir/transcripts_prot.fas --out $outdir/transcripts_hmmcompete_out.txt"
 );
 
 # Retrieve DNA sequences of AA contigs having a match in hmmcompete
 
 ## First, add description of matched families by hmmcompete
 ## to sequence header.
-my %fields = add_desc_to_ids("$outdir/hmmcompete.out");
+my %fields = add_desc_to_ids("$outdir/transcripts_hmmcompete_out.txt");
 
 ## Second, get DNA sequences using ids of putatives sequences
 ## from hmmcompete result.
@@ -243,18 +243,9 @@ close $precdna or croak "Close $precdna failed: $OS_ERROR";
 
 # STEP 4: Extract/extend matching sequences-----------------------------------
 # Extract matching region from hmmcompete.out and extend sequence
-
-my $inprot = Bio::DB::Fasta->new("$outdir/transcripts.prot.fas");
-keys %fields;
-open my $extseq, '>', "$outdir/contigs.prot.reg"
-	or croak "Open $outdir/contigs.prot.reg file failed: $OS_ERROR";
-while ( my ( $key, $value ) = each %fields ) {
-	my @pats = split m{[|]}msx, $value;    # split to get original seq id
-	print {$extseq} '>', join( q{|}, $key, $pats[0], $pats[2] ), "\n",
-		extend_str( $inprot->get_Seq_by_id($key)->seq, $pats[1] ), "\n",
-		or croak
-		"Print retrieving id of sequences to $extseq failed: $OS_ERROR";
-}
+open my $extseq, '>', "$outdir/contigs_prot_reg.fas"
+	or croak "Open $outdir/contigs_prot_reg.fas file failed: $OS_ERROR";
+extract_seq( %fields, "$outdir/transcripts_prot.fas", $extseq );
 close $extseq or croak "Close $extseq failed: $OS_ERROR";
 
 # STEP 5: Annotating sequences------------------------------------------------
@@ -262,9 +253,9 @@ close $extseq or croak "Close $extseq failed: $OS_ERROR";
 msg('Annotating sequences');
 msg('Searching signal sequence');
 msg("Use $signalp_version");
-runcmd(
-	"signalp -fasta $outdir/contigs.prot.reg -org euk -format short -prefix contigs_prot_reg -gff3"
-);
+runcmd(   'signalp -fasta '
+		. "$outdir/contigs_prot_reg.fas"
+		. ' -org euk -format short -prefix contigs_prot_reg -gff3' );
 msg('Done searching signal sequences');
 
 msg('Adding signal sequence presence to sequence header');
@@ -275,7 +266,7 @@ foreach my $val_id (@ids_from_sigp) {
 }
 
 my $protreg = Bio::SeqIO->new(
-	-file   => "$outdir/contigs.prot.reg",
+	-file   => "$outdir/contigs_prot_reg.fas",
 	-format => 'fasta'
 );
 
@@ -293,7 +284,7 @@ msg('Done adding signal presence');
 
 # Split fasta file into families
 my $panreg = Bio::SeqIO->new(
-	-file   => "$outdir/contigs.prot.reg",
+	-file   => "$outdir/contigs_prot_reg.fas",
 	-format => 'fasta'
 );
 while ( my $panobj = $panreg->next_seq ) {
@@ -318,7 +309,7 @@ msg('Done aligning sequences');
 
 # GetDNA region
 # Input is a Bio::SeqIO sequence object
-process_get_dna_reg( $transcripts, "$outdir/contigs.prot.reg",
+process_get_dna_reg( $transcripts, "$outdir/contigs_prot_reg.fas",
 	"$outdir/contigs_dna_reg.fas" );
 
 # STEP 7: Compute TPM for precursors------------------------------------------
@@ -327,7 +318,7 @@ msg('Computing expression level for precursors');
 # Build new index from putative transcripts
 msg('Building putative transcripts index');
 runcmd(
-	"kallisto index -i $outdir/putative_transcripts.index $outdir/contigs.dna.reg"
+	"kallisto index -i $outdir/putative_transcripts.index $outdir/contigs_dna_reg.fas"
 );
 msg('Done');
 
@@ -357,11 +348,12 @@ foreach ( capture("find $outdir -type f -name '*'") ) {
 	msg($_);
 }
 
-# Set up log file
+# Write to log file
 my $logfile = "$outdir/itap.log";
 msg("Writing log to: $logfile");
-open LOG, '>', $logfile or err ('Cannot open logfile');
-
+open my $LOG, '>', $logfile or err ('Cannot open logfile');
+print {$LOG} @LOG
+	or croak "Print to $LOG failed: $OS_ERROR";    # Write all buffered lines
 msg('Annotation finished successfully.');
 my $endtime  = localtime;
 my $walltime = $endtime - $starttime;
@@ -369,9 +361,25 @@ my $pretty   = sprintf '%.2f minutes', $walltime->minutes;
 msg("Walltime used: $pretty");
 msg( $walltime % 2 ? 'Share and enjoy!' : 'Thank you, come again.' );
 
-close LOG or croak("Close $logfile file failed: $OS_ERROR");
+close $LOG or croak "Close $logfile file failed: $OS_ERROR";
 
 # SUBROUTINES ----------------------------------------------------------------
+sub extract_seq {
+	my ( %hash, $protfile, $outfh ) = @_;
+
+	keys %hash;
+	my $inprot = Bio::DB::Fasta->new($protfile);
+
+	while ( my ( $key, $value ) = each %hash ) {
+		my @pats = split m{[|]}msx, $value;    # split to get original seq id
+		print {$outfh} '>', join( q{|}, $key, $pats[0], $pats[2] ), "\n",
+			extend_str( $inprot->get_Seq_by_id($key)->seq, $pats[1] ), "\n",
+			or croak
+			"Print retrieving id of sequences to $outfh failed: $OS_ERROR";
+	}
+	return;
+}
+
 sub get_dna_seq {
 
 	# Get DNA sequence using ids from contigs region file
