@@ -1,0 +1,830 @@
+# SignalP-5.0	Organism: euk	Timestamp: 20201224142405
+# ID	Prediction	SP(Sec/SPI)	OTHER	CS Position
+LYCTA_DN34321_c0_g3_i1|orf2|SN_10_26|Huwentoxin-1_family,_ICK_1_subfamily_(IPR011696;PF07740;)	OTHER	0.006906	0.993094	
+LYCTA_DN38862_c0_g1_i3|orf6|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.001148	0.998852	
+LYCTA_DN16122_c0_g1_i1|orf6|SN_10_07|Huwentoxin-1_family,_GrTx_subfamily_(IPR011696;PF07740;)	OTHER	0.005757	0.994243	
+LYCTA_DN38890_c1_g3_i1|orf1|SN_14_08|Magi-1_superfamily,_Ltx4_family_(IPR012627;PF08092;)	OTHER	0.007103	0.992897	
+LYCTA_DN39017_c1_g1_i4|orf4|SC_03_06|Latarcin_superfamily,_Lt6_family_(IPR018802;PF10279;)	OTHER	0.078678	0.921322	
+LYCTA_DN23879_c0_g1_i1|orf6|VP_13_02|Cysteine_rich_secretory_protein_type_2	SP(Sec/SPI)	0.981316	0.018684	CS pos: 29-30. VLS-CK. Pr: 0.7985
+LYCTA_DN30579_c0_g2_i1|orf6|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.000346	0.999654	
+LYCTA_DN26356_c0_g1_i1|orf2|SN_37_00|Cstx-37	OTHER	0.006316	0.993684	
+LYCTA_DN38792_c5_g1_i6|orf6|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.354383	0.645617	
+LYCTA_DN38313_c10_g1_i5|orf6|SN_22_00|Helical_arthropod_neuropeptide_derived_(HAND)_family_	OTHER	0.001340	0.998660	
+LYCTA_DN36109_c0_g3_i2|orf5|SN_26_00|Insecticidal_toxin_DTX_family_	OTHER	0.002194	0.997806	
+LYCTA_DN38578_c5_g1_i1|orf5|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.001587	0.998413	
+LYCTA_DN38490_c0_g1_i7|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000471	0.999529	
+LYCTA_DN37358_c0_g1_i2|orf5|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.036579	0.963421	
+LYCTA_DN38732_c5_g3_i1|orf4|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	SP(Sec/SPI)	0.696527	0.303473	CS pos: 22-23. VSS-LF. Pr: 0.3175
+LYCTA_DN39367_c0_g1_i23|orf5|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000733	0.999267	
+LYCTA_DN38384_c1_g1_i2|orf5|VP_12_04|Venom_Kunitz-type_family,_Long_Kunitz_domain_containing_protein_(IPR002223;IPR020901;PF00014;)	SP(Sec/SPI)	0.852193	0.147807	CS pos: 22-23. GLC-RQ. Pr: 0.5965
+LYCTA_DN39288_c3_g1_i1|orf1|SN_01_00|U2-agatoxin_family_	OTHER	0.029730	0.970270	
+LYCTA_DN35197_c0_g1_i1|orf4|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.175996	0.824004	
+LYCTA_DN38222_c1_g2_i4|orf6|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000469	0.999531	
+LYCTA_DN38852_c0_g1_i5|orf4|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.017512	0.982488	
+LYCTA_DN38587_c0_g3_i1|orf4|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000323	0.999677	
+LYCTA_DN38418_c0_g1_i2|orf6|VP_06_00|Arthropod_Phospholipase_A2_(IPR001211)	SP(Sec/SPI)	0.993990	0.006010	CS pos: 22-23. TEA-LF. Pr: 0.7325
+LYCTA_DN38972_c0_g1_i4|orf5|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.000817	0.999183	
+LYCTA_DN36433_c0_g2_i1|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.002537	0.997463	
+LYCTA_DN39051_c0_g1_i7|orf5|SC_04_05|Cupiennin_family,_5_subfamily_	OTHER	0.000606	0.999394	
+LYCTA_DN38855_c5_g1_i2|orf4|VP_08_00|Peptidylglycine_alpha-amidating_monooxygenase_(IPR000720)	SP(Sec/SPI)	0.990607	0.009393	CS pos: 22-23. GQA-LT. Pr: 0.9426
+LYCTA_DN38490_c0_g1_i15|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000471	0.999529	
+LYCTA_DN37199_c0_g1_i6|orf4|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.012593	0.987407	
+LYCTA_DN33469_c0_g1_i1|orf6|VP_18_00|Cystatin_(IPR027214)	SP(Sec/SPI)	0.993294	0.006706	CS pos: 16-17. SSA-AS. Pr: 0.4623
+LYCTA_DN23146_c0_g2_i1|orf4|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.000546	0.999454	
+LYCTA_DN33553_c0_g1_i2|orf4|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000450	0.999550	
+LYCTA_DN38339_c0_g1_i5|orf5|VP_01_00|Protease_inhibitor_I7_(squash_type_serine_protease_inhibitor)_family_(IPR000737;IPR011052;PF00299;)	OTHER	0.200284	0.799716	
+LYCTA_DN33033_c0_g1_i1|orf5|VP_06_00|Arthropod_Phospholipase_A2_(IPR001211)	OTHER	0.011333	0.988667	
+LYCTA_DN31342_c0_g1_i1|orf6|SN_10_40|Huwentoxin-1_family,_Jztx_35_subfamily_(IPR011696;PF07740;)	OTHER	0.011911	0.988089	
+LYCTA_DN37074_c0_g2_i2|orf4|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.001104	0.998896	
+LYCTA_DN36147_c0_g1_i2|orf1|SN_19_07|Spider_toxin_CsTx_superfamily,_U7_lycotoxin_family_(IPR019553;IPR011142;PF10530;)	OTHER	0.026557	0.973443	
+LYCTA_DN38735_c3_g1_i6|orf4|VP_02_00|Peptidase_M12A_family_(IPR024079;IPR001506;IPR006026;PF01400;)	OTHER	0.049588	0.950412	
+LYCTA_DN26282_c0_g1_i1|orf6|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.000635	0.999365	
+LYCTA_DN21803_c0_g1_i1|orf4|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.002131	0.997869	
+LYCTA_DN26981_c0_g1_i1|orf5|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001468	0.998532	
+LYCTA_DN39014_c2_g2_i1|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001227	0.998773	
+LYCTA_DN38187_c2_g3_i3|orf2|SN_05_06|Spider_Agouti	OTHER	0.001572	0.998428	
+LYCTA_DN42408_c0_g1_i1|orf5|VP_08_00|Peptidylglycine_alpha-amidating_monooxygenase_(IPR000720)	OTHER	0.008139	0.991861	
+LYCTA_DN5069_c0_g1_i1|orf3|SN_10_26|Huwentoxin-1_family,_ICK_1_subfamily_(IPR011696;PF07740;)	OTHER	0.008623	0.991377	
+LYCTA_DN42079_c0_g1_i1|orf5|SN_19_03|Spider_toxin_CsTx_superfamily,_Spider_CsTx_typ2_(IPR019553;IPR011142;PF10530;)	SP(Sec/SPI)	0.999308	0.000692	CS pos: 20-21. CSS-EI. Pr: 0.7201
+LYCTA_DN38587_c0_g5_i1|orf5|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000423	0.999577	
+LYCTA_DN37438_c0_g1_i5|orf6|SN_14_01|Magi-1_superfamily,_HNTX_16_family_(IPR012627;PF08092;)	OTHER	0.066542	0.933458	
+LYCTA_DN38972_c0_g1_i3|orf5|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.000817	0.999183	
+LYCTA_DN38972_c0_g1_i7|orf5|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.000817	0.999183	
+LYCTA_DN23694_c0_g1_i1|orf5|SN_05_03|Spider_agouti	OTHER	0.025810	0.974190	
+LYCTA_DN10937_c0_g1_i1|orf2|SN_10_46|Huwentoxin-1_family,_Jztx_7_10_12_subfamily_(IPR011696;PF07740;)	OTHER	0.031002	0.968998	
+LYCTA_DN38283_c0_g3_i1|orf5|VP_15_00|Leucine_rich_peptide_(IPR032675)	SP(Sec/SPI)	0.972397	0.027603	CS pos: 22-23. SES-FS. Pr: 0.8466
+LYCTA_DN36249_c0_g1_i5|orf5|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001200	0.998800	
+LYCTA_DN38862_c0_g1_i2|orf6|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.001148	0.998852	
+LYCTA_DN38792_c5_g1_i5|orf4|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.354383	0.645617	
+LYCTA_DN24649_c0_g1_i1|orf5|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.001429	0.998571	
+LYCTA_DN42826_c0_g1_i1|orf4|VP_09_00|Signal_Peptidase_(IPR001733)	OTHER	0.000904	0.999096	
+LYCTA_DN35407_c0_g1_i1|orf1|SN_10_40|Huwentoxin-1_family,_Jztx_35_subfamily_(IPR011696;PF07740;)	OTHER	0.055702	0.944298	
+LYCTA_DN38735_c3_g1_i8|orf4|VP_02_00|Peptidase_M12A_family_(IPR024079;IPR001506;IPR006026;PF01400;)	OTHER	0.049588	0.950412	
+LYCTA_DN39367_c0_g1_i8|orf5|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000733	0.999267	
+LYCTA_DN35289_c0_g1_i1|orf3|SN_10_13|Huwentoxin-1_family,_Hntx_13_subfamily_(IPR011696;PF07740;)	OTHER	0.003277	0.996723	
+LYCTA_DN35811_c0_g4_i1|orf6|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.000285	0.999715	
+LYCTA_DN33727_c0_g1_i2|orf4|VP_14_00|Thyroglobulin-like_protein	OTHER	0.007654	0.992346	
+LYCTA_DN38708_c6_g4_i3|orf4|VP_06_00|Arthropod_Phospholipase_A2_(IPR001211)	OTHER	0.484014	0.515986	
+LYCTA_DN39088_c4_g8_i1|orf6|VP_18_00|Cystatin_(IPR027214)	OTHER	0.003235	0.996765	
+LYCTA_DN42671_c0_g1_i1|orf6|SN_08_02|Shiva_Omega_superfamily,_Omega_kappa_toxin_family_(IPR009415;PF06357;)	OTHER	0.017255	0.982745	
+LYCTA_DN31192_c0_g3_i1|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001839	0.998161	
+LYCTA_DN39019_c3_g1_i7|orf2|VP_02_00|Peptidase_M12A_family_(IPR024079;IPR001506;IPR006026;PF01400;)	OTHER	0.000444	0.999556	
+LYCTA_DN40028_c0_g1_i1|orf6|VP_17_00|Tachylectin_5A_(IPR002181)	OTHER	0.000864	0.999136	
+LYCTA_DN13149_c0_g1_i2|orf5|VP_13_01|Cysteine_rich_secretory_protein_type_1_(IPR014044;IPR002413)	OTHER	0.018446	0.981554	
+LYCTA_DN37199_c0_g1_i7|orf6|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000459	0.999541	
+LYCTA_DN35197_c0_g1_i3|orf5|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.011172	0.988828	
+LYCTA_DN36443_c1_g1_i2|orf6|VP_06_00|Arthropod_Phospholipase_A2_(IPR001211)	SP(Sec/SPI)	0.983841	0.016159	CS pos: 25-26. TLA-AY. Pr: 0.8137
+LYCTA_DN37183_c0_g1_i3|orf6|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.000410	0.999590	
+LYCTA_DN37893_c0_g1_i2|orf4|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	SP(Sec/SPI)	0.636397	0.363603	CS pos: 20-21. LNS-SL. Pr: 0.4128
+LYCTA_DN40115_c0_g1_i1|orf5|SN_08_01|Shiva_Omega_superfamily,_Omega_toxin_family_(IPR009415;PF06357;)	OTHER	0.000486	0.999514	
+LYCTA_DN39026_c1_g1_i4|orf5|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.013243	0.986757	
+LYCTA_DN37199_c0_g1_i5|orf6|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.000459	0.999541	
+LYCTA_DN38232_c0_g2_i3|orf2|SN_02_02|Plectoxin_superfamily,_Plectoxin_family_(IPR004169;)	OTHER	0.016736	0.983264	
+LYCTA_DN39367_c0_g1_i25|orf5|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.000733	0.999267	
+LYCTA_DN7628_c0_g1_i1|orf6|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.014296	0.985704	
+LYCTA_DN38438_c7_g5_i2|orf5|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.000729	0.999271	
+LYCTA_DN38490_c0_g1_i2|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000471	0.999529	
+LYCTA_DN38384_c1_g1_i1|orf5|VP_12_04|Venom_Kunitz-type_family,_Long_Kunitz_domain_containing_protein_(IPR002223;IPR020901;PF00014;)	OTHER	0.001057	0.998943	
+LYCTA_DN38484_c0_g1_i1|orf4|VP_13_02|Cysteine_rich_secretory_protein_type_2	SP(Sec/SPI)	0.956940	0.043060	CS pos: 23-24. GMG-CD. Pr: 0.4747
+LYCTA_DN36114_c0_g1_i1|orf4|SN_10_32|Huwentoxin-1_family,_Jztx_16_subfamily_(IPR011696;PF07740;)	OTHER	0.169414	0.830586	
+LYCTA_DN38354_c0_g1_i4|orf4|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.001263	0.998737	
+LYCTA_DN32362_c0_g1_i4|orf6|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.000849	0.999151	
+LYCTA_DN25048_c0_g1_i1|orf6|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	SP(Sec/SPI)	0.695518	0.304482	CS pos: 26-27. AKG-SD. Pr: 0.5112
+LYCTA_DN38792_c5_g2_i2|orf4|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	SP(Sec/SPI)	0.992411	0.007589	CS pos: 16-17. VLA-SD. Pr: 0.8416
+LYCTA_DN38793_c2_g6_i6|orf6|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.000870	0.999130	
+LYCTA_DN38792_c5_g1_i4|orf5|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.000463	0.999537	
+LYCTA_DN38472_c0_g1_i2|orf4|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.001955	0.998045	
+LYCTA_DN39153_c7_g2_i1|orf5|SN_02_06|CsTx-36	OTHER	0.025063	0.974937	
+LYCTA_DN36261_c0_g2_i3|orf6|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.004078	0.995922	
+LYCTA_DN29016_c0_g3_i1|orf4|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.002129	0.997871	
+LYCTA_DN33297_c0_g1_i1|orf4|VP_15_00|Leucine_rich_peptide_(IPR032675)	SP(Sec/SPI)	0.994750	0.005250	CS pos: 26-27. VEG-GE. Pr: 0.9534
+LYCTA_DN34849_c0_g2_i1|orf5|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.000840	0.999160	
+LYCTA_DN36254_c0_g2_i1|orf6|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.003239	0.996761	
+LYCTA_DN38972_c0_g1_i10|orf5|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.000817	0.999183	
+LYCTA_DN37930_c0_g1_i1|orf5|VP_05_00|Hyaluronidase_(IPR018155)	SP(Sec/SPI)	0.984081	0.015919	CS pos: 23-24. VGA-GV. Pr: 0.7322
+LYCTA_DN44190_c0_g1_i1|orf5|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	SP(Sec/SPI)	0.940108	0.059892	CS pos: 18-19. GLS-VE. Pr: 0.5252
+LYCTA_DN38008_c0_g1_i3|orf6|VP_07_00|Angiotensin-converting_Enzyme_(IPR033591)	SP(Sec/SPI)	0.992193	0.007807	CS pos: 19-20. ANG-VK. Pr: 0.4832
+LYCTA_DN39220_c1_g6_i1|orf2|SN_03_05|Spider_toxin_Tx2_family,_Spider_Tx2_sb3_	OTHER	0.001043	0.998957	
+LYCTA_DN38852_c0_g1_i3|orf6|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	SP(Sec/SPI)	0.873220	0.126780	CS pos: 19-20. SSA-II. Pr: 0.3718
+LYCTA_DN32556_c0_g1_i3|orf5|SN_14_01|Magi-1_superfamily,_HNTX_16_family_(IPR012627;PF08092;)	OTHER	0.008451	0.991549	
+LYCTA_DN39396_c3_g3_i3|orf5|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	SP(Sec/SPI)	0.905528	0.094472	CS pos: 27-28. CRG-DE. Pr: 0.8474
+LYCTA_DN39103_c1_g1_i6|orf6|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.000434	0.999566	
+LYCTA_DN33469_c0_g1_i2|orf6|VP_18_00|Cystatin_(IPR027214)	SP(Sec/SPI)	0.583243	0.416757	CS pos: 27-28. SSA-AS. Pr: 0.3048
+LYCTA_DN36349_c0_g4_i1|orf5|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001096	0.998904	
+LYCTA_DN30748_c0_g1_i1|orf2|VP_06_00|Arthropod_Phospholipase_A2_(IPR001211)	OTHER	0.019408	0.980592	
+LYCTA_DN32190_c0_g1_i1|orf6|SN_34_00|CsTx-29	OTHER	0.106941	0.893059	
+LYCTA_DN38187_c2_g3_i1|orf2|SN_05_06|Spider_Agouti	OTHER	0.001572	0.998428	
+LYCTA_DN27851_c0_g1_i1|orf6|SN_10_11|Huwentoxin-1_family,_Haplotoxin_2_subfamily_(IPR011696;PF07740;)	OTHER	0.143204	0.856796	
+LYCTA_DN32320_c0_g1_i1|orf4|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.050783	0.949217	
+LYCTA_DN39142_c5_g4_i2|orf6|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.006763	0.993237	
+LYCTA_DN36249_c0_g1_i4|orf4|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001176	0.998824	
+LYCTA_DN37822_c0_g1_i1|orf6|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.000892	0.999108	
+LYCTA_DN38814_c0_g2_i3|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000208	0.999792	
+LYCTA_DN34470_c0_g2_i1|orf5|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.062267	0.937733	
+LYCTA_DN39014_c2_g2_i4|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000655	0.999345	
+LYCTA_DN44877_c0_g1_i1|orf2|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.002213	0.997787	
+LYCTA_DN33940_c0_g1_i1|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.192433	0.807567	
+LYCTA_DN36006_c0_g1_i1|orf4|SC_03_03|Latarcin_superfamily,_Lt3_family_(IPR018802;PF10279;)	OTHER	0.000527	0.999473	
+LYCTA_DN13409_c0_g1_i1|orf3|VP_12_02|Venom_Kunitz-type_family,_Native_Kunitz_toxin_subfamily_(IPR002223;IPR020901;PF00014;)	OTHER	0.004802	0.995198	
+LYCTA_DN35811_c0_g3_i1|orf5|VP_15_00|Leucine_rich_peptide_(IPR032675)	SP(Sec/SPI)	0.830649	0.169351	CS pos: 41-42. TEG-IC. Pr: 0.6535
+LYCTA_DN39367_c0_g1_i17|orf4|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001251	0.998749	
+LYCTA_DN39184_c1_g3_i5|orf4|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.000581	0.999419	
+LYCTA_DN31297_c0_g3_i1|orf5|SN_05_04|Spider_Agouti	OTHER	0.102022	0.897978	
+LYCTA_DN24949_c0_g1_i1|orf4|VP_17_00|Tachylectin_5A_(IPR002181)	OTHER	0.000691	0.999309	
+LYCTA_DN26260_c0_g1_i1|orf6|VP_13_02|Cysteine_rich_secretory_protein_type_2	OTHER	0.002271	0.997729	
+LYCTA_DN37812_c0_g4_i2|orf3|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.003549	0.996451	
+LYCTA_DN35368_c0_g1_i1|orf6|SN_32_01|MIT-like_CsTx-21	OTHER	0.053395	0.946605	
+LYCTA_DN38472_c0_g1_i1|orf4|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.000818	0.999182	
+LYCTA_DN35357_c0_g1_i2|orf4|SN_29_00|Omega_lycotoxin_family_	OTHER	0.000379	0.999621	
+LYCTA_DN1910_c0_g1_i1|orf4|SN_12_03|Huwentoxin-2_family,_Juruin_subfamily_(IPR012625;PF08089;)	OTHER	0.002081	0.997919	
+LYCTA_DN39367_c0_g1_i26|orf4|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001251	0.998749	
+LYCTA_DN39158_c1_g2_i1|orf5|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.029540	0.970460	
+LYCTA_DN38972_c0_g1_i8|orf5|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.000817	0.999183	
+LYCTA_DN45628_c0_g1_i1|orf5|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.000488	0.999512	
+LYCTA_DN39260_c0_g1_i5|orf4|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	SP(Sec/SPI)	0.647825	0.352175	CS pos: 22-23. TSA-AV. Pr: 0.4227
+LYCTA_DN41356_c0_g1_i1|orf6|SN_02_00|Plectoxin_superfamily_(IPR004169;)	OTHER	0.006716	0.993284	
+LYCTA_DN33725_c0_g1_i1|orf6|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	SP(Sec/SPI)	0.917810	0.082190	CS pos: 22-23. VIG-KE. Pr: 0.8873
+LYCTA_DN37102_c0_g1_i1|orf5|VP_13_02|Cysteine_rich_secretory_protein_type_2	OTHER	0.002678	0.997322	
+LYCTA_DN6189_c0_g2_i1|orf3|SN_02_08|CsTx-28	OTHER	0.367907	0.632093	
+LYCTA_DN36459_c0_g1_i1|orf6|SN_10_54|Huwentoxin-1_family,_ProTx_1_subfamily_(IPR011696;PF07740;)	OTHER	0.036629	0.963371	
+LYCTA_DN23838_c0_g1_i1|orf6|SN_10_13|Huwentoxin-1_family,_Hntx_13_subfamily_(IPR011696;PF07740;)	OTHER	0.046743	0.953257	
+LYCTA_DN38792_c5_g1_i1|orf6|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.354383	0.645617	
+LYCTA_DN38852_c0_g1_i8|orf6|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	SP(Sec/SPI)	0.873220	0.126780	CS pos: 19-20. SSA-II. Pr: 0.3718
+LYCTA_DN37199_c0_g1_i2|orf6|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001185	0.998815	
+LYCTA_DN37523_c0_g2_i2|orf5|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.000350	0.999650	
+LYCTA_DN38480_c0_g1_i1|orf5|SN_02_09|CsTx-34	OTHER	0.009054	0.990946	
+LYCTA_DN43293_c0_g1_i1|orf3|SN_10_44|Huwentoxin-1_family,_Jztx_4_subfamily_(IPR011696;PF07740;)	OTHER	0.000745	0.999255	
+LYCTA_DN39068_c4_g5_i1|orf4|VP_13_02|Cysteine_rich_secretory_protein_type_2	SP(Sec/SPI)	0.804503	0.195497	CS pos: 25-26. STG-AF. Pr: 0.4404
+LYCTA_DN34849_c0_g2_i2|orf5|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.000363	0.999637	
+LYCTA_DN38115_c0_g1_i2|orf6|SN_10_59|Huwentoxin-1_family,_Tltx_subfamily_(IPR011696;PF07740;)	OTHER	0.000316	0.999684	
+LYCTA_DN27072_c0_g2_i1|orf4|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.002730	0.997270	
+LYCTA_DN36306_c0_g3_i3|orf5|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001613	0.998387	
+LYCTA_DN28391_c0_g1_i1|orf6|SN_30_00|Phrixotoxin_family_	OTHER	0.274091	0.725909	
+LYCTA_DN38578_c5_g1_i2|orf5|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.001587	0.998413	
+LYCTA_DN38984_c2_g8_i1|orf6|SN_10_06|Huwentoxin-1_family,_F4b_subfamily_(IPR011696;PF07740;)	OTHER	0.001819	0.998181	
+LYCTA_DN38696_c4_g2_i1|orf3|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.001267	0.998733	
+LYCTA_DN35939_c0_g1_i2|orf4|SN_03_01|Spider_toxin_Tx2_family,_OAIP_2_subfamily_(IPR004214;PF02950;)	OTHER	0.043037	0.956963	
+LYCTA_DN31146_c0_g2_i1|orf4|VP_12_02|Venom_Kunitz-type_family,_Native_Kunitz_toxin_subfamily_(IPR002223;IPR020901;PF00014;)	OTHER	0.004622	0.995378	
+LYCTA_DN41711_c0_g1_i1|orf5|SN_13_01|Insecticidal_toxin_ABC_family,_Aps_III_subfamily_(IPR012626;PF08091;)	OTHER	0.001008	0.998992	
+LYCTA_DN36971_c0_g1_i1|orf4|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	SP(Sec/SPI)	0.613811	0.386189	CS pos: 22-23. FNA-QQ. Pr: 0.4803
+LYCTA_DN38852_c0_g1_i6|orf5|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.006809	0.993191	
+LYCTA_DN38852_c0_g1_i1|orf6|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	SP(Sec/SPI)	0.873220	0.126780	CS pos: 19-20. SSA-II. Pr: 0.3718
+LYCTA_DN35725_c0_g1_i3|orf5|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.000214	0.999786	
+LYCTA_DN38873_c8_g4_i1|orf5|VP_07_00|Angiotensin-converting_Enzyme_(IPR033591)	OTHER	0.001600	0.998400	
+LYCTA_DN38814_c0_g2_i2|orf6|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000208	0.999792	
+LYCTA_DN38852_c0_g1_i11|orf6|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.006809	0.993191	
+LYCTA_DN37295_c1_g1_i1|orf5|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000475	0.999525	
+LYCTA_DN38275_c5_g1_i2|orf6|SN_10_03|Huwentoxin-1_family,_BsTX5_subfamily_(IPR011696;PF07740;)	OTHER	0.001285	0.998715	
+LYCTA_DN38407_c4_g1_i2|orf4|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.001658	0.998342	
+LYCTA_DN36778_c1_g1_i1|orf6|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.488417	0.511583	
+LYCTA_DN37861_c4_g1_i4|orf6|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.139533	0.860467	
+LYCTA_DN32547_c0_g2_i1|orf6|SN_06_00|Delta-atracotoxin_family_(IPR008017;PF05353;)	OTHER	0.001648	0.998352	
+LYCTA_DN31611_c0_g1_i1|orf5|SC_03_03|Latarcin_superfamily,_Lt3_family_(IPR018802;PF10279;)	OTHER	0.050716	0.949284	
+LYCTA_DN35604_c1_g1_i4|orf2|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001550	0.998450	
+LYCTA_DN36918_c0_g2_i1|orf5|VP_02_00|Peptidase_M12A_family_(IPR024079;IPR001506;IPR006026;PF01400;)	OTHER	0.040623	0.959377	
+LYCTA_DN5728_c0_g1_i1|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001003	0.998997	
+LYCTA_DN39103_c1_g1_i5|orf4|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.000565	0.999435	
+LYCTA_DN32925_c0_g1_i2|orf4|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.001041	0.998959	
+LYCTA_DN45975_c0_g1_i1|orf2|SN_05_04|Spider_Agouti	OTHER	0.284927	0.715073	
+LYCTA_DN37878_c0_g2_i1|orf5|VP_08_00|Peptidylglycine_alpha-amidating_monooxygenase_(IPR000720)	OTHER	0.431342	0.568658	
+LYCTA_DN35939_c0_g1_i3|orf4|SN_03_01|Spider_toxin_Tx2_family,_OAIP_2_subfamily_(IPR004214;PF02950;)	OTHER	0.043037	0.956963	
+LYCTA_DN39161_c5_g8_i1|orf5|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000429	0.999571	
+LYCTA_DN39107_c1_g1_i1|orf4|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.005974	0.994026	
+LYCTA_DN10625_c0_g1_i1|orf5|VP_18_00|Cystatin_(IPR027214)	SP(Sec/SPI)	0.899049	0.100951	CS pos: 29-30. SFS-VP. Pr: 0.7950
+LYCTA_DN35110_c0_g1_i1|orf4|SN_07_00|Beta-delta_agatoxin_family_(IPR009243;)	SP(Sec/SPI)	0.994619	0.005381	CS pos: 19-20. VNA-IP. Pr: 0.6428
+LYCTA_DN45625_c0_g1_i1|orf5|VP_11_02|Spider_WAP_family,_Spider_wap_2_family_(IPR008197;)	SP(Sec/SPI)	0.999609	0.000391	CS pos: 20-21. ALA-GG. Pr: 0.7155
+LYCTA_DN36619_c0_g1_i1|orf4|VP_13_02|Cysteine_rich_secretory_protein_type_2	OTHER	0.002236	0.997764	
+LYCTA_DN38147_c0_g1_i5|orf5|SN_10_37|Huwentoxin-1_family,_Jztx_31_subfamily_(IPR011696;PF07740;)	SP(Sec/SPI)	0.999143	0.000857	CS pos: 19-20. TQA-LI. Pr: 0.8452
+LYCTA_DN39158_c1_g1_i1|orf4|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.055053	0.944947	
+LYCTA_DN44305_c0_g1_i1|orf4|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.001858	0.998142	
+LYCTA_DN36384_c0_g1_i3|orf4|SN_05_01|Spider_agouti	OTHER	0.001421	0.998579	
+LYCTA_DN38688_c0_g7_i2|orf4|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.002425	0.997575	
+LYCTA_DN38401_c4_g1_i1|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000359	0.999641	
+LYCTA_DN34110_c0_g3_i1|orf4|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000582	0.999418	
+LYCTA_DN38527_c1_g2_i3|orf6|SN_16_00|Spider_toxin_SFI_family_(IPR012633;PF08115;)	OTHER	0.011014	0.988986	
+LYCTA_DN38147_c0_g1_i1|orf5|SN_10_28|Huwentoxin-1_family,_Jztx_11_subfamily_(IPR011696;PF07740;)	SP(Sec/SPI)	0.999569	0.000431	CS pos: 19-20. TQA-LN. Pr: 0.8534
+LYCTA_DN37552_c0_g2_i1|orf2|SN_19_00|Spider_toxin_CsTx_superfamily_(IPR019553;IPR011142;PF10530;)	OTHER	0.040800	0.959200	
+LYCTA_DN39386_c1_g5_i1|orf6|VP_13_02|Cysteine_rich_secretory_protein_type_2	SP(Sec/SPI)	0.947220	0.052780	CS pos: 22-23. GWG-CE. Pr: 0.7826
+LYCTA_DN39330_c4_g1_i4|orf4|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000615	0.999385	
+LYCTA_DN37851_c0_g1_i2|orf5|VP_12_02|Venom_Kunitz-type_family,_Native_Kunitz_toxin_subfamily_(IPR002223;IPR020901;PF00014;)	SP(Sec/SPI)	0.955877	0.044123	CS pos: 34-35. TES-RL. Pr: 0.6896
+LYCTA_DN38008_c0_g1_i2|orf6|VP_07_00|Angiotensin-converting_Enzyme_(IPR033591)	SP(Sec/SPI)	0.991166	0.008834	CS pos: 19-20. ANG-VK. Pr: 0.4822
+LYCTA_DN38290_c3_g3_i1|orf6|SN_10_17|Huwentoxin-1_family,_Hntx_9_subfamily_(IPR011696;PF07740;)	OTHER	0.002393	0.997607	
+LYCTA_DN38263_c0_g3_i3|orf4|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.000596	0.999404	
+LYCTA_DN39209_c0_g2_i2|orf4|SC_03_03|Latarcin_superfamily,_Lt3_family_(IPR018802;PF10279;)	OTHER	0.000357	0.999643	
+LYCTA_DN36030_c0_g8_i1|orf6|SN_10_16|Huwentoxin-1_family,_Hntx_8_subfamily_(IPR011696;PF07740;)	OTHER	0.001091	0.998909	
+LYCTA_DN39706_c0_g1_i1|orf3|SN_14_02|Magi-1_superfamily,_HWTX_XVIc_family_(IPR012627;PF08092;)	OTHER	0.001752	0.998248	
+LYCTA_DN28267_c0_g1_i1|orf4|VP_13_02|Cysteine_rich_secretory_protein_type_2	OTHER	0.000993	0.999007	
+LYCTA_DN38735_c3_g1_i3|orf5|VP_02_00|Peptidase_M12A_family_(IPR024079;IPR001506;IPR006026;PF01400;)	OTHER	0.007629	0.992371	
+LYCTA_DN37864_c0_g1_i2|orf5|SN_10_55|Huwentoxin-1_family,_ProTx_III_subfamily_(IPR011696;PF07740;)	SP(Sec/SPI)	0.997498	0.002502	CS pos: 22-23. TTA-EN. Pr: 0.8200
+LYCTA_DN39051_c0_g1_i5|orf5|SC_04_05|Cupiennin_family,_5_subfamily_	OTHER	0.000606	0.999394	
+LYCTA_DN38488_c0_g1_i1|orf6|VP_17_00|Tachylectin_5A_(IPR002181)	SP(Sec/SPI)	0.635467	0.364533	CS pos: 30-31. GDA-KY. Pr: 0.3197
+LYCTA_DN39184_c1_g3_i9|orf6|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.001109	0.998891	
+LYCTA_DN30103_c0_g1_i1|orf5|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.000288	0.999712	
+LYCTA_DN37735_c0_g1_i1|orf3|SN_13_00|Insecticidal_toxin_ABC_family_(IPR012626;PF08091;)	OTHER	0.011468	0.988532	
+LYCTA_DN39184_c1_g3_i3|orf5|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000744	0.999256	
+LYCTA_DN36501_c0_g1_i2|orf5|VP_06_00|Arthropod_Phospholipase_A2_(IPR001211)	SP(Sec/SPI)	0.714168	0.285832	CS pos: 29-30. SHN-TL. Pr: 0.2393
+LYCTA_DN38793_c2_g6_i3|orf4|VP_15_00|Leucine_rich_peptide_(IPR032675)	SP(Sec/SPI)	0.979901	0.020099	CS pos: 24-25. VIS-KR. Pr: 0.8499
+LYCTA_DN37861_c4_g1_i2|orf6|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.000778	0.999222	
+LYCTA_DN265_c0_g1_i1|orf6|SN_03_06|Spider_toxin_Tx2_family,_Spider_Tx2_sb4_	SP(Sec/SPI)	0.999203	0.000797	CS pos: 19-20. TLA-AY. Pr: 0.8709
+LYCTA_DN33553_c0_g1_i1|orf4|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.005074	0.994926	
+LYCTA_DN37074_c0_g2_i7|orf4|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.001104	0.998896	
+LYCTA_DN34309_c0_g1_i1|orf4|SC_03_04|Latarcin_superfamily,_latarcin_lt4_typ2_(IPR018802;PF10279;)	SP(Sec/SPI)	0.609529	0.390471	CS pos: 23-24. SMG-EK. Pr: 0.5506
+LYCTA_DN36514_c0_g1_i1|orf4|VP_07_00|Angiotensin-converting_Enzyme_(IPR033591)	OTHER	0.002736	0.997264	
+LYCTA_DN36986_c0_g3_i1|orf2|VP_06_00|Arthropod_Phospholipase_A2_(IPR001211)	OTHER	0.061782	0.938218	
+LYCTA_DN36229_c0_g1_i1|orf4|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001025	0.998975	
+LYCTA_DN36249_c0_g1_i3|orf4|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.092492	0.907508	
+LYCTA_DN32689_c0_g1_i1|orf4|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000765	0.999235	
+LYCTA_DN38972_c0_g1_i11|orf5|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.000817	0.999183	
+LYCTA_DN38534_c0_g1_i5|orf4|SN_10_10|Huwentoxin-1_family,_Haplotoxin_1_subfamily_(IPR011696;PF07740;)	OTHER	0.017966	0.982034	
+LYCTA_DN38402_c5_g1_i8|orf3|SN_10_18|Huwentoxin-1_family,_Hntx_VII_subfamily_(IPR011696;PF07740;)	OTHER	0.028544	0.971456	
+LYCTA_DN37011_c0_g1_i2|orf6|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.000201	0.999799	
+LYCTA_DN39103_c1_g1_i1|orf4|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.000565	0.999435	
+LYCTA_DN37960_c0_g1_i5|orf4|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.164816	0.835184	
+LYCTA_DN39273_c0_g1_i4|orf6|SC_03_01|Latarcin_superfamily,_Lt1_family_(IPR018802;PF10279;)	OTHER	0.001169	0.998831	
+LYCTA_DN36278_c0_g3_i3|orf5|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.001439	0.998561	
+LYCTA_DN34668_c0_g1_i1|orf6|VP_02_00|Peptidase_M12A_family_(IPR024079;IPR001506;IPR006026;PF01400;)	OTHER	0.002610	0.997390	
+LYCTA_DN37864_c0_g2_i2|orf4|SN_08_01|Shiva_Omega_superfamily,_Omega_toxin_family_(IPR009415;PF06357;)	SP(Sec/SPI)	0.980693	0.019307	CS pos: 29-30. TSA-SY. Pr: 0.4288
+LYCTA_DN32362_c0_g1_i3|orf5|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.001463	0.998537	
+LYCTA_DN17066_c0_g1_i1|orf4|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001152	0.998848	
+LYCTA_DN37893_c0_g1_i1|orf6|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.001080	0.998920	
+LYCTA_DN37780_c0_g1_i4|orf4|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.140840	0.859160	
+LYCTA_DN38708_c6_g4_i2|orf4|VP_06_00|Arthropod_Phospholipase_A2_(IPR001211)	OTHER	0.484014	0.515986	
+LYCTA_DN38290_c2_g8_i1|orf4|SN_10_24|Huwentoxin-1_family,_Hwtx_6_subfamily_(IPR011696;PF07740;)	OTHER	0.001478	0.998522	
+LYCTA_DN38492_c1_g2_i3|orf6|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.000726	0.999274	
+LYCTA_DN8848_c0_g2_i1|orf4|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.001724	0.998276	
+LYCTA_DN39068_c4_g5_i2|orf4|VP_13_02|Cysteine_rich_secretory_protein_type_2	SP(Sec/SPI)	0.886251	0.113749	CS pos: 18-19. LEG-GM. Pr: 0.5077
+LYCTA_DN39026_c1_g4_i3|orf4|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.011033	0.988967	
+LYCTA_DN38793_c2_g6_i2|orf4|VP_15_00|Leucine_rich_peptide_(IPR032675)	SP(Sec/SPI)	0.979901	0.020099	CS pos: 24-25. VIS-KR. Pr: 0.8499
+LYCTA_DN38222_c1_g2_i5|orf5|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000359	0.999641	
+LYCTA_DN28349_c0_g1_i1|orf2|SN_10_18|Huwentoxin-1_family,_Hntx_VII_subfamily_(IPR011696;PF07740;)	OTHER	0.001577	0.998423	
+LYCTA_DN34614_c0_g1_i1|orf4|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.385334	0.614666	
+LYCTA_DN34865_c0_g2_i1|orf3|SC_03_07|Latarcin_superfamily,_Lt7_family_(IPR018802;PF10279;)	OTHER	0.001681	0.998319	
+LYCTA_DN37861_c4_g1_i5|orf6|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.139533	0.860467	
+LYCTA_DN30413_c0_g1_i2|orf5|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.015159	0.984841	
+LYCTA_DN39789_c0_g1_i1|orf6|VP_11_01|Spider_WAP_family,_Spider_wap_1_family_(IPR008197;)	SP(Sec/SPI)	0.999827	0.000173	CS pos: 20-21. VLS-EQ. Pr: 0.8902
+LYCTA_DN39122_c0_g1_i3|orf2|SN_19_01|Spider_toxin_CsTx_superfamily,_D1_family_(IPR019553;IPR011142;PF10530;)	OTHER	0.001436	0.998564	
+LYCTA_DN36382_c0_g1_i2|orf5|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.002715	0.997285	
+LYCTA_DN36345_c0_g1_i2|orf4|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.008476	0.991524	
+LYCTA_DN22328_c0_g2_i1|orf2|SN_02_04|Plectoxin_superfamily,_U16_lycotoxin_family_(IPR004169;)	OTHER	0.169786	0.830214	
+LYCTA_DN45299_c0_g1_i1|orf5|SN_10_31|Huwentoxin-1_family,_Jztx_15_subfamily_(IPR011696;PF07740;)	OTHER	0.017678	0.982322	
+LYCTA_DN39026_c1_g1_i1|orf6|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.000875	0.999125	
+LYCTA_DN38049_c6_g2_i3|orf1|SN_19_00|Spider_toxin_CsTx_superfamily_(IPR019553;IPR011142;PF10530;)	OTHER	0.011559	0.988441	
+LYCTA_DN35604_c1_g1_i2|orf2|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001550	0.998450	
+LYCTA_DN34783_c0_g3_i1|orf4|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.000686	0.999314	
+LYCTA_DN40849_c0_g1_i1|orf5|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.001854	0.998146	
+LYCTA_DN27167_c0_g1_i1|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.053460	0.946540	
+LYCTA_DN32198_c0_g2_i1|orf6|SN_10_49|Huwentoxin-1_family,_Jztx_F6_subfamily_(IPR011696;PF07740;)	OTHER	0.008469	0.991531	
+LYCTA_DN34665_c0_g2_i1|orf6|SC_03_00|latarcin_superfamily	OTHER	0.003104	0.996896	
+LYCTA_DN26568_c0_g2_i1|orf5|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.001176	0.998824	
+LYCTA_DN36443_c1_g1_i1|orf4|VP_06_00|Arthropod_Phospholipase_A2_(IPR001211)	SP(Sec/SPI)	0.983841	0.016159	CS pos: 25-26. TLA-AY. Pr: 0.8137
+LYCTA_DN35725_c0_g1_i1|orf5|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.000214	0.999786	
+LYCTA_DN39330_c4_g1_i14|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000615	0.999385	
+LYCTA_DN35239_c0_g6_i1|orf6|SN_10_48|Huwentoxin-1_family,_Jztx_F5_subfamily_(IPR011696;PF07740;)	OTHER	0.003975	0.996025	
+LYCTA_DN26938_c0_g2_i2|orf5|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.000973	0.999027	
+LYCTA_DN34705_c0_g5_i1|orf3|SN_05_02|Spider_Agouti	OTHER	0.044521	0.955479	
+LYCTA_DN37812_c0_g3_i3|orf5|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	SP(Sec/SPI)	0.530078	0.469922	CS pos: 22-23. AFG-HT. Pr: 0.2245
+LYCTA_DN38972_c0_g1_i13|orf5|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.000817	0.999183	
+LYCTA_DN38490_c0_g1_i8|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000471	0.999529	
+LYCTA_DN35529_c0_g2_i1|orf6|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.000728	0.999272	
+LYCTA_DN18358_c0_g1_i1|orf5|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.001417	0.998583	
+LYCTA_DN38972_c0_g1_i9|orf5|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.000817	0.999183	
+LYCTA_DN38816_c1_g5_i2|orf5|VP_01_00|Protease_inhibitor_I7_(squash_type_serine_protease_inhibitor)_family_(IPR000737;IPR011052;PF00299;)	OTHER	0.016479	0.983521	
+LYCTA_DN39367_c0_g1_i22|orf4|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001251	0.998749	
+LYCTA_DN32250_c0_g1_i2|orf6|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.002473	0.997527	
+LYCTA_DN37875_c0_g2_i1|orf6|SN_19_12|Spider_toxin_CsTx_superfamily,_Spider_CsTx_typ3_(IPR011142;)	OTHER	0.005649	0.994351	
+LYCTA_DN39273_c0_g1_i8|orf4|SC_03_01|Latarcin_superfamily,_Lt1_family_(IPR018802;PF10279;)	OTHER	0.007038	0.992962	
+LYCTA_DN38438_c7_g3_i4|orf4|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	SP(Sec/SPI)	0.550069	0.449931	CS pos: 27-28. VFC-EN. Pr: 0.5086
+LYCTA_DN39213_c2_g8_i6|orf6|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.001133	0.998867	
+LYCTA_DN37864_c0_g1_i3|orf4|SN_10_14|Huwentoxin-1_family,_Hntx_1_subfamily_(IPR011696;PF07740;)	OTHER	0.018470	0.981530	
+LYCTA_DN38852_c0_g1_i8|orf5|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.006809	0.993191	
+LYCTA_DN30748_c0_g1_i1|orf1|VP_06_00|Arthropod_Phospholipase_A2_(IPR001211)	SP(Sec/SPI)	0.986064	0.013936	CS pos: 20-21. VSC-GI. Pr: 0.6445
+LYCTA_DN22791_c0_g1_i1|orf6|SN_10_07|Huwentoxin-1_family,_GrTx_subfamily_(IPR011696;PF07740;)	OTHER	0.002563	0.997437	
+LYCTA_DN37812_c0_g3_i1|orf5|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	SP(Sec/SPI)	0.530078	0.469922	CS pos: 22-23. AFG-HT. Pr: 0.2245
+LYCTA_DN12175_c0_g1_i1|orf6|SN_33_00|CsTx-26	SP(Sec/SPI)	0.999758	0.000242	CS pos: 25-26. SGA-DE. Pr: 0.5351
+LYCTA_DN43668_c0_g1_i1|orf6|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	SP(Sec/SPI)	0.885381	0.114619	CS pos: 16-17. SLQ-VP. Pr: 0.5365
+LYCTA_DN38492_c1_g2_i1|orf6|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.003042	0.996958	
+LYCTA_DN38157_c0_g1_i11|orf4|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.003982	0.996018	
+LYCTA_DN36384_c0_g1_i2|orf4|SN_05_01|Spider_agouti	OTHER	0.002903	0.997097	
+LYCTA_DN38816_c1_g6_i1|orf4|VP_07_00|Angiotensin-converting_Enzyme_(IPR033591)	OTHER	0.000803	0.999197	
+LYCTA_DN39330_c4_g1_i10|orf4|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000615	0.999385	
+LYCTA_DN37823_c1_g1_i2|orf2|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.001957	0.998043	
+LYCTA_DN33686_c0_g2_i1|orf4|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.001037	0.998963	
+LYCTA_DN17964_c0_g1_i1|orf6|SN_10_06|Huwentoxin-1_family,_F4b_subfamily_(IPR011696;PF07740;)	OTHER	0.008608	0.991392	
+LYCTA_DN8679_c0_g1_i1|orf4|SN_10_21|Huwentoxin-1_family,_HpTx1_subfamily_(IPR011696;PF07740;)	OTHER	0.001156	0.998844	
+LYCTA_DN30164_c0_g1_i1|orf5|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000302	0.999698	
+LYCTA_DN38402_c5_g1_i6|orf2|SN_10_18|Huwentoxin-1_family,_Hntx_VII_subfamily_(IPR011696;PF07740;)	OTHER	0.028544	0.971456	
+LYCTA_DN36345_c0_g1_i1|orf4|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.007719	0.992281	
+LYCTA_DN37852_c0_g1_i4|orf5|VP_17_00|Tachylectin_5A_(IPR002181)	SP(Sec/SPI)	0.995696	0.004304	CS pos: 17-18. VTG-EE. Pr: 0.9160
+LYCTA_DN39207_c5_g4_i1|orf4|SC_03_02|Latarcin_superfamily,_Lt2_family_(IPR018802;PF10279;)	OTHER	0.009981	0.990019	
+LYCTA_DN39144_c1_g1_i2|orf5|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.000097	0.999903	
+LYCTA_DN38559_c1_g3_i1|orf3|SN_10_22|Huwentoxin-1_family,_Htx_4_subfamily_(IPR011696;PF07740;)	OTHER	0.024580	0.975420	
+LYCTA_DN37523_c0_g5_i1|orf4|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001830	0.998170	
+LYCTA_DN38792_c5_g1_i3|orf4|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.000463	0.999537	
+LYCTA_DN16955_c0_g1_i1|orf6|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.000995	0.999005	
+LYCTA_DN39260_c0_g1_i2|orf4|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	SP(Sec/SPI)	0.647825	0.352175	CS pos: 22-23. TSA-AV. Pr: 0.4227
+LYCTA_DN39370_c3_g1_i1|orf3|SN_12_05|Huwentoxin-2_family,_OAIP_5_subfamily_(IPR012625;PF08089;)	OTHER	0.003270	0.996730	
+LYCTA_DN38115_c0_g1_i1|orf6|SN_10_59|Huwentoxin-1_family,_Tltx_subfamily_(IPR011696;PF07740;)	OTHER	0.000316	0.999684	
+LYCTA_DN37960_c0_g1_i4|orf5|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000967	0.999033	
+LYCTA_DN24154_c0_g2_i1|orf2|SN_10_07|Huwentoxin-1_family,_GrTx_subfamily_(IPR011696;PF07740;)	OTHER	0.003018	0.996982	
+LYCTA_DN38490_c0_g1_i18|orf6|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.000471	0.999529	
+LYCTA_DN39367_c0_g1_i20|orf5|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.000733	0.999267	
+LYCTA_DN38697_c1_g1_i1|orf5|SN_04_01|Omega-agatoxin_superfamily,_Omega_agatx_sb2_(IPR005853;IPR013605;PF08396;)	OTHER	0.000656	0.999344	
+LYCTA_DN30455_c0_g1_i1|orf5|VP_02_00|Peptidase_M12A_family_(IPR024079;IPR001506;IPR006026;PF01400;)	OTHER	0.000700	0.999300	
+LYCTA_DN38656_c5_g2_i5|orf4|SN_14_06|Magi-1_superfamily,_ICK_Trit_family_(IPR012627;PF08092;)	OTHER	0.017276	0.982724	
+LYCTA_DN37183_c0_g1_i4|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000857	0.999143	
+LYCTA_DN38972_c0_g1_i1|orf5|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.000817	0.999183	
+LYCTA_DN30413_c0_g1_i1|orf5|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.006787	0.993213	
+LYCTA_DN34329_c0_g2_i1|orf4|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.000596	0.999404	
+LYCTA_DN39184_c1_g3_i7|orf5|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.000933	0.999067	
+LYCTA_DN38656_c5_g2_i3|orf4|SN_14_06|Magi-1_superfamily,_ICK_Trit_family_(IPR012627;PF08092;)	OTHER	0.017276	0.982724	
+LYCTA_DN45420_c0_g1_i1|orf4|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.001019	0.998981	
+LYCTA_DN36241_c0_g1_i3|orf5|SN_10_27|Huwentoxin-1_family,_ICK_3_subfamily_(IPR011696;PF07740;)	OTHER	0.000972	0.999028	
+LYCTA_DN31915_c0_g1_i2|orf6|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000708	0.999292	
+LYCTA_DN31060_c0_g2_i1|orf4|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.004816	0.995184	
+LYCTA_DN38580_c3_g3_i3|orf6|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.004561	0.995439	
+LYCTA_DN10180_c0_g1_i1|orf5|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.006876	0.993124	
+LYCTA_DN39178_c1_g1_i7|orf6|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.000619	0.999381	
+LYCTA_DN36242_c0_g2_i1|orf6|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.000183	0.999817	
+LYCTA_DN35939_c0_g1_i6|orf6|SN_03_01|Spider_toxin_Tx2_family,_OAIP_2_subfamily_(IPR004214;PF02950;)	OTHER	0.043037	0.956963	
+LYCTA_DN31760_c0_g1_i1|orf4|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	SP(Sec/SPI)	0.646781	0.353219	CS pos: 22-23. GNA-DL. Pr: 0.4117
+LYCTA_DN38484_c0_g1_i2|orf4|VP_13_02|Cysteine_rich_secretory_protein_type_2	SP(Sec/SPI)	0.956940	0.043060	CS pos: 23-24. GMG-CD. Pr: 0.4747
+LYCTA_DN35529_c0_g2_i3|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.003782	0.996218	
+LYCTA_DN37357_c0_g1_i1|orf4|SN_14_05|Magi-1_superfamily,_ICK_7_family_(IPR012627;PF08092;)	OTHER	0.011217	0.988783	
+LYCTA_DN38147_c0_g1_i4|orf6|SN_10_47|Huwentoxin-1_family,_Jztx_9_subfamily_(IPR011696;PF07740;)	SP(Sec/SPI)	0.998973	0.001027	CS pos: 19-20. TQA-LI. Pr: 0.8282
+LYCTA_DN40130_c0_g1_i1|orf6|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.021322	0.978678	
+LYCTA_DN30051_c0_g1_i1|orf6|VP_07_00|Angiotensin-converting_Enzyme_(IPR033591)	SP(Sec/SPI)	0.949046	0.050954	CS pos: 30-31. LFA-FS. Pr: 0.7791
+LYCTA_DN39260_c0_g1_i4|orf4|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	SP(Sec/SPI)	0.647825	0.352175	CS pos: 22-23. TSA-AV. Pr: 0.4227
+LYCTA_DN38852_c0_g1_i6|orf6|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	SP(Sec/SPI)	0.873220	0.126780	CS pos: 19-20. SSA-II. Pr: 0.3718
+LYCTA_DN17272_c0_g2_i1|orf2|SN_19_08|Spider_toxin_CsTx_superfamily,_U8_lycotoxin_family_(IPR019553;IPR011142;PF10530;)	OTHER	0.028000	0.972000	
+LYCTA_DN35733_c0_g2_i1|orf6|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000507	0.999493	
+LYCTA_DN37555_c5_g2_i3|orf6|VP_13_02|Cysteine_rich_secretory_protein_type_2	OTHER	0.000803	0.999197	
+LYCTA_DN38348_c3_g1_i2|orf4|SN_10_08|Huwentoxin-1_family,_Gtx1_15_subfamily_(IPR011696;PF07740;)	OTHER	0.007315	0.992685	
+LYCTA_DN38358_c1_g1_i1|orf4|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.000504	0.999496	
+LYCTA_DN36501_c0_g1_i1|orf6|VP_06_00|Arthropod_Phospholipase_A2_(IPR001211)	OTHER	0.002679	0.997321	
+LYCTA_DN29047_c0_g2_i1|orf6|SN_14_07|Magi-1_superfamily,_Jztx_56_family_(IPR012627;PF08092;)	OTHER	0.007122	0.992878	
+LYCTA_DN38635_c6_g1_i1|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.004077	0.995923	
+LYCTA_DN24357_c0_g2_i1|orf5|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.010625	0.989375	
+LYCTA_DN38358_c1_g1_i3|orf4|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.006847	0.993153	
+LYCTA_DN34032_c0_g1_i1|orf4|VP_12_04|Venom_Kunitz-type_family,_Long_Kunitz_domain_containing_protein_(IPR002223;IPR020901;PF00014;)	OTHER	0.014816	0.985184	
+LYCTA_DN33940_c0_g1_i2|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.003445	0.996555	
+LYCTA_DN33685_c0_g1_i1|orf6|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.000945	0.999055	
+LYCTA_DN38467_c3_g2_i1|orf4|SC_03_03|Latarcin_superfamily,_Lt3_family_(IPR018802;PF10279;)	OTHER	0.000242	0.999758	
+LYCTA_DN32762_c0_g3_i1|orf2|SN_10_42|Huwentoxin-1_family,_Jztx_44_subfamily_(IPR011696;PF07740;)	OTHER	0.005671	0.994329	
+LYCTA_DN37773_c9_g1_i1|orf6|SN_10_51|Huwentoxin-1_family,_Lectin_subfamily_(IPR011696;PF07740;)	SP(Sec/SPI)	0.951306	0.048694	CS pos: 24-25. THG-LG. Pr: 0.6212
+LYCTA_DN33100_c0_g2_i1|orf5|SN_34_00|CsTx-29	OTHER	0.001016	0.998984	
+LYCTA_DN39926_c0_g1_i1|orf2|SC_03_04|Latarcin_superfamily,_latarcin_lt4_typ2_(IPR018802;PF10279;)	OTHER	0.049334	0.950666	
+LYCTA_DN31894_c0_g1_i2|orf5|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.002677	0.997323	
+LYCTA_DN39048_c1_g1_i1|orf4|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.419855	0.580145	
+LYCTA_DN41188_c0_g1_i1|orf6|VP_05_00|Hyaluronidase_(IPR018155)	SP(Sec/SPI)	0.628610	0.371390	CS pos: 13-14. VSG-FE. Pr: 0.5119
+LYCTA_DN39153_c7_g2_i2|orf5|SN_02_06|CsTx-36	OTHER	0.025063	0.974937	
+LYCTA_DN29016_c0_g1_i1|orf4|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.000463	0.999537	
+LYCTA_DN23724_c0_g2_i1|orf4|SC_04_01|Cupiennin_family,_1_subfamily_	OTHER	0.003745	0.996255	
+LYCTA_DN38530_c3_g1_i3|orf6|SC_03_07|Latarcin_superfamily,_Lt7_family_(IPR018802;PF10279;)	OTHER	0.000765	0.999235	
+LYCTA_DN35001_c0_g2_i1|orf6|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.000223	0.999777	
+LYCTA_DN39184_c1_g3_i8|orf5|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000744	0.999256	
+LYCTA_DN37812_c0_g4_i1|orf3|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.007425	0.992575	
+LYCTA_DN38855_c5_g1_i1|orf4|VP_08_00|Peptidylglycine_alpha-amidating_monooxygenase_(IPR000720)	SP(Sec/SPI)	0.990607	0.009393	CS pos: 22-23. GQA-LT. Pr: 0.9426
+LYCTA_DN25873_c0_g1_i1|orf6|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.002806	0.997194	
+LYCTA_DN39413_c1_g12_i1|orf1|SN_10_26|Huwentoxin-1_family,_ICK_1_subfamily_(IPR011696;PF07740;)	OTHER	0.009650	0.990350	
+LYCTA_DN34706_c0_g3_i1|orf3|SN_10_27|Huwentoxin-1_family,_ICK_3_subfamily_(IPR011696;PF07740;)	OTHER	0.005796	0.994204	
+LYCTA_DN44871_c0_g1_i1|orf2|SN_14_06|Magi-1_superfamily,_ICK_Trit_family_(IPR012627;PF08092;)	OTHER	0.060271	0.939729	
+LYCTA_DN46133_c0_g1_i1|orf5|SN_14_04|Magi-1_superfamily,_ICK_6_family_(IPR012627;PF08092;)	OTHER	0.002156	0.997844	
+LYCTA_DN26981_c0_g2_i1|orf4|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.001059	0.998941	
+LYCTA_DN38827_c2_g5_i1|orf6|SN_10_00|Huwentoxin-1_family_(IPR011696;PF07740;)	OTHER	0.003127	0.996873	
+LYCTA_DN39184_c1_g3_i8|orf4|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.005831	0.994169	
+LYCTA_DN37555_c5_g2_i2|orf5|VP_13_02|Cysteine_rich_secretory_protein_type_2	OTHER	0.002265	0.997735	
+LYCTA_DN38735_c3_g1_i15|orf5|VP_02_00|Peptidase_M12A_family_(IPR024079;IPR001506;IPR006026;PF01400;)	OTHER	0.007629	0.992371	
+LYCTA_DN38222_c1_g2_i6|orf4|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000818	0.999182	
+LYCTA_DN38863_c0_g10_i1|orf6|VP_15_00|Leucine_rich_peptide_(IPR032675)	SP(Sec/SPI)	0.985000	0.015000	CS pos: 22-23. CWA-TE. Pr: 0.8926
+LYCTA_DN33686_c0_g1_i1|orf5|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.000966	0.999034	
+LYCTA_DN39142_c5_g3_i1|orf6|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.001433	0.998567	
+LYCTA_DN25834_c0_g1_i1|orf5|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.091855	0.908145	
+LYCTA_DN39386_c1_g5_i2|orf6|VP_13_02|Cysteine_rich_secretory_protein_type_2	SP(Sec/SPI)	0.947220	0.052780	CS pos: 22-23. GWG-CE. Pr: 0.7826
+LYCTA_DN36924_c0_g1_i1|orf5|VP_17_00|Tachylectin_5A_(IPR002181)	OTHER	0.000563	0.999437	
+LYCTA_DN38313_c10_g1_i1|orf4|SN_22_00|Helical_arthropod_neuropeptide_derived_(HAND)_family_	OTHER	0.001340	0.998660	
+LYCTA_DN36249_c0_g1_i1|orf5|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001176	0.998824	
+LYCTA_DN36382_c0_g1_i4|orf5|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.000287	0.999713	
+LYCTA_DN39184_c1_g3_i10|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000744	0.999256	
+LYCTA_DN38816_c1_g9_i1|orf5|SN_10_40|Huwentoxin-1_family,_Jztx_35_subfamily_(IPR011696;PF07740;)	OTHER	0.001796	0.998204	
+LYCTA_DN36478_c0_g2_i1|orf4|VP_15_00|Leucine_rich_peptide_(IPR032675)	SP(Sec/SPI)	0.990984	0.009016	CS pos: 23-24. INA-RH. Pr: 0.8539
+LYCTA_DN31371_c0_g1_i1|orf4|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.000261	0.999739	
+LYCTA_DN12394_c0_g1_i1|orf4|VP_17_00|Tachylectin_5A_(IPR002181)	OTHER	0.001910	0.998090	
+LYCTA_DN27742_c0_g2_i1|orf4|VP_18_00|Cystatin_(IPR027214)	OTHER	0.033373	0.966627	
+LYCTA_DN36241_c0_g1_i2|orf6|SN_10_27|Huwentoxin-1_family,_ICK_3_subfamily_(IPR011696;PF07740;)	OTHER	0.000652	0.999348	
+LYCTA_DN34119_c0_g2_i1|orf5|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.000315	0.999685	
+LYCTA_DN36657_c0_g2_i1|orf4|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001664	0.998336	
+LYCTA_DN26449_c0_g1_i1|orf5|SC_03_05|Latarcin_superfamily,_Lt5_family_(IPR018802;PF10279;)	OTHER	0.002202	0.997798	
+LYCTA_DN37199_c0_g1_i8|orf6|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.001185	0.998815	
+LYCTA_DN29039_c0_g1_i1|orf6|VP_17_00|Tachylectin_5A_(IPR002181)	OTHER	0.001446	0.998554	
+LYCTA_DN38157_c0_g1_i1|orf5|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.004060	0.995940	
+LYCTA_DN38402_c5_g1_i5|orf2|SN_10_18|Huwentoxin-1_family,_Hntx_VII_subfamily_(IPR011696;PF07740;)	OTHER	0.028544	0.971456	
+LYCTA_DN26150_c0_g1_i2|orf3|SN_10_36|Huwentoxin-1_family,_Jztx_2_subfamily_(IPR011696;PF07740;)	OTHER	0.001922	0.998078	
+LYCTA_DN37437_c0_g2_i3|orf5|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.050596	0.949404	
+LYCTA_DN35523_c0_g1_i1|orf4|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.266037	0.733963	
+LYCTA_DN38980_c5_g5_i2|orf4|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.002680	0.997320	
+LYCTA_DN41112_c0_g1_i1|orf4|VP_17_00|Tachylectin_5A_(IPR002181)	OTHER	0.001905	0.998095	
+LYCTA_DN35047_c0_g1_i3|orf4|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.001090	0.998910	
+LYCTA_DN39184_c1_g3_i6|orf4|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.000581	0.999419	
+LYCTA_DN39367_c0_g1_i3|orf6|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000688	0.999312	
+LYCTA_DN38472_c0_g1_i4|orf4|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.001995	0.998005	
+LYCTA_DN36384_c0_g1_i4|orf6|SN_05_01|Spider_agouti	OTHER	0.003933	0.996067	
+LYCTA_DN26064_c0_g1_i1|orf6|SN_02_05|Plectoxin_superfamily,_U19_lycotoxin_family_	OTHER	0.005665	0.994335	
+LYCTA_DN38290_c3_g2_i2|orf6|SN_10_17|Huwentoxin-1_family,_Hntx_9_subfamily_(IPR011696;PF07740;)	OTHER	0.001647	0.998353	
+LYCTA_DN44837_c0_g1_i1|orf6|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.001120	0.998880	
+LYCTA_DN20931_c0_g1_i1|orf6|VP_17_00|Tachylectin_5A_(IPR002181)	SP(Sec/SPI)	0.968823	0.031177	CS pos: 17-18. TSA-KI. Pr: 0.5120
+LYCTA_DN40321_c0_g1_i1|orf4|SN_10_53|Huwentoxin-1_family,_PNTx27C4_subfamily_(IPR011696;PF07740;)	OTHER	0.009616	0.990384	
+LYCTA_DN38656_c5_g2_i6|orf5|SN_14_06|Magi-1_superfamily,_ICK_Trit_family_(IPR012627;PF08092;)	OTHER	0.013619	0.986381	
+LYCTA_DN44041_c0_g1_i1|orf4|SN_04_01|Omega-agatoxin_superfamily,_Omega_agatx_sb2_(IPR005853;IPR013605;PF08396;)	SP(Sec/SPI)	0.988894	0.011106	CS pos: 17-18. VYS-FT. Pr: 0.5684
+LYCTA_DN38011_c0_g1_i2|orf1|SN_19_02|Spider_toxin_CsTx_superfamily,_D7_family_(IPR019553;IPR011142;PF10530;)	OTHER	0.018382	0.981618	
+LYCTA_DN27365_c0_g1_i1|orf6|VP_11_02|Spider_WAP_family,_Spider_wap_2_family_(IPR008197;)	SP(Sec/SPI)	0.985614	0.014386	CS pos: 19-20. VQS-AW. Pr: 0.8031
+LYCTA_DN10988_c0_g1_i1|orf6|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001852	0.998148	
+LYCTA_DN35222_c0_g2_i2|orf4|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.000668	0.999332	
+LYCTA_DN37523_c0_g1_i1|orf4|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.000205	0.999795	
+LYCTA_DN20804_c0_g1_i1|orf4|SN_29_00|Omega_lycotoxin_family_	OTHER	0.001704	0.998296	
+LYCTA_DN38697_c1_g1_i2|orf5|SN_04_01|Omega-agatoxin_superfamily,_Omega_agatx_sb2_(IPR005853;IPR013605;PF08396;)	OTHER	0.000656	0.999344	
+LYCTA_DN38438_c7_g3_i1|orf6|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	SP(Sec/SPI)	0.818292	0.181708	CS pos: 22-23. VFC-EN. Pr: 0.7665
+LYCTA_DN39142_c5_g9_i1|orf6|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.001298	0.998702	
+LYCTA_DN34118_c0_g1_i1|orf4|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.012737	0.987263	
+LYCTA_DN37851_c0_g1_i3|orf5|VP_12_02|Venom_Kunitz-type_family,_Native_Kunitz_toxin_subfamily_(IPR002223;IPR020901;PF00014;)	OTHER	0.003282	0.996718	
+LYCTA_DN36766_c0_g1_i2|orf4|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	SP(Sec/SPI)	0.649549	0.350451	CS pos: 28-29. SYG-DV. Pr: 0.4292
+LYCTA_DN36514_c0_g1_i1|orf6|VP_07_00|Angiotensin-converting_Enzyme_(IPR033591)	OTHER	0.000670	0.999330	
+LYCTA_DN31591_c0_g1_i2|orf4|SN_29_00|Omega_lycotoxin_family_	SP(Sec/SPI)	0.999563	0.000437	CS pos: 17-18. VYC-QP. Pr: 0.7519
+LYCTA_DN39178_c1_g1_i3|orf4|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.000696	0.999304	
+LYCTA_DN29891_c0_g1_i1|orf6|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.000545	0.999455	
+LYCTA_DN38972_c0_g1_i2|orf5|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.000817	0.999183	
+LYCTA_DN38263_c0_g3_i1|orf4|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.000596	0.999404	
+LYCTA_DN36619_c0_g1_i3|orf5|VP_13_01|Cysteine_rich_secretory_protein_type_1_(IPR014044;IPR002413)	SP(Sec/SPI)	0.704899	0.295101	CS pos: 20-21. VDG-WG. Pr: 0.4600
+LYCTA_DN41623_c0_g1_i1|orf1|VP_17_00|Tachylectin_5A_(IPR002181)	OTHER	0.002612	0.997388	
+LYCTA_DN38792_c5_g1_i3|orf6|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.354383	0.645617	
+LYCTA_DN33890_c0_g1_i1|orf4|SN_10_22|Huwentoxin-1_family,_Htx_4_subfamily_(IPR011696;PF07740;)	OTHER	0.002790	0.997210	
+LYCTA_DN38661_c0_g2_i2|orf3|SN_03_05|Spider_toxin_Tx2_family,_Spider_Tx2_sb3_	OTHER	0.054487	0.945513	
+LYCTA_DN39178_c1_g1_i4|orf6|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.125388	0.874612	
+LYCTA_DN23186_c0_g1_i1|orf5|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001503	0.998497	
+LYCTA_DN24941_c0_g1_i1|orf5|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.000980	0.999020	
+LYCTA_DN38043_c0_g1_i2|orf6|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.002393	0.997607	
+LYCTA_DN39144_c1_g1_i3|orf6|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001364	0.998636	
+LYCTA_DN37066_c0_g2_i1|orf4|SN_05_06|Spider_Agouti	OTHER	0.004232	0.995768	
+LYCTA_DN38043_c0_g1_i1|orf5|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001572	0.998428	
+LYCTA_DN38708_c6_g3_i12|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001043	0.998957	
+LYCTA_DN38402_c3_g3_i3|orf5|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.001300	0.998700	
+LYCTA_DN38536_c1_g7_i1|orf1|SN_39_00|Spider_LiTx3_related_peptide_family_	OTHER	0.007879	0.992121	
+LYCTA_DN37102_c0_g1_i2|orf6|VP_13_02|Cysteine_rich_secretory_protein_type_2	OTHER	0.000536	0.999464	
+LYCTA_DN38402_c5_g1_i4|orf2|SN_10_18|Huwentoxin-1_family,_Hntx_VII_subfamily_(IPR011696;PF07740;)	OTHER	0.028544	0.971456	
+LYCTA_DN37199_c0_g1_i3|orf6|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.000459	0.999541	
+LYCTA_DN39396_c3_g3_i1|orf5|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	SP(Sec/SPI)	0.905528	0.094472	CS pos: 27-28. CRG-DE. Pr: 0.8474
+LYCTA_DN34515_c0_g2_i1|orf4|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.000633	0.999367	
+LYCTA_DN34249_c0_g1_i1|orf2|SN_02_06|CsTx-36	OTHER	0.002462	0.997538	
+LYCTA_DN38164_c1_g1_i1|orf1|SN_14_00|Magi-1_superfamily_	OTHER	0.007563	0.992437	
+LYCTA_DN35498_c0_g1_i3|orf6|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.000371	0.999629	
+LYCTA_DN36306_c0_g3_i2|orf5|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.001613	0.998387	
+LYCTA_DN36349_c0_g4_i2|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.136827	0.863173	
+LYCTA_DN36115_c0_g2_i1|orf6|SN_19_03|Spider_toxin_CsTx_superfamily,_Spider_CsTx_typ2_(IPR019553;IPR011142;PF10530;)	SP(Sec/SPI)	0.999743	0.000257	CS pos: 21-22. SEG-ID. Pr: 0.5096
+LYCTA_DN37082_c0_g5_i1|orf5|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.036060	0.963940	
+LYCTA_DN38490_c0_g1_i19|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000471	0.999529	
+LYCTA_DN31292_c0_g2_i1|orf4|SC_03_04|Latarcin_superfamily,_latarcin_lt4_typ2_(IPR018802;PF10279;)	OTHER	0.073814	0.926186	
+LYCTA_DN33061_c0_g1_i1|orf4|VP_12_02|Venom_Kunitz-type_family,_Native_Kunitz_toxin_subfamily_(IPR002223;IPR020901;PF00014;)	OTHER	0.004802	0.995198	
+LYCTA_DN36433_c0_g2_i3|orf5|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.002472	0.997528	
+LYCTA_DN36115_c0_g3_i1|orf4|SN_19_05|Spider_toxin_CsTx_superfamily,_U4_lycotoxin_family_(IPR019553;IPR011142;PF10530;)	SP(Sec/SPI)	0.998633	0.001367	CS pos: 22-23. TEA-ID. Pr: 0.7211
+LYCTA_DN37498_c0_g1_i5|orf6|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.089979	0.910021	
+LYCTA_DN37060_c0_g1_i2|orf3|SN_34_00|CsTx-29	OTHER	0.002469	0.997531	
+LYCTA_DN33409_c0_g1_i2|orf4|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001265	0.998735	
+LYCTA_DN39210_c1_g11_i1|orf4|SN_31_00|U12-lycotoxin_family_	OTHER	0.000260	0.999740	
+LYCTA_DN45752_c0_g1_i1|orf4|VP_05_00|Hyaluronidase_(IPR018155)	OTHER	0.015429	0.984571	
+LYCTA_DN39412_c6_g4_i1|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000712	0.999288	
+LYCTA_DN1606_c0_g1_i1|orf4|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.002144	0.997856	
+LYCTA_DN38490_c0_g1_i17|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000471	0.999529	
+LYCTA_DN38290_c3_g2_i1|orf4|SN_10_17|Huwentoxin-1_family,_Hntx_9_subfamily_(IPR011696;PF07740;)	OTHER	0.001647	0.998353	
+LYCTA_DN28076_c0_g2_i1|orf4|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001011	0.998989	
+LYCTA_DN32250_c0_g1_i1|orf6|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.001879	0.998121	
+LYCTA_DN39178_c1_g1_i1|orf5|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.000619	0.999381	
+LYCTA_DN37523_c0_g1_i3|orf4|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.000205	0.999795	
+LYCTA_DN19547_c0_g1_i1|orf1|VP_11_02|Spider_WAP_family,_Spider_wap_2_family_(IPR008197;)	OTHER	0.018493	0.981507	
+LYCTA_DN37662_c0_g1_i2|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001372	0.998628	
+LYCTA_DN37183_c0_g1_i1|orf5|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.000393	0.999607	
+LYCTA_DN29890_c0_g1_i1|orf4|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.010078	0.989922	
+LYCTA_DN30413_c0_g2_i1|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000776	0.999224	
+LYCTA_DN39158_c1_g1_i3|orf5|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.001142	0.998858	
+LYCTA_DN3439_c0_g1_i1|orf1|SN_04_00|Omega-agatoxin_superfamily_(IPR005853;IPR013605;PF08396;)	OTHER	0.001508	0.998492	
+LYCTA_DN34032_c0_g1_i2|orf4|VP_12_04|Venom_Kunitz-type_family,_Long_Kunitz_domain_containing_protein_(IPR002223;IPR020901;PF00014;)	OTHER	0.014816	0.985184	
+LYCTA_DN38490_c0_g1_i9|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000471	0.999529	
+LYCTA_DN27738_c0_g1_i1|orf2|SN_08_01|Shiva_Omega_superfamily,_Omega_toxin_family_(IPR009415;PF06357;)	OTHER	0.001072	0.998928	
+LYCTA_DN38931_c1_g1_i4|orf6|VP_12_04|Venom_Kunitz-type_family,_Long_Kunitz_domain_containing_protein_(IPR002223;IPR020901;PF00014;)	SP(Sec/SPI)	0.861828	0.138172	CS pos: 19-20. GMG-KE. Pr: 0.7963
+LYCTA_DN38635_c6_g1_i2|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.004077	0.995923	
+LYCTA_DN31591_c0_g1_i3|orf5|SN_29_00|Omega_lycotoxin_family_	SP(Sec/SPI)	0.998944	0.001056	CS pos: 18-19. VYC-QP. Pr: 0.7668
+LYCTA_DN39184_c1_g3_i6|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000744	0.999256	
+LYCTA_DN38708_c6_g3_i8|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001043	0.998957	
+LYCTA_DN30008_c0_g1_i1|orf4|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.000566	0.999434	
+LYCTA_DN35571_c0_g1_i1|orf1|SN_10_52|Huwentoxin-1_family,_MTx4_subfamily_(IPR011696;PF07740;)	OTHER	0.005158	0.994842	
+LYCTA_DN39330_c4_g1_i9|orf4|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000615	0.999385	
+LYCTA_DN33907_c0_g3_i1|orf5|SN_10_35|Huwentoxin-1_family,_Jztx_27_subfamily_(IPR011696;PF07740;)	OTHER	0.039671	0.960329	
+LYCTA_DN38881_c3_g7_i1|orf6|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.001535	0.998465	
+LYCTA_DN39006_c2_g4_i1|orf3|SN_10_36|Huwentoxin-1_family,_Jztx_2_subfamily_(IPR011696;PF07740;)	OTHER	0.046815	0.953185	
+LYCTA_DN39273_c0_g1_i1|orf5|SC_03_01|Latarcin_superfamily,_Lt1_family_(IPR018802;PF10279;)	OTHER	0.002625	0.997375	
+LYCTA_DN38011_c0_g1_i1|orf1|SN_19_02|Spider_toxin_CsTx_superfamily,_D7_family_(IPR019553;IPR011142;PF10530;)	OTHER	0.018382	0.981618	
+LYCTA_DN37861_c4_g1_i1|orf6|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.139533	0.860467	
+LYCTA_DN39014_c2_g2_i3|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001227	0.998773	
+LYCTA_DN38490_c0_g1_i4|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000471	0.999529	
+LYCTA_DN38852_c0_g1_i4|orf4|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.015340	0.984660	
+LYCTA_DN36801_c0_g2_i1|orf5|SN_01_00|U2-agatoxin_family_	OTHER	0.001030	0.998970	
+LYCTA_DN37498_c0_g1_i1|orf5|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.110022	0.889978	
+LYCTA_DN14595_c0_g1_i1|orf4|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001208	0.998792	
+LYCTA_DN34339_c0_g3_i1|orf6|SN_10_25|Huwentoxin-1_family,_ICK4_subfamily_(IPR011696;PF07740;)	OTHER	0.002972	0.997028	
+LYCTA_DN41083_c0_g1_i1|orf3|SN_02_08|CsTx-28	OTHER	0.000599	0.999401	
+LYCTA_DN29519_c0_g1_i1|orf4|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.002190	0.997810	
+LYCTA_DN37400_c0_g3_i2|orf4|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.002004	0.997996	
+LYCTA_DN35529_c0_g2_i2|orf6|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.000728	0.999272	
+LYCTA_DN41002_c0_g1_i1|orf5|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.104411	0.895589	
+LYCTA_DN44251_c0_g1_i1|orf6|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.001329	0.998671	
+LYCTA_DN28833_c0_g1_i1|orf5|SN_19_09|Spider_toxin_CsTx_superfamily,_U10_lycotoxin_family_(IPR019553;IPR011142;PF10530;)	OTHER	0.010034	0.989966	
+LYCTA_DN34820_c0_g1_i1|orf4|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	SP(Sec/SPI)	0.996657	0.003343	CS pos: 16-17. CQA-NV. Pr: 0.8133
+LYCTA_DN33161_c0_g1_i1|orf6|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.002838	0.997162	
+LYCTA_DN31591_c0_g1_i1|orf5|SN_29_00|Omega_lycotoxin_family_	SP(Sec/SPI)	0.999563	0.000437	CS pos: 17-18. VYC-QP. Pr: 0.7519
+LYCTA_DN23108_c0_g1_i1|orf5|VP_07_00|Angiotensin-converting_Enzyme_(IPR033591)	SP(Sec/SPI)	0.894056	0.105944	CS pos: 20-21. NWA-CK. Pr: 0.7116
+LYCTA_DN43259_c0_g1_i1|orf4|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	SP(Sec/SPI)	0.997725	0.002275	CS pos: 18-19. TSG-KL. Pr: 0.9610
+LYCTA_DN26949_c0_g1_i1|orf5|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.076157	0.923843	
+LYCTA_DN5686_c0_g1_i1|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001869	0.998131	
+LYCTA_DN32233_c0_g1_i1|orf6|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.002480	0.997520	
+LYCTA_DN13619_c0_g1_i1|orf3|SC_05_00|Bradykinin-related_peptide_family_	OTHER	0.011005	0.988995	
+LYCTA_DN37358_c0_g1_i1|orf5|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.036579	0.963421	
+LYCTA_DN38354_c0_g1_i8|orf6|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.001250	0.998750	
+LYCTA_DN38852_c0_g1_i12|orf5|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.006809	0.993191	
+LYCTA_DN39178_c1_g1_i9|orf5|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.000619	0.999381	
+LYCTA_DN39178_c1_g1_i8|orf4|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.000696	0.999304	
+LYCTA_DN37310_c0_g1_i5|orf5|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000880	0.999120	
+LYCTA_DN38814_c0_g2_i1|orf5|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000893	0.999107	
+LYCTA_DN34393_c0_g1_i3|orf4|VP_06_00|Arthropod_Phospholipase_A2_(IPR001211)	OTHER	0.007346	0.992654	
+LYCTA_DN34791_c0_g1_i3|orf4|SN_14_04|Magi-1_superfamily,_ICK_6_family_(IPR012627;PF08092;)	OTHER	0.005704	0.994296	
+LYCTA_DN37498_c0_g1_i3|orf5|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.088020	0.911980	
+LYCTA_DN30121_c0_g1_i1|orf4|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.005099	0.994901	
+LYCTA_DN37417_c0_g1_i6|orf5|SN_10_59|Huwentoxin-1_family,_Tltx_subfamily_(IPR011696;PF07740;)	OTHER	0.005491	0.994509	
+LYCTA_DN39178_c1_g1_i12|orf5|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.000619	0.999381	
+LYCTA_DN45782_c0_g1_i1|orf5|VP_13_01|Cysteine_rich_secretory_protein_type_1_(IPR014044;IPR002413)	OTHER	0.005067	0.994933	
+LYCTA_DN34470_c0_g1_i1|orf4|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.000706	0.999294	
+LYCTA_DN21626_c0_g1_i1|orf4|SN_10_62|Huwentoxin-1_family,_Vatx_subfamily_(IPR011696;PF07740;)	OTHER	0.001101	0.998899	
+LYCTA_DN38972_c0_g1_i14|orf5|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.000817	0.999183	
+LYCTA_DN35222_c0_g2_i2|orf6|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.001298	0.998702	
+LYCTA_DN34783_c0_g1_i1|orf5|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.253522	0.746478	
+LYCTA_DN36443_c1_g2_i2|orf5|VP_06_00|Arthropod_Phospholipase_A2_(IPR001211)	OTHER	0.009606	0.990394	
+LYCTA_DN38800_c1_g3_i1|orf5|VP_06_00|Arthropod_Phospholipase_A2_(IPR001211)	SP(Sec/SPI)	0.748232	0.251768	CS pos: 23-24. GYT-FF. Pr: 0.5914
+LYCTA_DN37754_c0_g1_i1|orf4|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.000229	0.999771	
+LYCTA_DN39178_c1_g1_i11|orf4|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.000696	0.999304	
+LYCTA_DN38287_c0_g3_i1|orf2|SN_03_01|Spider_toxin_Tx2_family,_OAIP_2_subfamily_(IPR004214;PF02950;)	OTHER	0.012567	0.987433	
+LYCTA_DN20804_c0_g1_i2|orf5|SN_29_00|Omega_lycotoxin_family_	OTHER	0.000814	0.999186	
+LYCTA_DN31377_c0_g1_i1|orf3|SN_02_06|CsTx-36	OTHER	0.164746	0.835254	
+LYCTA_DN37852_c0_g1_i1|orf5|VP_17_00|Tachylectin_5A_(IPR002181)	SP(Sec/SPI)	0.972816	0.027184	CS pos: 20-21. STG-EE. Pr: 0.6861
+LYCTA_DN39394_c1_g7_i1|orf6|SN_10_44|Huwentoxin-1_family,_Jztx_4_subfamily_(IPR011696;PF07740;)	OTHER	0.009120	0.990880	
+LYCTA_DN38527_c1_g1_i1|orf5|VP_15_00|Leucine_rich_peptide_(IPR032675)	SP(Sec/SPI)	0.993553	0.006447	CS pos: 28-29. TLA-DA. Pr: 0.6667
+LYCTA_DN37074_c0_g2_i4|orf4|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.001104	0.998896	
+LYCTA_DN37812_c0_g4_i3|orf2|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.003549	0.996451	
+LYCTA_DN31192_c0_g1_i1|orf5|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.001242	0.998758	
+LYCTA_DN33810_c0_g1_i1|orf3|SN_10_08|Huwentoxin-1_family,_Gtx1_15_subfamily_(IPR011696;PF07740;)	OTHER	0.048859	0.951141	
+LYCTA_DN38638_c4_g1_i1|orf5|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	SP(Sec/SPI)	0.987447	0.012553	CS pos: 18-19. SDA-LY. Pr: 0.7284
+LYCTA_DN9430_c0_g1_i1|orf5|SN_05_04|Spider_Agouti	OTHER	0.029738	0.970262	
+LYCTA_DN33409_c0_g1_i1|orf6|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000960	0.999040	
+LYCTA_DN27474_c0_g2_i1|orf1|SN_10_63|Huwentoxin-1_family,_VsTx1_subfamily_(IPR011696;PF07740;)	OTHER	0.001253	0.998747	
+LYCTA_DN39178_c1_g1_i5|orf4|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.000696	0.999304	
+LYCTA_DN36923_c0_g1_i2|orf5|VP_03_01|Arthropod_phospholipase_D_family,_Class_II_subfamily_(IPR017946;)	OTHER	0.002146	0.997854	
+LYCTA_DN32252_c0_g1_i1|orf4|VP_02_00|Peptidase_M12A_family_(IPR024079;IPR001506;IPR006026;PF01400;)	OTHER	0.000645	0.999355	
+LYCTA_DN37864_c0_g2_i1|orf5|SN_08_01|Shiva_Omega_superfamily,_Omega_toxin_family_(IPR009415;PF06357;)	SP(Sec/SPI)	0.999220	0.000780	CS pos: 23-24. TSA-SY. Pr: 0.4733
+LYCTA_DN34491_c0_g3_i1|orf5|SC_04_03|Cupiennin_family,_3_subfamily_	OTHER	0.004350	0.995650	
+LYCTA_DN33265_c0_g2_i1|orf1|SN_19_04|Spider_toxin_CsTx_superfamily,_U1_lycotoxin_family_(IPR019553;IPR011142;PF10530;)	OTHER	0.021682	0.978318	
+LYCTA_DN15470_c0_g2_i1|orf5|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.011446	0.988554	
+LYCTA_DN36261_c0_g2_i1|orf4|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001786	0.998214	
+LYCTA_DN38407_c4_g1_i1|orf5|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.446078	0.553922	
+LYCTA_DN37555_c5_g2_i1|orf5|VP_13_02|Cysteine_rich_secretory_protein_type_2	OTHER	0.002265	0.997735	
+LYCTA_DN35608_c0_g2_i1|orf6|VP_17_00|Tachylectin_5A_(IPR002181)	OTHER	0.001120	0.998880	
+LYCTA_DN39199_c1_g10_i1|orf1|SN_19_12|Spider_toxin_CsTx_superfamily,_Spider_CsTx_typ3_(IPR011142;)	OTHER	0.003625	0.996375	
+LYCTA_DN20042_c0_g1_i1|orf4|SN_03_04|Spider_toxin_Tx2_family,_Spider_Tx2_sb2_	OTHER	0.002872	0.997128	
+LYCTA_DN37437_c0_g2_i4|orf4|VP_15_00|Leucine_rich_peptide_(IPR032675)	SP(Sec/SPI)	0.840767	0.159233	CS pos: 17-18. IQS-IE. Pr: 0.4433
+LYCTA_DN32362_c0_g1_i2|orf6|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000849	0.999151	
+LYCTA_DN37310_c0_g1_i6|orf5|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000880	0.999120	
+LYCTA_DN37893_c0_g1_i3|orf5|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.002095	0.997905	
+LYCTA_DN38275_c5_g1_i1|orf6|SN_10_05|Huwentoxin-1_family,_F4a_subfamily_(IPR011696;PF07740;)	SP(Sec/SPI)	0.634864	0.365136	CS pos: 18-19. VDC-EK. Pr: 0.4293
+LYCTA_DN38580_c3_g3_i1|orf6|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.004561	0.995439	
+LYCTA_DN38347_c0_g1_i4|orf2|SN_14_04|Magi-1_superfamily,_ICK_6_family_(IPR012627;PF08092;)	OTHER	0.054436	0.945564	
+LYCTA_DN38492_c1_g2_i4|orf6|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.002428	0.997572	
+LYCTA_DN37960_c0_g1_i1|orf4|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.452538	0.547462	
+LYCTA_DN38980_c5_g5_i1|orf4|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.002680	0.997320	
+LYCTA_DN38735_c3_g1_i21|orf5|VP_02_00|Peptidase_M12A_family_(IPR024079;IPR001506;IPR006026;PF01400;)	OTHER	0.007629	0.992371	
+LYCTA_DN13701_c0_g1_i1|orf1|SN_19_06|Spider_toxin_CsTx_superfamily,_U6_lycotoxin_family_(IPR019553;IPR011142;PF10530;)	OTHER	0.015838	0.984162	
+LYCTA_DN35289_c0_g1_i2|orf3|SN_10_13|Huwentoxin-1_family,_Hntx_13_subfamily_(IPR011696;PF07740;)	OTHER	0.003277	0.996723	
+LYCTA_DN23174_c0_g1_i1|orf4|SN_19_02|Spider_toxin_CsTx_superfamily,_D7_family_(IPR019553;IPR011142;PF10530;)	OTHER	0.001160	0.998840	
+LYCTA_DN35608_c0_g2_i2|orf5|VP_17_00|Tachylectin_5A_(IPR002181)	OTHER	0.091505	0.908495	
+LYCTA_DN37861_c4_g1_i3|orf4|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.000595	0.999405	
+LYCTA_DN38358_c1_g1_i6|orf5|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.000290	0.999710	
+LYCTA_DN46066_c0_g1_i1|orf1|SN_05_02|Spider_Agouti	SP(Sec/SPI)	0.611864	0.388136	CS pos: 24-25. LLA-CS. Pr: 0.3528
+LYCTA_DN32037_c0_g1_i1|orf5|SN_02_05|Plectoxin_superfamily,_U19_lycotoxin_family_	OTHER	0.004479	0.995521	
+LYCTA_DN34832_c0_g1_i2|orf4|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001166	0.998834	
+LYCTA_DN35485_c0_g3_i1|orf3|SC_03_07|Latarcin_superfamily,_Lt7_family_(IPR018802;PF10279;)	OTHER	0.004350	0.995650	
+LYCTA_DN31900_c0_g3_i1|orf6|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.002259	0.997741	
+LYCTA_DN38222_c1_g2_i3|orf5|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000469	0.999531	
+LYCTA_DN31192_c0_g4_i1|orf4|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.062477	0.937523	
+LYCTA_DN33727_c0_g1_i1|orf6|VP_14_00|Thyroglobulin-like_protein	OTHER	0.002171	0.997829	
+LYCTA_DN32398_c0_g1_i1|orf2|SN_21_00|Aptotoxin_family_	OTHER	0.017825	0.982175	
+LYCTA_DN29897_c0_g1_i2|orf6|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.001537	0.998463	
+LYCTA_DN5650_c0_g1_i1|orf5|SN_05_06|Spider_Agouti	OTHER	0.016760	0.983240	
+LYCTA_DN39273_c0_g1_i9|orf6|SC_03_01|Latarcin_superfamily,_Lt1_family_(IPR018802;PF10279;)	OTHER	0.001169	0.998831	
+LYCTA_DN39122_c0_g1_i4|orf2|SN_19_01|Spider_toxin_CsTx_superfamily,_D1_family_(IPR019553;IPR011142;PF10530;)	OTHER	0.001436	0.998564	
+LYCTA_DN38006_c0_g1_i1|orf4|VP_12_02|Venom_Kunitz-type_family,_Native_Kunitz_toxin_subfamily_(IPR002223;IPR020901;PF00014;)	OTHER	0.001275	0.998725	
+LYCTA_DN30060_c0_g1_i2|orf6|SN_02_04|Plectoxin_superfamily,_U16_lycotoxin_family_(IPR004169;)	OTHER	0.010252	0.989748	
+LYCTA_DN38232_c0_g2_i5|orf2|SN_02_02|Plectoxin_superfamily,_Plectoxin_family_(IPR004169;)	OTHER	0.016736	0.983264	
+LYCTA_DN38862_c0_g1_i4|orf6|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.001148	0.998852	
+LYCTA_DN38792_c5_g1_i2|orf4|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.354383	0.645617	
+LYCTA_DN36318_c0_g2_i1|orf4|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000904	0.999096	
+LYCTA_DN38605_c1_g6_i6|orf1|SN_19_02|Spider_toxin_CsTx_superfamily,_D7_family_(IPR019553;IPR011142;PF10530;)	OTHER	0.002685	0.997315	
+LYCTA_DN26194_c0_g2_i1|orf6|SN_10_64|Huwentoxin-1_family,_Jztx_20_subfamily_	OTHER	0.015291	0.984709	
+LYCTA_DN38873_c8_g5_i1|orf4|VP_07_00|Angiotensin-converting_Enzyme_(IPR033591)	OTHER	0.000563	0.999437	
+LYCTA_DN38418_c0_g1_i1|orf6|VP_06_00|Arthropod_Phospholipase_A2_(IPR001211)	SP(Sec/SPI)	0.866402	0.133598	CS pos: 21-22. MEA-LF. Pr: 0.3848
+LYCTA_DN38852_c0_g1_i9|orf6|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	SP(Sec/SPI)	0.873220	0.126780	CS pos: 19-20. SSA-II. Pr: 0.3718
+LYCTA_DN32008_c0_g2_i2|orf5|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.002333	0.997667	
+LYCTA_DN38862_c0_g1_i5|orf6|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.001148	0.998852	
+LYCTA_DN39330_c3_g2_i2|orf6|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	SP(Sec/SPI)	0.978063	0.021937	CS pos: 21-22. IHG-ER. Pr: 0.9247
+LYCTA_DN36542_c0_g1_i1|orf6|SN_03_03|Spider_toxin_Tx2_family,_Spider_toxin_Tx2_family_	OTHER	0.002318	0.997682	
+LYCTA_DN38221_c4_g2_i1|orf1|SN_05_02|Spider_Agouti	OTHER	0.000375	0.999625	
+LYCTA_DN13149_c0_g1_i1|orf4|VP_13_01|Cysteine_rich_secretory_protein_type_1_(IPR014044;IPR002413)	OTHER	0.006387	0.993613	
+LYCTA_DN38358_c1_g1_i7|orf4|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.006847	0.993153	
+LYCTA_DN42127_c0_g1_i1|orf4|VP_13_02|Cysteine_rich_secretory_protein_type_2	OTHER	0.001617	0.998383	
+LYCTA_DN39396_c3_g3_i2|orf5|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.000816	0.999184	
+LYCTA_DN39330_c4_g1_i11|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000615	0.999385	
+LYCTA_DN37498_c0_g1_i4|orf6|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.001831	0.998169	
+LYCTA_DN39184_c1_g3_i1|orf5|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.000933	0.999067	
+LYCTA_DN40056_c0_g1_i1|orf6|SN_10_62|Huwentoxin-1_family,_Vatx_subfamily_(IPR011696;PF07740;)	OTHER	0.014025	0.985975	
+LYCTA_DN38656_c5_g2_i8|orf5|SN_14_06|Magi-1_superfamily,_ICK_Trit_family_(IPR012627;PF08092;)	OTHER	0.013619	0.986381	
+LYCTA_DN39103_c1_g1_i2|orf6|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.000434	0.999566	
+LYCTA_DN2867_c0_g1_i1|orf4|VP_18_00|Cystatin_(IPR027214)	OTHER	0.086080	0.913920	
+LYCTA_DN18269_c0_g1_i1|orf2|SN_06_00|Delta-atracotoxin_family_(IPR008017;PF05353;)	OTHER	0.077727	0.922273	
+LYCTA_DN36514_c0_g1_i2|orf6|VP_07_00|Angiotensin-converting_Enzyme_(IPR033591)	OTHER	0.000670	0.999330	
+LYCTA_DN38113_c8_g3_i1|orf4|SN_10_30|Huwentoxin-1_family,_Jztx_14_subfamily_(IPR011696;PF07740;)	OTHER	0.011544	0.988456	
+LYCTA_DN34506_c0_g1_i1|orf4|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.006883	0.993117	
+LYCTA_DN39330_c4_g1_i6|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000615	0.999385	
+LYCTA_DN33387_c0_g1_i2|orf3|SN_10_10|Huwentoxin-1_family,_Haplotoxin_1_subfamily_(IPR011696;PF07740;)	OTHER	0.033842	0.966158	
+LYCTA_DN44575_c0_g1_i1|orf4|VP_12_02|Venom_Kunitz-type_family,_Native_Kunitz_toxin_subfamily_(IPR002223;IPR020901;PF00014;)	SP(Sec/SPI)	0.988527	0.011473	CS pos: 24-25. IHS-RP. Pr: 0.5306
+LYCTA_DN32034_c0_g4_i1|orf2|SN_03_05|Spider_toxin_Tx2_family,_Spider_Tx2_sb3_	OTHER	0.006182	0.993818	
+LYCTA_DN38852_c0_g1_i7|orf5|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.006809	0.993191	
+LYCTA_DN37074_c0_g2_i1|orf4|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.001104	0.998896	
+LYCTA_DN36306_c0_g3_i1|orf6|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.002024	0.997976	
+LYCTA_DN38049_c7_g1_i2|orf6|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.000326	0.999674	
+LYCTA_DN38354_c0_g1_i1|orf6|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.001221	0.998779	
+LYCTA_DN29897_c0_g1_i3|orf5|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.000321	0.999679	
+LYCTA_DN36619_c0_g1_i1|orf6|VP_13_01|Cysteine_rich_secretory_protein_type_1_(IPR014044;IPR002413)	OTHER	0.001099	0.998901	
+LYCTA_DN31444_c0_g3_i1|orf4|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.003722	0.996278	
+LYCTA_DN30103_c0_g1_i1|orf1|VP_12_03|Venom_Kunitz-type_family,_Sub_Kunitz_toxin_subfamily_(IPR002223;IPR020901;PF00014;)	OTHER	0.063763	0.936237	
+LYCTA_DN39273_c0_g1_i2|orf5|SC_03_01|Latarcin_superfamily,_Lt1_family_(IPR018802;PF10279;)	OTHER	0.002625	0.997375	
+LYCTA_DN31760_c0_g2_i1|orf4|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.001001	0.998999	
+LYCTA_DN38438_c7_g5_i4|orf5|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.277026	0.722974	
+LYCTA_DN34317_c0_g1_i1|orf6|VP_14_00|Thyroglobulin-like_protein	SP(Sec/SPI)	0.994875	0.005125	CS pos: 20-21. VEP-KK. Pr: 0.5655
+LYCTA_DN36433_c0_g2_i2|orf4|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001158	0.998842	
+LYCTA_DN37735_c0_g1_i2|orf3|SN_13_00|Insecticidal_toxin_ABC_family_(IPR012626;PF08091;)	OTHER	0.011468	0.988532	
+LYCTA_DN27851_c0_g1_i2|orf5|SN_10_11|Huwentoxin-1_family,_Haplotoxin_2_subfamily_(IPR011696;PF07740;)	SP(Sec/SPI)	0.995098	0.004902	CS pos: 20-21. IHC-GN. Pr: 0.8459
+LYCTA_DN36459_c0_g1_i2|orf5|SN_10_54|Huwentoxin-1_family,_ProTx_1_subfamily_(IPR011696;PF07740;)	OTHER	0.036629	0.963371	
+LYCTA_DN14879_c0_g1_i1|orf5|SN_10_43|Huwentoxin-1_family,_Jztx_49_subfamily_(IPR011696;PF07740;)	OTHER	0.108362	0.891638	
+LYCTA_DN33036_c0_g1_i1|orf3|VP_12_02|Venom_Kunitz-type_family,_Native_Kunitz_toxin_subfamily_(IPR002223;IPR020901;PF00014;)	OTHER	0.002813	0.997187	
+LYCTA_DN31153_c0_g1_i1|orf4|VP_07_00|Angiotensin-converting_Enzyme_(IPR033591)	OTHER	0.001512	0.998488	
+LYCTA_DN36382_c0_g1_i3|orf5|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.000287	0.999713	
+LYCTA_DN35222_c0_g2_i1|orf4|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.000668	0.999332	
+LYCTA_DN39435_c4_g2_i3|orf4|SN_14_05|Magi-1_superfamily,_ICK_7_family_(IPR012627;PF08092;)	OTHER	0.002643	0.997357	
+LYCTA_DN34414_c0_g1_i1|orf6|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.046793	0.953207	
+LYCTA_DN38438_c7_g5_i3|orf4|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.001186	0.998814	
+LYCTA_DN10427_c0_g1_i1|orf4|VP_17_00|Tachylectin_5A_(IPR002181)	SP(Sec/SPI)	0.933108	0.066892	CS pos: 27-28. SNG-NY. Pr: 0.7735
+LYCTA_DN19327_c0_g1_i1|orf6|VP_13_01|Cysteine_rich_secretory_protein_type_1_(IPR014044;IPR002413)	OTHER	0.000739	0.999261	
+LYCTA_DN32362_c0_g1_i1|orf6|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.002084	0.997916	
+LYCTA_DN39367_c0_g1_i4|orf6|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000688	0.999312	
+LYCTA_DN36443_c1_g2_i1|orf5|VP_06_00|Arthropod_Phospholipase_A2_(IPR001211)	OTHER	0.009606	0.990394	
+LYCTA_DN31153_c0_g2_i1|orf6|VP_07_00|Angiotensin-converting_Enzyme_(IPR033591)	OTHER	0.128269	0.871731	
+LYCTA_DN30121_c0_g2_i1|orf5|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.001637	0.998363	
+LYCTA_DN34258_c0_g2_i2|orf4|SN_10_56|Huwentoxin-1_family,_SNX_482_subfamily_(IPR011696;PF07740;)	OTHER	0.056774	0.943226	
+LYCTA_DN39433_c2_g1_i11|orf5|SC_03_02|Latarcin_superfamily,_Lt2_family_(IPR018802;PF10279;)	OTHER	0.008736	0.991264	
+LYCTA_DN29347_c0_g1_i1|orf4|VP_18_00|Cystatin_(IPR027214)	SP(Sec/SPI)	0.789434	0.210566	CS pos: 25-26. SSS-AR. Pr: 0.2809
+LYCTA_DN39158_c1_g1_i2|orf5|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.001142	0.998858	
+LYCTA_DN38157_c0_g1_i3|orf5|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.004060	0.995940	
+LYCTA_DN39178_c1_g1_i10|orf4|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.000696	0.999304	
+LYCTA_DN19731_c0_g1_i1|orf2|SN_10_57|Huwentoxin-1_family,_ScTx1_subfamily_(IPR011696;PF07740;)	OTHER	0.002470	0.997530	
+LYCTA_DN38933_c4_g1_i7|orf6|SC_02_00|Oxyopinin_family_(IPR012522;PF08025;)	OTHER	0.059605	0.940395	
+LYCTA_DN38049_c7_g1_i1|orf6|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.000326	0.999674	
+LYCTA_DN38656_c5_g2_i1|orf4|SN_14_06|Magi-1_superfamily,_ICK_Trit_family_(IPR012627;PF08092;)	OTHER	0.017276	0.982724	
+LYCTA_DN39044_c0_g1_i1|orf5|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001025	0.998975	
+LYCTA_DN8815_c0_g1_i1|orf5|VP_17_00|Tachylectin_5A_(IPR002181)	OTHER	0.001681	0.998319	
+LYCTA_DN4641_c0_g1_i1|orf4|SN_10_01|Huwentoxin-1_family,_AU5A_subfamily_(IPR011696;PF07740;)	OTHER	0.005039	0.994961	
+LYCTA_DN25267_c0_g1_i1|orf6|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.003970	0.996030	
+LYCTA_DN38222_c1_g2_i2|orf6|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000359	0.999641	
+LYCTA_DN39330_c4_g1_i7|orf4|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000734	0.999266	
+LYCTA_DN24401_c0_g1_i1|orf6|SN_05_01|Spider_agouti	OTHER	0.003917	0.996083	
+LYCTA_DN39019_c3_g1_i8|orf2|VP_02_00|Peptidase_M12A_family_(IPR024079;IPR001506;IPR006026;PF01400;)	OTHER	0.000444	0.999556	
+LYCTA_DN36619_c0_g1_i3|orf6|VP_13_02|Cysteine_rich_secretory_protein_type_2	OTHER	0.002236	0.997764	
+LYCTA_DN38358_c1_g1_i4|orf4|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.000504	0.999496	
+LYCTA_DN38157_c0_g1_i2|orf5|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.003614	0.996386	
+LYCTA_DN36501_c0_g1_i1|orf5|VP_06_00|Arthropod_Phospholipase_A2_(IPR001211)	OTHER	0.375751	0.624249	
+LYCTA_DN45335_c0_g1_i1|orf4|SN_10_12|Huwentoxin-1_family,_Hntx_12_subfamily_(IPR011696;PF07740;)	OTHER	0.001857	0.998143	
+LYCTA_DN36841_c0_g3_i1|orf4|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.002760	0.997240	
+LYCTA_DN34393_c0_g1_i2|orf6|VP_06_00|Arthropod_Phospholipase_A2_(IPR001211)	SP(Sec/SPI)	0.904876	0.095124	CS pos: 19-20. INA-GQ. Pr: 0.7357
+LYCTA_DN38008_c0_g1_i1|orf5|VP_07_00|Angiotensin-converting_Enzyme_(IPR033591)	OTHER	0.000586	0.999414	
+LYCTA_DN38029_c0_g4_i1|orf3|SN_10_18|Huwentoxin-1_family,_Hntx_VII_subfamily_(IPR011696;PF07740;)	OTHER	0.014716	0.985284	
+LYCTA_DN37885_c0_g1_i1|orf4|SN_07_01|Beta-delta_agatoxin_family,_Aga_2_subfamily_(IPR009243;)	OTHER	0.002498	0.997502	
+LYCTA_DN30616_c0_g1_i1|orf6|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.001073	0.998927	
+LYCTA_DN38157_c0_g1_i6|orf4|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000789	0.999211	
+LYCTA_DN43034_c0_g1_i1|orf2|SN_04_04|Omega-agatoxin_superfamily,_omega_agatox_sb3_(IPR005853;IPR013605;PF08396;)	OTHER	0.006143	0.993857	
+LYCTA_DN35939_c0_g1_i1|orf6|SN_03_01|Spider_toxin_Tx2_family,_OAIP_2_subfamily_(IPR004214;PF02950;)	OTHER	0.043037	0.956963	
+LYCTA_DN37780_c0_g1_i2|orf5|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.140840	0.859160	
+LYCTA_DN31146_c0_g3_i1|orf6|VP_12_02|Venom_Kunitz-type_family,_Native_Kunitz_toxin_subfamily_(IPR002223;IPR020901;PF00014;)	OTHER	0.002548	0.997452	
+LYCTA_DN38604_c2_g12_i1|orf6|SN_13_01|Insecticidal_toxin_ABC_family,_Aps_III_subfamily_(IPR012626;PF08091;)	OTHER	0.040357	0.959643	
+LYCTA_DN38488_c0_g1_i2|orf6|VP_17_00|Tachylectin_5A_(IPR002181)	SP(Sec/SPI)	0.635467	0.364533	CS pos: 30-31. GDA-KY. Pr: 0.3197
+LYCTA_DN6878_c0_g1_i1|orf4|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.001426	0.998574	
+LYCTA_DN39367_c0_g1_i6|orf6|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000688	0.999312	
+LYCTA_DN38490_c0_g1_i20|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000471	0.999529	
+LYCTA_DN37960_c0_g1_i2|orf5|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.012029	0.987971	
+LYCTA_DN39108_c0_g1_i1|orf4|SN_10_26|Huwentoxin-1_family,_ICK_1_subfamily_(IPR011696;PF07740;)	OTHER	0.008017	0.991983	
+LYCTA_DN39330_c3_g2_i3|orf6|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	SP(Sec/SPI)	0.978063	0.021937	CS pos: 21-22. IHG-ER. Pr: 0.9247
+LYCTA_DN37822_c0_g1_i2|orf6|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.000892	0.999108	
+LYCTA_DN36278_c0_g1_i1|orf5|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.157414	0.842586	
+LYCTA_DN34414_c0_g1_i1|orf5|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.001689	0.998311	
+LYCTA_DN38222_c1_g2_i1|orf6|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.034563	0.965437	
+LYCTA_DN35529_c0_g3_i1|orf5|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001363	0.998637	
+LYCTA_DN39178_c1_g1_i2|orf5|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.001905	0.998095	
+LYCTA_DN39184_c1_g3_i5|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000744	0.999256	
+LYCTA_DN37887_c8_g2_i1|orf1|VP_02_00|Peptidase_M12A_family_(IPR024079;IPR001506;IPR006026;PF01400;)	OTHER	0.298065	0.701935	
+LYCTA_DN29890_c0_g1_i2|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001360	0.998640	
+LYCTA_DN37780_c0_g1_i3|orf5|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.140840	0.859160	
+LYCTA_DN38358_c1_g3_i1|orf6|SN_03_05|Spider_toxin_Tx2_family,_Spider_Tx2_sb3_	OTHER	0.001351	0.998649	
+LYCTA_DN37523_c0_g1_i2|orf6|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.001714	0.998286	
+LYCTA_DN38514_c2_g4_i1|orf5|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.002434	0.997566	
+LYCTA_DN45898_c0_g1_i1|orf4|SN_10_57|Huwentoxin-1_family,_ScTx1_subfamily_(IPR011696;PF07740;)	OTHER	0.008875	0.991125	
+LYCTA_DN37930_c0_g1_i2|orf5|VP_05_00|Hyaluronidase_(IPR018155)	SP(Sec/SPI)	0.984081	0.015919	CS pos: 23-24. VGA-GV. Pr: 0.7322
+LYCTA_DN37851_c0_g1_i1|orf5|VP_12_02|Venom_Kunitz-type_family,_Native_Kunitz_toxin_subfamily_(IPR002223;IPR020901;PF00014;)	SP(Sec/SPI)	0.955877	0.044123	CS pos: 34-35. TES-RL. Pr: 0.6896
+LYCTA_DN34329_c0_g3_i1|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.003154	0.996846	
+LYCTA_DN37523_c0_g2_i1|orf5|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.000350	0.999650	
+LYCTA_DN21906_c0_g1_i1|orf6|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.002211	0.997789	
+LYCTA_DN39184_c1_g3_i3|orf4|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.005831	0.994169	
+LYCTA_DN38735_c3_g1_i11|orf4|VP_02_00|Peptidase_M12A_family_(IPR024079;IPR001506;IPR006026;PF01400;)	OTHER	0.049588	0.950412	
+LYCTA_DN34118_c0_g1_i2|orf5|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	SP(Sec/SPI)	0.532777	0.467223	CS pos: 19-20. TNS-II. Pr: 0.4053
+LYCTA_DN38972_c0_g1_i5|orf5|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.000817	0.999183	
+LYCTA_DN38792_c5_g2_i1|orf6|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	SP(Sec/SPI)	0.992411	0.007589	CS pos: 16-17. VLA-SD. Pr: 0.8416
+LYCTA_DN36115_c0_g1_i1|orf6|SN_19_01|Spider_toxin_CsTx_superfamily,_D1_family_(IPR019553;IPR011142;PF10530;)	SP(Sec/SPI)	0.998262	0.001738	CS pos: 20-21. STA-EM. Pr: 0.8842
+LYCTA_DN35047_c0_g1_i1|orf4|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.001090	0.998910	
+LYCTA_DN39144_c1_g1_i1|orf5|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.000097	0.999903	
+LYCTA_DN38492_c1_g2_i2|orf4|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.000714	0.999286	
+LYCTA_DN38972_c0_g1_i6|orf5|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.000817	0.999183	
+LYCTA_DN44987_c0_g1_i1|orf4|SC_04_10|CsTx-16	OTHER	0.000334	0.999666	
+LYCTA_DN29633_c0_g3_i1|orf4|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.001004	0.998996	
+LYCTA_DN35821_c0_g2_i1|orf5|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.001307	0.998693	
+LYCTA_DN35368_c0_g1_i2|orf6|SN_32_01|MIT-like_CsTx-21	SP(Sec/SPI)	0.795480	0.204520	CS pos: 37-38. SSS-QP. Pr: 0.4926
+LYCTA_DN31276_c0_g4_i1|orf6|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.000931	0.999069	
+LYCTA_DN38472_c0_g2_i1|orf6|VP_15_00|Leucine_rich_peptide_(IPR032675)	SP(Sec/SPI)	0.799470	0.200530	CS pos: 38-39. VGA-TT. Pr: 0.4671
+LYCTA_DN38358_c1_g3_i3|orf6|SN_03_05|Spider_toxin_Tx2_family,_Spider_Tx2_sb3_	OTHER	0.001351	0.998649	
+LYCTA_DN36384_c0_g1_i1|orf4|SN_05_01|Spider_agouti	OTHER	0.079041	0.920959	
+LYCTA_DN46193_c0_g1_i1|orf4|SN_10_20|Huwentoxin-1_family,_HpTX3_subfamily_(IPR011696;PF07740;)	OTHER	0.005991	0.994009	
+LYCTA_DN37895_c2_g1_i1|orf4|SN_16_00|Spider_toxin_SFI_family_(IPR012633;PF08115;)	OTHER	0.193004	0.806996	
+LYCTA_DN39273_c0_g1_i3|orf6|SC_03_01|Latarcin_superfamily,_Lt1_family_(IPR018802;PF10279;)	OTHER	0.001169	0.998831	
+LYCTA_DN34393_c0_g1_i1|orf6|VP_06_00|Arthropod_Phospholipase_A2_(IPR001211)	SP(Sec/SPI)	0.955128	0.044872	CS pos: 19-20. INA-GQ. Pr: 0.7754
+LYCTA_DN36278_c0_g3_i1|orf6|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.002327	0.997673	
+LYCTA_DN38348_c3_g1_i7|orf4|SN_10_08|Huwentoxin-1_family,_Gtx1_15_subfamily_(IPR011696;PF07740;)	OTHER	0.007315	0.992685	
+LYCTA_DN36372_c0_g4_i1|orf5|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	SP(Sec/SPI)	0.759549	0.240451	CS pos: 27-28. SKG-KV. Pr: 0.5722
+LYCTA_DN40391_c0_g1_i1|orf4|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.002733	0.997267	
+LYCTA_DN36382_c0_g1_i1|orf5|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.002715	0.997285	
+LYCTA_DN36307_c0_g1_i1|orf4|SN_10_00|Huwentoxin-1_family_(IPR011696;PF07740;)	SP(Sec/SPI)	0.998235	0.001765	CS pos: 17-18. VAA-IP. Pr: 0.5750
+LYCTA_DN33624_c0_g3_i1|orf5|SN_19_12|Spider_toxin_CsTx_superfamily,_Spider_CsTx_typ3_(IPR011142;)	OTHER	0.001215	0.998785	
+LYCTA_DN30097_c0_g1_i1|orf4|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	SP(Sec/SPI)	0.940036	0.059964	CS pos: 23-24. TAG-SR. Pr: 0.6027
+LYCTA_DN32266_c0_g1_i1|orf6|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.033376	0.966624	
+LYCTA_DN38168_c0_g1_i2|orf4|SN_10_54|Huwentoxin-1_family,_ProTx_1_subfamily_(IPR011696;PF07740;)	OTHER	0.001332	0.998668	
+LYCTA_DN38816_c1_g7_i1|orf6|VP_07_00|Angiotensin-converting_Enzyme_(IPR033591)	OTHER	0.000381	0.999619	
+LYCTA_DN36229_c0_g3_i1|orf6|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.000647	0.999353	
+LYCTA_DN37199_c0_g1_i1|orf4|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.012593	0.987407	
+LYCTA_DN39273_c0_g1_i7|orf5|SC_03_01|Latarcin_superfamily,_Lt1_family_(IPR018802;PF10279;)	OTHER	0.002625	0.997375	
+LYCTA_DN38157_c0_g1_i2|orf6|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.003982	0.996018	
+LYCTA_DN11312_c0_g1_i1|orf4|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.140154	0.859846	
+LYCTA_DN37864_c0_g1_i1|orf5|SN_10_66|Huwentoxin-1_family,_Jztx_24_subfamily_	SP(Sec/SPI)	0.993079	0.006921	CS pos: 22-23. TTA-EN. Pr: 0.8056
+LYCTA_DN44066_c0_g1_i1|orf5|SN_10_03|Huwentoxin-1_family,_BsTX5_subfamily_(IPR011696;PF07740;)	SP(Sec/SPI)	0.983195	0.016805	CS pos: 23-24. VNG-YL. Pr: 0.9243
+LYCTA_DN38966_c8_g1_i1|orf6|VP_13_01|Cysteine_rich_secretory_protein_type_1_(IPR014044;IPR002413)	SP(Sec/SPI)	0.996501	0.003499	CS pos: 26-27. VQS-AY. Pr: 0.9271
+LYCTA_DN38402_c3_g3_i1|orf5|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.001300	0.998700	
+LYCTA_DN35604_c1_g1_i3|orf2|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001550	0.998450	
+LYCTA_DN38219_c1_g19_i1|orf4|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.002644	0.997356	
+LYCTA_DN35997_c0_g1_i4|orf3|SN_07_00|Beta-delta_agatoxin_family_(IPR009243;)	OTHER	0.050569	0.949431	
+LYCTA_DN38792_c5_g1_i4|orf4|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	OTHER	0.354383	0.645617	
+LYCTA_DN33553_c0_g1_i3|orf4|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.007942	0.992058	
+LYCTA_DN39184_c1_g3_i10|orf4|VP_19_04|Latrotoxin_superfamily,_Delta_latroinsectotoxin_family_	OTHER	0.000581	0.999419	
+LYCTA_DN39412_c6_g5_i1|orf4|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000294	0.999706	
+LYCTA_DN29897_c0_g1_i1|orf4|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.001039	0.998961	
+LYCTA_DN26938_c0_g2_i1|orf6|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.070679	0.929321	
+LYCTA_DN38799_c3_g5_i1|orf5|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000657	0.999343	
+LYCTA_DN38697_c1_g1_i4|orf5|SN_04_01|Omega-agatoxin_superfamily,_Omega_agatx_sb2_(IPR005853;IPR013605;PF08396;)	OTHER	0.001137	0.998863	
+LYCTA_DN39014_c2_g2_i2|orf5|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.003521	0.996479	
+LYCTA_DN36971_c0_g4_i1|orf6|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.005263	0.994737	
+LYCTA_DN30558_c0_g2_i1|orf3|SN_10_43|Huwentoxin-1_family,_Jztx_49_subfamily_(IPR011696;PF07740;)	OTHER	0.000489	0.999511	
+LYCTA_DN32925_c0_g1_i1|orf6|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.001920	0.998080	
+LYCTA_DN39161_c5_g8_i2|orf4|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.010285	0.989715	
+LYCTA_DN36619_c0_g1_i2|orf6|VP_13_02|Cysteine_rich_secretory_protein_type_2	OTHER	0.001125	0.998875	
+LYCTA_DN36923_c0_g1_i3|orf5|VP_03_01|Arthropod_phospholipase_D_family,_Class_II_subfamily_(IPR017946;)	OTHER	0.002146	0.997854	
+LYCTA_DN38793_c2_g6_i4|orf4|VP_15_00|Leucine_rich_peptide_(IPR032675)	SP(Sec/SPI)	0.616598	0.383402	CS pos: 34-35. VIS-KR. Pr: 0.5315
+LYCTA_DN38792_c5_g4_i1|orf5|VP_16_00|Protein_disulfide-isomerase_(IPR005792)	SP(Sec/SPI)	0.749868	0.250132	CS pos: 28-29. VSC-EE. Pr: 0.6774
+LYCTA_DN37498_c0_g1_i2|orf4|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.000903	0.999097	
+LYCTA_DN24357_c0_g1_i1|orf5|VP_19_03|Latrotoxin_superfamily,_Alpha_latrotoxin_family_(IPR002110;IPR020683;IPR013829;PF00023)	OTHER	0.001192	0.998808	
+LYCTA_DN35459_c0_g1_i1|orf5|SN_10_59|Huwentoxin-1_family,_Tltx_subfamily_(IPR011696;PF07740;)	OTHER	0.003110	0.996890	
+LYCTA_DN38472_c0_g1_i3|orf4|VP_15_00|Leucine_rich_peptide_(IPR032675)	OTHER	0.001995	0.998005	
+LYCTA_DN31036_c0_g1_i2|orf3|SN_19_03|Spider_toxin_CsTx_superfamily,_Spider_CsTx_typ2_(IPR019553;IPR011142;PF10530;)	OTHER	0.014223	0.985777	
+LYCTA_DN39367_c0_g1_i27|orf6|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000688	0.999312	
+LYCTA_DN37228_c0_g2_i1|orf6|VP_02_00|Peptidase_M12A_family_(IPR024079;IPR001506;IPR006026;PF01400;)	OTHER	0.001620	0.998380	
+LYCTA_DN38157_c0_g1_i10|orf4|VP_19_02|Latrotoxin_superfamily,_Alpha_latroinsectotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000789	0.999211	
+LYCTA_DN39142_c5_g3_i2|orf6|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001433	0.998567	
+LYCTA_DN38852_c0_g1_i2|orf4|VP_10_00|Venom_Serine_protease_(IPR001314;IPR001254)	OTHER	0.015340	0.984660	
+LYCTA_DN39330_c4_g1_i3|orf4|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.000734	0.999266	
+LYCTA_DN31060_c0_g4_i1|orf4|VP_19_01|Latrotoxin_superfamily,_Alpha_latrocrustotoxin_family_(IPR002110;IPR020683;PF00023)	OTHER	0.001728	0.998272	
+LYCTA_DN44325_c0_g1_i1|orf5|SN_10_32|Huwentoxin-1_family,_Jztx_16_subfamily_(IPR011696;PF07740;)	SP(Sec/SPI)	0.998650	0.001350	CS pos: 17-18. SNA-LF. Pr: 0.8617

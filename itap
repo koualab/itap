@@ -16,9 +16,11 @@ use Cwd qw( abs_path );
 use English qw( -no_match_vars );
 use File::Temp qw( tempfile );
 use File::Basename;
+use File::Replace qw( replace );
 use FindBin qw( $RealBin );
 use Getopt::Declare;
 use IPC::System::Simple qw( capture );
+use List::Util qw( any );
 use Pod::Usage;
 use Readonly;
 use Scalar::Util qw( openhandle );
@@ -28,7 +30,7 @@ use Text::CSV;
 use Text::CSV::Hashify;
 
 $::VERSION = '0.1.0';    # use $::VERSION for Getopt::Declare
-our $VERSION = 0.1.0;    # use $VERSION to avoid Perl::Critic warns
+our $VERSION = 0.1.0;    # use $VERSION to avoid Perl::Critic warning
 
 # Global variables
 my @CMDLINE = ( $PROGRAM_NAME, @ARGV );
@@ -135,12 +137,17 @@ foreach my $ne (@needed_exe) {
 		msg("Found $ne");
 	}
 	else {
-		err ("itap need $ne. Please install it and continue");
+			err ("itap need $ne. Please install it and continue");
 	}
 }
 my $kallisto_version   = capture('kallisto version');
 my $hmmcompete_version = capture('hmmcompete -v');
-my $signalp_version    = capture('signalp -V');
+my $signalp_version    = capture('signalp -version');
+
+if ( index( 'version 5', $signalp_version ) == -1 ) {
+		err
+		('SignalP version is not equal or greater than 5.0. Please upgrade');
+}
 
 #----------STEP 1: Quantify raw reads with all transcripts--#
 # Build all contigs index
@@ -229,8 +236,10 @@ open my $prec, '<', "$outdir/hmmcompete.out"
 my %fields;
 $tsv->getline($prec);
 while ( my $row = $tsv->getline($prec) ) {
+	my $rhmm = $row->[$HMM_CLASSIFIER_DESC];
+	$rhmm =~ tr/ /_/s;
 	$fields{ $row->[0] } = join q{|}, $row->[1], $row->[$HMM_TARGET_REGION],
-		$row->[$HMM_CLASSIFIER_DESC];
+		$rhmm;
 }
 close $prec or croak " Close failed: $OS_ERROR";
 
@@ -257,7 +266,8 @@ while ( my ( $key, $value ) = each %fields ) {
 	my $pat  = $pats[1];
 	print {$extseq} '>', join( q{|}, $key, $pats[0], $pats[2] ), "\n",
 		extend_str( $inprot->get_Seq_by_id($key)->seq, $pat ), "\n",
-		or croak "Print retrieving id of sequences to $extseq failed: $OS_ERROR";
+		or croak
+		"Print retrieving id of sequences to $extseq failed: $OS_ERROR";
 }
 close $extseq or croak "Close $extseq failed: $OS_ERROR";
 
@@ -266,47 +276,48 @@ close $extseq or croak "Close $extseq failed: $OS_ERROR";
 msg('Annotating sequences');
 msg('Searching signal sequence');
 msg("Use $signalp_version");
-runcmd("signalp -t euk $outdir/contigs.prot.reg > $outdir/signalp.out");
+runcmd(
+	"signalp -fasta $outdir/contigs.prot.reg -org euk -format short -prefix contigs_prot_reg -gff3"
+);
 msg('Done searching signal sequences');
 
 msg('Adding signal sequence presence to sequence header');
-open my $sigpout, '<', "$outdir/signalp.out"
-	or croak "Failed opening $outdir/signal.out: $OS_ERROR";
+my @ids_from_sigp = parse_gff3("$outdir/contigs_prot_reg.gff3");
+
+foreach my $val_id (@ids_from_sigp) {
+	$val_id = $val_id . '#SIGYES';
+}
+
 my $protreg = Bio::SeqIO->new(
 	-file   => "$outdir/contigs.prot.reg",
 	-format => 'fasta'
 );
 
-# Skip first two lines
-$tsv->getline($sigpout);
-$tsv->getline($sigpout);
-
-# Add signal presence info to contig headers
-while ( my $regobj = $protreg->next_seq ) {
-	while ( my $regrow = $tsv->getline($sigpout) ) {
-		if ( $regobj->id eq $regrow->[0] ) {
-			$regobj->id =~ s/\s/-/msx;
-			if ( $regrow->[$SIGNAL_PRESENCE] eq 'N' ) {
-				$regobj->id = $regobj->id . '#SIGNO';
-			}
-			elsif ( $regrow->[$SIGNAL_PRESENCE] eq 'Y' ) {
-				$regobj->id = $regobj->id . '#SIGYES';
-			}
-		}
+my $temprotreg = replace($protreg);
+while ( my $protreg_obj = $protreg->next_seq ) {
+	if ( any { $_ eq $protreg_obj->id } @ids_from_sigp ) {
+		$protreg_obj->id = $_;
 	}
+	print {$temprotreg} $protreg_obj->id, "\n", $protreg_obj->seq
+		or croak "Failed to print to $temprotreg: $OS_ERROR";
 }
+close $temprotreg or croak "Failed to close file $temprotreg: $OS_ERROR";
+
 msg('Done adding signal presence');
 
 # Split fasta file into families
-while ( my $regobj = $protreg->next_seq ) {
-	my @idfields = split m{[|]}msx, $regobj->id;
+my $panreg = Bio::SeqIO->new(
+	-file   => "$outdir/contigs.prot.reg",
+	-format => 'fasta'
+);
+while ( my $panobj = $panreg->next_seq ) {
+	my @idfields = split m{[|]}msx, $panreg->id;
 	my $regid    = $idfields[2];
 	Bio::SeqIO->new(
 		-format => 'fasta',
 		-file   => '>' . $regid . '_fam.fas'
-	)->write_seq($regobj);
+	)->write_seq($panobj);
 }
-close $sigpout or croak "Failed closing $sigpout: $OS_ERROR";
 
 # Make alignment
 my @fam = glob "$outdir/*_fam.fas";
@@ -333,7 +344,8 @@ while ( my $sioprotreg = $protreg->next_seq ) {
 	# into original AA sequence
 	my $tindex = index $inprot->get_Seq_by_id( $tid[0] ), $sioprotreg->seq;
 
-	print {$oregdna} '>', $tid[0], "\n", substr $inx->get_Seq_by_id( $tid[0] ),
+	print {$oregdna} '>', $tid[0], "\n",
+		substr $inx->get_Seq_by_id( $tid[0] ),
 		$tindex * $CODON_LENGTH, length( $sioprotreg->seq ) * $CODON_LENGTH
 		or croak "Print failed: $OS_ERROR";
 
@@ -404,6 +416,30 @@ close LOG or croak("Close $logfile file failed: $OS_ERROR");
 
 #------------Subroutines section-----------------------#
 
+sub parse_gff3 {
+
+	# This subroutine takes a gff3 and return the list of sequences
+	# ids from first column. It's intended to use with signalp 5.0
+	# gff3 output file.
+
+	my $infile = @_;
+	my @fields;
+	my @ids;
+
+	open my $infh, '<', $infile
+		or croak "Cannot open file $infile: $OS_ERROR";
+
+	while ( my $line = <$infh> ) {
+		if ( $line =~ /^#/msx ) {
+			next;
+		}
+		@fields = split /\t/msx, $line;
+		push @ids, $fields[0];
+	}
+	close $infh or croak "Cannot close file $infh: $OS_ERROR";
+	return @ids;
+}
+
 sub extend_str {
 
 	my ( $seq, $pat ) = @_;
@@ -422,15 +458,16 @@ sub extend_str {
 	# Look for M and * in left string and * in right string
 	my $rindx = index $rstr, q{*};
 	my $lindm = index $lstr, 'M';
-	my $lindx = rindex $lstr, q{*}; # use rindex to find last occurence of char
+	my $lindx = rindex $lstr,
+		q{*};    # use rindex to find last occurence of char
 
 	if ( $lindm > $lindx
-		)    # Case a Methionine is closer to begin of pattern than a Stop
+		)        # Case a Methionine is closer to begin of pattern than a Stop
 	{
 		$l = $lindm;
 	}
 	elsif ( $lindm < $lindx )
-	{        # Case a Stop is closer to begin of pattern than a Methionine
+	{            # Case a Stop is closer to begin of pattern than a Methionine
 		$l = $lindx + 1;    # + 1 to avoid display of * in sequence
 	}
 	else {
@@ -463,8 +500,6 @@ sub find_exe {
 sub translate {
 
 	# input is a Bio::Seq object
-	use Bio::SeqIO;
-	use Bio::Seq;
 	my $seqobj = shift;
 	open my $seqout, '>', "$outdir/transcripts.prot.fas"
 		or croak "open file failed: $OS_ERROR";
