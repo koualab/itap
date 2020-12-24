@@ -14,9 +14,10 @@ use Carp qw( croak );
 use Compress::Zlib;
 use Cwd qw( abs_path );
 use English qw( -no_match_vars );
-use File::Temp qw( tempfile );
 use File::Basename;
+use File::Path qw( remove_tree );
 use File::Replace qw( replace );
+use File::Temp qw( tempfile );
 use FindBin qw( $RealBin );
 use Getopt::Declare;
 use IPC::System::Simple qw( capture );
@@ -100,9 +101,10 @@ if ( -d $outdir ) {
 		msg("Re-using existing -o $outdir");
 	}
 	else {
-			err (
-			"Folder '$outdir' already exists! Please change --out or use --force"
-			);
+		msg(
+			"Folder $outdir already exists! Overwriting the directory. If it's not what was intended use --force please"
+		);
+		remove_tree( $outdir, { safe => 1 } );
 	}
 }
 else {
@@ -121,7 +123,10 @@ msg("Operating system is $OSNAME");
 # Determine number of cpus
 my $num_cores = num_cpu();
 msg("System has $num_cores cores.");
-if ( !defined $cpus ) {
+if ( !defined $cpus || $cpus < 0 ) {
+	$cpus = 1;
+}
+elsif ( $cpus == 0 ) {
 	$cpus = $num_cores;
 }
 elsif ( $cpus > $num_cores ) {
@@ -133,15 +138,14 @@ msg("We will use maximum of $cpus cores.");
 msg("Your command is: @CMDLINE");
 
 # Check needed tools
-my @needed_exe
-	= qw(kallisto signalp blastp blastx diamond hmmsearch hmmcompete);
-foreach my $ne (@needed_exe) {
-	my $tool = find_exe($ne);
+my @needed_tools = qw(kallisto signalp hmmcompete);
+foreach my $need (@needed_tools) {
+	my $tool = find_exe($need);
 	if ($tool) {
-		msg("Found $ne");
+		msg("Found $need");
 	}
 	else {
-			err ("itap need $ne. Please install it and continue");
+		print_install_msg($need);
 	}
 }
 my $kallisto_version   = capture('kallisto version');
@@ -162,71 +166,22 @@ msg('Done creating index');
 
 # Quantifying reads
 msg('Quantifying reads');
-runcmd(
-	"kallisto quant -t $cpus -i $outdir/all_transcripts.index -o $outdir/kallisto_1 $forward_reads $reverse_reads"
-);
+runcmd(   'kallisto quant' . '-t '
+		. $cpus . '-i '
+		. "$outdir/all_transcripts.index" . '-o '
+		. "$outdir/kallisto_1"
+		. "$forward_reads $reverse_reads" );
 msg('Done quantifying reads');
 
 # STEP 2: Translate transcriptome to proteins---------------------------------
-my ( $seqin, $alphabet, $gz, $buffer );
-my $tmpfh = tempfile();
-if ( $transcripts =~ m{.gz$}msx ) {
-
-	# Handling gziped file
-	msg('Your transcript file is gziped.');
-	$gz = gzopen( $transcripts, 'rb' )
-		or croak "Cannot open $transcripts: $gzerrno";
-	while ( $gz->gzread($buffer) > 0 ) {
-		print {$tmpfh} $buffer
-			or croak "Error reading from $transcripts: $gzerrno";
-	}
-	$gz->gzclose();
-	msg('Done');
-
-	# Translating
-	$seqin = Bio::SeqIO->new(
-		-file   => "$outdir/$tmpfh",
-		-format => 'fasta'
-	);
-
-	# Guess alphabet before translating.
-	$alphabet
-		= defined( $seqin->alphabet )
-		? $alphabet
-		: $EMPTY;    # init to "" if not defined
-	if ( $alphabet eq 'proteins' ) {
-		msg('Sequences aready in proteins. Skip translation.');
-		last;
-	}
-	else {
-		msg('Translating transcripts');
-		translate($seqin);
-		msg('Done translating');
-	}
-}
-else {
-	$seqin = Bio::SeqIO->new(
-		-file   => $transcripts,
-		-format => 'fasta'
-	);
-	$alphabet = defined( $seqin->alphabet ) ? $alphabet : $EMPTY;
-	if ( $alphabet eq 'proteins' ) {
-		msg('Sequences aready in proteins. Skip translation.');
-		last;
-	}
-	else {
-		msg('Translating transcripts');
-		translate($seqin);
-		msg('Done translating');
-	}
-}
-close $tmpfh or croak "Close $tmpfh file failed: $OS_ERROR";
+do_translation($transcripts);
 
 # STEP 3: Putative toxins identification--------------------------------------
 msg('Putative toxins prediction');
-runcmd(
-	"hmmcompete --desc --pepreg --hmm $dbdir/ekenda.hmm --in $outdir/transcripts_prot.fas --out $outdir/transcripts_hmmcompete_out.txt"
-);
+runcmd(   'hmmcompete --desc --pepreg ' . '--hmm'
+		. "$dbdir/ekenda.hmm " . '--in'
+		. "$outdir/transcripts_prot.fas " . '--out'
+		. "$outdir/transcripts_hmmcompete_out.txt" );
 
 # Retrieve DNA sequences of AA contigs having a match in hmmcompete
 
@@ -253,33 +208,18 @@ close $extseq or croak "Close $extseq failed: $OS_ERROR";
 msg('Annotating sequences');
 msg('Searching signal sequence');
 msg("Use $signalp_version");
-runcmd(   'signalp -fasta '
-		. "$outdir/contigs_prot_reg.fas"
-		. ' -org euk -format short -prefix contigs_prot_reg -gff3' );
+runcmd(   'signalp '
+		. '-fasta '
+		. "$outdir/contigs_prot_reg.fas "
+		. '-org euk '
+		. '-format short '
+		. '-prefix contigs_prot_reg '
+		. '-gff3' );
 msg('Done searching signal sequences');
 
 msg('Adding signal sequence presence to sequence header');
-my @ids_from_sigp = parse_gff3("$outdir/contigs_prot_reg.gff3");
-
-foreach my $val_id (@ids_from_sigp) {
-	$val_id = $val_id . '#SIGYES';
-}
-
-my $protreg = Bio::SeqIO->new(
-	-file   => "$outdir/contigs_prot_reg.fas",
-	-format => 'fasta'
-);
-
-my $temprotreg = replace($protreg);
-while ( my $protreg_obj = $protreg->next_seq ) {
-	if ( any { $_ eq $protreg_obj->id } @ids_from_sigp ) {
-		$protreg_obj->id = $_;
-	}
-	print {$temprotreg} $protreg_obj->id, "\n", $protreg_obj->seq
-		or croak "Failed to print to $temprotreg: $OS_ERROR";
-}
-close $temprotreg or croak "Failed to close file $temprotreg: $OS_ERROR";
-
+add_signal_presence( "$outdir/contigs_prot_reg.gff3",
+	"$outdir/contigs_prot_reg.fas" );
 msg('Done adding signal presence');
 
 # Split fasta file into families
@@ -324,9 +264,11 @@ msg('Done');
 
 # Quantify raw reads using putative transcripts index
 msg('Quantifying putative transcripts');
-runcmd(
-	"kallisto quant -t $cpus -i $outdir/putative_transcripts.index -o $outdir/kallisto_2 $forward_reads $reverse_reads"
-);
+runcmd(   'kallisto quant' . '-t '
+		. $cpus . '-i '
+		. "$outdir/putative_transcripts.index " . '-o '
+		. "$outdir/kallisto_2 "
+		. "$forward_reads $reverse_reads" );
 msg('Done');
 msg('Done computing expression level for precursors');
 
@@ -360,10 +302,122 @@ my $walltime = $endtime - $starttime;
 my $pretty   = sprintf '%.2f minutes', $walltime->minutes;
 msg("Walltime used: $pretty");
 msg( $walltime % 2 ? 'Share and enjoy!' : 'Thank you, come again.' );
-
 close $LOG or croak "Close $logfile file failed: $OS_ERROR";
 
 # SUBROUTINES ----------------------------------------------------------------
+sub add_signal_presence {
+
+	my ( $gfffh, $protfile ) = @_;
+	my @ids_from_sigp = parse_gff3($gfffh);
+
+	foreach my $val_id (@ids_from_sigp) {
+		$val_id = $val_id . '#SIGYES';
+	}
+
+	my $protreg = Bio::SeqIO->new(
+		-file   => $protfile,
+		-format => 'fasta'
+	);
+
+	my $temprotreg = replace($protreg);
+	while ( my $protreg_obj = $protreg->next_seq ) {
+		if ( any { $_ eq $protreg_obj->id } @ids_from_sigp ) {
+			$protreg_obj->id = $_;
+		}
+		print {$temprotreg} $protreg_obj->id, "\n", $protreg_obj->seq
+			or croak "Failed to print to $temprotreg: $OS_ERROR";
+	}
+	close $temprotreg or croak "Failed to close file $temprotreg: $OS_ERROR";
+
+	return;
+}
+
+sub do_translation {
+
+	my $infh  = @_;
+	my $outfh = tempfile();
+	my $alphabet;
+	my $buffer;
+	my $seqin;
+
+	if ( $infh =~ m{.gz$}msx ) {
+
+		# Handling gziped file
+		msg('Your transcript file is gziped.');
+		my $gzip = gzopen( $infh, 'rb' )
+			or croak "Cannot open $infh: $gzerrno";
+		while ( $gzip->gzread($buffer) > 0 ) {
+			print {$outfh} $buffer
+				or croak "Error reading from $infh: $gzerrno";
+		}
+		$gzip->gzclose();
+		msg('Done');
+
+		# Translating
+		$seqin = Bio::SeqIO->new(
+			-file   => "$outdir/$outfh",
+			-format => 'fasta'
+		);
+
+		# Guess alphabet before translating.
+		$alphabet
+			= defined( $seqin->alphabet )
+			? $alphabet
+			: $EMPTY;    # init to "" if not defined
+		if ( $alphabet eq 'proteins' ) {
+				err (
+				'Sequences already in proteins. Please provide DNA sequences.'
+				);
+		}
+		else {
+			msg('Translating transcripts');
+			translate($seqin);
+			msg('Done translating');
+		}
+	}
+	else {
+		$seqin = Bio::SeqIO->new(
+			-file   => $infh,
+			-format => 'fasta'
+		);
+		$alphabet = defined( $seqin->alphabet ) ? $alphabet : $EMPTY;
+		if ( $alphabet eq 'proteins' ) {
+				err
+				('Sequences aready in proteins. Please provide DNA sequences.'
+				);
+		}
+		else {
+			msg('Translating transcripts');
+			translate($seqin);
+			msg('Done translating');
+		}
+	}
+	close $outfh or croak "Close $outfh file failed: $OS_ERROR";
+
+	return;
+
+}
+
+sub print_install_msg {
+	my $tool = @_;
+	if ( $tool eq 'kallisto' ) {
+			err (
+			'Kallisto not found. Installation instruction can be found at https://github.com/patcherlab/kallisto.git'
+			);
+	}
+	elsif ( $tool eq 'hmmcompete' ) {
+			err (
+			'Hmmcompete not found. Installation instruction can be found at https://github.com/koualab/hmmcompete.git'
+			);
+	}
+	elsif ( $tool eq 'signalp' ) {
+			err (
+			'SignalP not found. Installation instruction can be found at http://www.cbs.dtu.dk/services/SignalP/portable.php'
+			);
+	}
+	return;
+}
+
 sub extract_seq {
 	my ( %hash, $protfile, $outfh ) = @_;
 
