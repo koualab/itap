@@ -155,7 +155,6 @@ if ( index( 'version 5', $signalp_version ) == $NON_EXIST ) {
 
 # STEP 1: Quantify raw reads with all transcripts ----------------------------
 # Build all contigs index
-# Don't need Compress::Zlib here because kallisto take care
 msg('Builing transcripts index');
 msg("Use $kallisto_version");
 runcmd("kallisto index -i $outdir/all_transcripts.index $transcripts");
@@ -237,14 +236,9 @@ my %fields = add_desc_to_ids("$outdir/hmmcompete.out");
 
 ## Second, get DNA sequences using ids of putatives sequences
 ## from hmmcompete result.
-my $inx = Bio::DB::Fasta->new($transcripts);
 open my $precdna, '>', "$outdir/contigs_dna.fas"
 	or croak "Open $outdir/contigs_dna.fas file failed: $OS_ERROR";
-foreach my $id ( keys %fields ) {    # Retrieving dna seq for each prot id
-	my @k = split m{[|]}msx, $id;
-	print {$precdna} ">$k[0]", "\n", $inx->get_Seq_by_id( $k[0] )->seq, "\n"
-		or croak "Print to $precdna failed: $OS_ERROR";
-}
+get_dna_seq( %fields, $transcripts, $precdna );
 close $precdna or croak "Close $precdna failed: $OS_ERROR";
 
 # STEP 4: Extract/extend matching sequences-----------------------------------
@@ -352,17 +346,7 @@ my $kh1_ref = hashify( "$outdir/kallisto_1/abundance.tsv", 'target_id' );
 my $kh2_ref = hashify( "$outdir/kallisto_2/abundance.tsv", 'target_id' );
 open my $ffo, '<', "$outdir/itap_output.tsv"
 	or croak "Open $outdir/itap_output.tsv file failed: $OS_ERROR";
-print $ffo, "sequence_id\traw_tpm\ttranscripts_tpm\tsequence"
-	or croak "Print to $ffo failed: $OS_ERROR";
-foreach my $k1 ( keys %{$kh1_ref} ) {
-	foreach my $k2 ( keys %{$kh2_ref} ) {
-		if ( $k1 == $k2 ) {
-			print {$ffo} $k1, "\t", $kh1_ref->{$k1}->{'tpm'}, "\t",
-				$kh2_ref->{$k2}->{'tpm'}, "\n"
-				or croak "Print to stats file failed: $OS_ERROR";
-		}
-	}
-}
+write_output( $kh1_ref, $kh2_ref, $ffo );
 close $ffo or croak "Close failed: $OS_ERROR";
 msg('Done writing files');
 
@@ -388,6 +372,38 @@ msg( $walltime % 2 ? 'Share and enjoy!' : 'Thank you, come again.' );
 close LOG or croak("Close $logfile file failed: $OS_ERROR");
 
 # SUBROUTINES ----------------------------------------------------------------
+sub get_dna_seq {
+
+	# Get DNA sequence using ids from contigs region file
+	my ( %hash, $contig_file, $outfh ) = @_;
+	my $inx = Bio::DB::Fasta->new($contig_file);
+
+	foreach my $id ( keys %hash ) {    # Retrieving dna seq for each prot id
+		my @k = split m{[|]}msx, $id;
+		print {$outfh} ">$k[0]", "\n", $inx->get_Seq_by_id( $k[0] )->seq, "\n"
+			or croak "Print to $outfh failed: $OS_ERROR";
+	}
+	return;
+}
+
+sub write_output {
+	my ( $hashref1, $hashref2, $outfh ) = @_;
+
+	print $outfh, "sequence_id\traw_tpm\ttranscripts_tpm\tsequence"
+		or croak "Print to $ffo failed: $OS_ERROR";
+
+	foreach my $k1 ( keys %{$hashref1} ) {
+		foreach my $k2 ( keys %{$hashref2} ) {
+			if ( $k1 == $k2 ) {
+				print {$outfh} $k1, "\t", $hashref1->{$k1}->{'tpm'}, "\t",
+					$hashref2->{$k2}->{'tpm'}, "\n"
+					or croak "Print to stats file failed: $OS_ERROR";
+			}
+		}
+	}
+	return;
+}
+
 sub _get_dna_reg {
 
 	# Private method for process_get_dna_reg
@@ -401,7 +417,7 @@ sub _get_dna_reg {
 		my $tindex = index $dna_index->get_Seq_by_id( $tid[0] ),
 			$protfh_obj->seq;
 		print {$outfh} ">$tid[0]\n",
-			substr $inx->get_Seq_by_id( $tid[0] ),
+			substr $dna_index->get_Seq_by_id( $tid[0] ),
 			$tindex * $CODON_LENGTH, length( $protfh->seq ) * $CODON_LENGTH
 			or croak "Print to $outfh failed: $OS_ERROR";
 	}
@@ -634,7 +650,7 @@ sub num_cpu {
 
 __END__
 
-=for stopwords fasta Ekenda itap transcriptome tsc nucleotides NGS ouput contigs kallisto signalp blastp blastx hmmcompete Anicet Ebou MERCHANTABILITY
+=for stopwords ekenda.hmm itap transcriptome tsc nucleotides NGS ouput contigs kallisto signalp blastp blastx hmmcompete Anicet Ebou MERCHANTABILITY
 
 =head1 NAME
 
@@ -661,7 +677,7 @@ for manual validation.
 
 =head1 USAGE
 
-itap [options] -tsc transcripts.fasta -fwd reads_R1.fq -rev reads_R2.fq
+itap [options] -tsc transcripts.fa -fwd reads_R1.fq -rev reads_R2.fq
 
 =head1 REQUIRED ARGUMENTS
 
@@ -691,7 +707,7 @@ Specify output directory
 
 =item  --hmm    <file>
 
-HMM file for putative toxin classification, default is Ekenda.hmm
+HMM file for putative toxin classification, default is ekenda.hmm
 
 =item  --quiet
 
