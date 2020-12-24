@@ -101,9 +101,8 @@ if ( -d $outdir ) {
 		msg("Re-using existing -o $outdir");
 	}
 	else {
-		msg(
-			"Folder $outdir already exists! Overwriting the directory. If it's not what was intended use --force please"
-		);
+		msg(      "Folder $outdir already exists! Overwriting the directory."
+				. 'If it is not what was intended use --force please' );
 		remove_tree( $outdir, { safe => 1 } );
 	}
 }
@@ -174,7 +173,7 @@ runcmd(   'kallisto quant' . '-t '
 msg('Done quantifying reads');
 
 # STEP 2: Translate transcriptome to proteins---------------------------------
-do_translation($transcripts);
+run_translation($transcripts);
 
 # STEP 3: Putative toxins identification--------------------------------------
 msg('Putative toxins prediction');
@@ -257,9 +256,9 @@ msg('Computing expression level for precursors');
 
 # Build new index from putative transcripts
 msg('Building putative transcripts index');
-runcmd(
-	"kallisto index -i $outdir/putative_transcripts.index $outdir/contigs_dna_reg.fas"
-);
+runcmd(   'kallisto index' . '-i '
+		. "$outdir/putative_transcripts.index "
+		. "$outdir/contigs_dna_reg.fas" );
 msg('Done');
 
 # Quantify raw reads using putative transcripts index
@@ -305,6 +304,8 @@ msg( $walltime % 2 ? 'Share and enjoy!' : 'Thank you, come again.' );
 close $LOG or croak "Close $logfile file failed: $OS_ERROR";
 
 # SUBROUTINES ----------------------------------------------------------------
+
+# Add peptide signal presence to sequence header -----------------------------
 sub add_signal_presence {
 
 	my ( $gfffh, $protfile ) = @_;
@@ -332,92 +333,28 @@ sub add_signal_presence {
 	return;
 }
 
-sub do_translation {
-
-	my $infh  = @_;
-	my $outfh = tempfile();
-	my $alphabet;
-	my $buffer;
-	my $seqin;
-
-	if ( $infh =~ m{.gz$}msx ) {
-
-		# Handling gziped file
-		msg('Your transcript file is gziped.');
-		my $gzip = gzopen( $infh, 'rb' )
-			or croak "Cannot open $infh: $gzerrno";
-		while ( $gzip->gzread($buffer) > 0 ) {
-			print {$outfh} $buffer
-				or croak "Error reading from $infh: $gzerrno";
-		}
-		$gzip->gzclose();
-		msg('Done');
-
-		# Translating
-		$seqin = Bio::SeqIO->new(
-			-file   => "$outdir/$outfh",
-			-format => 'fasta'
-		);
-
-		# Guess alphabet before translating.
-		$alphabet
-			= defined( $seqin->alphabet )
-			? $alphabet
-			: $EMPTY;    # init to "" if not defined
-		if ( $alphabet eq 'proteins' ) {
-				err (
-				'Sequences already in proteins. Please provide DNA sequences.'
-				);
-		}
-		else {
-			msg('Translating transcripts');
-			translate($seqin);
-			msg('Done translating');
-		}
-	}
-	else {
-		$seqin = Bio::SeqIO->new(
-			-file   => $infh,
-			-format => 'fasta'
-		);
-		$alphabet = defined( $seqin->alphabet ) ? $alphabet : $EMPTY;
-		if ( $alphabet eq 'proteins' ) {
-				err
-				('Sequences aready in proteins. Please provide DNA sequences.'
-				);
-		}
-		else {
-			msg('Translating transcripts');
-			translate($seqin);
-			msg('Done translating');
-		}
-	}
-	close $outfh or croak "Close $outfh file failed: $OS_ERROR";
-
-	return;
-
-}
-
+# Print useful error for user missing some tools -----------------------------
 sub print_install_msg {
 	my $tool = @_;
 	if ( $tool eq 'kallisto' ) {
 			err (
-			'Kallisto not found. Installation instruction can be found at https://github.com/patcherlab/kallisto.git'
-			);
+			  'Kallisto not found. Installation instruction can be found at '
+			. 'https://github.com/patcherlab/kallisto.git' );
 	}
 	elsif ( $tool eq 'hmmcompete' ) {
 			err (
-			'Hmmcompete not found. Installation instruction can be found at https://github.com/koualab/hmmcompete.git'
-			);
+			'Hmmcompete not found. Installation instruction can be found at '
+			. 'https://github.com/koualab/hmmcompete.git' );
 	}
 	elsif ( $tool eq 'signalp' ) {
 			err (
-			'SignalP not found. Installation instruction can be found at http://www.cbs.dtu.dk/services/SignalP/portable.php'
-			);
+			  'SignalP not found. Installation instruction can be found at '
+			. 'http://www.cbs.dtu.dk/services/SignalP/portable.php' );
 	}
 	return;
 }
 
+# Return extended sequence with full header ----------------------------------
 sub extract_seq {
 	my ( %hash, $protfile, $outfh ) = @_;
 
@@ -434,9 +371,8 @@ sub extract_seq {
 	return;
 }
 
+# Get DNA sequence using ids from contigs region file ------------------------
 sub get_dna_seq {
-
-	# Get DNA sequence using ids from contigs region file
 	my ( %hash, $contig_file, $outfh ) = @_;
 	my $inx = Bio::DB::Fasta->new($contig_file);
 
@@ -448,6 +384,7 @@ sub get_dna_seq {
 	return;
 }
 
+# Subroutine to process output file to create final output file --------------
 sub write_output {
 	my ( $hashref1, $hashref2, $outfh ) = @_;
 
@@ -466,6 +403,18 @@ sub write_output {
 	return;
 }
 
+# Subroutine to get DNA region corresponding to AA region --------------------
+sub process_get_dna_reg {
+	my ( $self, $dnafile, $protfile, $outfile ) = @_;
+	my $dnaind = Bio::DB::Fasta->new($dnafile);
+	open my $outfh, '>', $outfile
+		or croak 'Failed to open' . $outfile . ': ' . $OS_ERROR;
+	_get_dna_reg( $dnaind, "$outdir/contigs.prot.reg", $outfh );
+	close $outfh or croak "Failed to close $outfh: $OS_ERROR";
+	return;
+}
+
+# Private method for process_get_dna_reg -------------------------------------
 sub _get_dna_reg {
 
 	# Private method for process_get_dna_reg
@@ -486,16 +435,7 @@ sub _get_dna_reg {
 	return;
 }
 
-sub process_get_dna_reg {
-	my ( $self, $dnafile, $protfile, $outfile ) = @_;
-	my $dnaind = Bio::DB::Fasta->new($dnafile);
-	open my $outfh, '>', $outfile
-		or croak 'Failed to open' . $outfile . ': ' . $OS_ERROR;
-	_get_dna_reg( $dnaind, "$outdir/contigs.prot.reg", $outfh );
-	close $outfh or croak "Failed to close $outfh: $OS_ERROR";
-	return;
-}
-
+# Subroutine to add family and family description to sequence header ---------
 sub add_desc_to_ids {
 
 	# Add Family description to sequence header. Take as input
@@ -516,6 +456,23 @@ sub add_desc_to_ids {
 	return %seqs_header;
 }
 
+# Parse signalp gff3 output file to retrieve list of sequence ids ------------
+sub parse_gff3 {
+
+	# This subroutine takes a gff3 and return the list of sequences
+	# ids from first column. It's intended to use with signalp 5.0
+	# gff3 output file.
+
+	my ( $self, $infile ) = @_;
+
+	open my $infh, '<', $infile
+		or croak 'Cannot open file' . $infile . ': ' . $OS_ERROR;
+	_parse_input_gff3($infh);
+	close $infh or croak "Cannot close file $infh: $OS_ERROR";
+	return;
+}
+
+# Private method for parse_gff3 ----------------------------------------------
 sub _parse_input_gff3 {
 
 	# Private method for parse_gff3
@@ -531,20 +488,7 @@ sub _parse_input_gff3 {
 	return @ids;
 }
 
-sub parse_gff3 {
-
-	# This subroutine takes a gff3 and return the list of sequences
-	# ids from first column. It's intended to use with signalp 5.0
-	# gff3 output file.
-
-	my ( $self, $infile ) = @_;
-
-	open my $infh, '<', $infile
-		or croak 'Cannot open file' . $infile . ': ' . $OS_ERROR;
-	_parse_input_gff3($infh);
-	close $infh or croak "Cannot close file $infh: $OS_ERROR";
-	return;
-}
+# Extend AA sequences to sequence with start and stop codon ------------------
 
 sub extend_str {
 
@@ -592,7 +536,7 @@ sub extend_str {
 	return $extseq;
 }
 
-# Find executable sub
+# Find executable subroutine -------------------------------------------------
 sub find_exe {
 	my ($bin) = shift;
 	for my $dir ( File::Spec->path ) {
@@ -602,6 +546,83 @@ sub find_exe {
 	return;
 }
 
+# Subroutine to run translation taking into account file compression ---------
+sub run_translation {
+
+	my $infh  = @_;
+	my $outfh = tempfile();
+	my $alphabet;
+	my $buffer;
+	my $seqin;
+
+	if ( $infh =~ m{.gz$}msx ) {
+
+		# Handling gziped file
+		msg('Your transcript file is gziped.');
+		my $gzip = gzopen( $infh, 'rb' )
+			or croak "Cannot open $infh: $gzerrno";
+		while ( $gzip->gzread($buffer) > 0 ) {
+			print {$outfh} $buffer
+				or croak "Error reading from $infh: $gzerrno";
+		}
+		$gzip->gzclose();
+		msg('Done');
+
+		# Translating
+		$seqin = Bio::SeqIO->new(
+			-file   => "$outdir/$outfh",
+			-format => 'fasta'
+		);
+
+		# Guess alphabet before translating.
+		$alphabet
+			= defined( $seqin->alphabet )
+			? $alphabet
+			: $EMPTY;    # init to "" if not defined
+		if ( $alphabet eq 'proteins' ) {
+				err (
+				'Sequences already in proteins. Please provide DNA sequences.'
+				);
+		}
+		else {
+			msg('Translating transcripts');
+			translate( $seqin, "$outdir/contigs_prot.fas" );
+			msg('Done translating');
+		}
+	}
+	else {
+		$seqin = Bio::SeqIO->new(
+			-file   => $infh,
+			-format => 'fasta'
+		);
+		$alphabet = defined( $seqin->alphabet ) ? $alphabet : $EMPTY;
+		if ( $alphabet eq 'proteins' ) {
+				err
+				('Sequences aready in proteins. Please provide DNA sequences.'
+				);
+		}
+		else {
+			msg('Translating transcripts');
+			translate( $seqin, "$outdir/contigs_prot.fas" );
+			msg('Done translating');
+		}
+	}
+	close $outfh or croak "Close $outfh file failed: $OS_ERROR";
+
+	return;
+
+}
+
+# Translate a DNA sequence file into 6 ORF -----------------------------------
+sub translate {
+	my ( $seqobj, $outfile ) = @_;
+	open my $seqout, '>', $outfile or croak "open file failed: $OS_ERROR";
+	_do_translation( $seqobj, $seqout );
+	close $seqout or croak "Close file failed: $OS_ERROR";
+	return;
+}
+
+# Private method for translate subroutine ------------------------------------
 sub _do_translation {
 	my ( $self, $seqobj, $seqout ) = @_;
 
@@ -643,19 +664,7 @@ sub _do_translation {
 	return;
 }
 
-sub translate {
-
-	# Translate subroutine
-	# input is a Bio::Seq object
-	my $seqobj = @_;
-	open my $seqout, '>', "$outdir/transcripts.prot.fas"
-		or croak "open file failed: $OS_ERROR";
-	_do_translation( $seqobj, $seqout );
-	close $seqout or croak "Close file failed: $OS_ERROR";
-	return;
-}
-
-# msg subroutine
+# Print message to screen ----------------------------------------------------
 sub msg {
 	my $t    = localtime;
 	my $line = '[' . $t->hms . "] @_\n";
@@ -680,15 +689,15 @@ sub msg {
 	return;
 }
 
-# err subroutine
+# Print error and exit -------------------------------------------------------
 sub err {
 	my $text = @_;
 	$quiet = 0;
 	msg($text);
-	exit 2;    #???
+	exit 2;
 }
 
-# runcmd subroutine
+# Run command subroutine -----------------------------------------------------
 sub runcmd {
 	my @cmd = @_;
 	msg( 'Running:', @cmd );
@@ -696,7 +705,7 @@ sub runcmd {
 	return 1;
 }
 
-# Automatic detection of num of cpu subroutine
+# Automatic detection of number of cpu ---------------------------------------
 sub num_cpu {
 	if ( $OSNAME =~ m/linux/msi ) {
 		my ($num) = capture('grep -c ^processor /proc/cpuinfo');
@@ -710,9 +719,11 @@ sub num_cpu {
 	return 1;
 }
 
+# POD HELP -------------------------------------------------------------------
 __END__
 
-=for stopwords ekenda.hmm itap transcriptome tsc nucleotides NGS ouput contigs kallisto signalp blastp blastx hmmcompete Anicet Ebou MERCHANTABILITY
+=for stopwords ekenda.hmm itap transcriptome tsc nucleotides NGS ouput contigs
+=for stopwords kallisto signalp blastp blastx hmmcompete Anicet Ebou MERCHANTABILITY
 
 =head1 NAME
 
