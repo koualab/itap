@@ -4,12 +4,7 @@ use strict;
 use warnings;
 
 use Bio::DB::Fasta;
-use Bio::Root::Version;
-use Bio::SearchIO;
-use Bio::Seq;
 use Bio::SeqIO;
-use Bio::SeqFeature::Generic;
-use Bio::Tools::GuessSeqFormat;
 use Carp qw( croak );
 use Compress::Zlib;
 use Cwd qw( abs_path );
@@ -112,12 +107,12 @@ else {
 }
 
 # START ----------------------------------------------------------------------
-msg("This is $EXE $::VERSION");
-msg("Written by $AUTHOR");
-msg("Homepage is $URL");
-msg("Local time is $starttime");
+msg( 'This is ' . $EXE . $::VERSION );
+msg( 'Written by ' . $AUTHOR );
+msg( 'Homepage is ' . $URL );
+msg( 'Local time is ' . $starttime );
 msg( 'You are', $ENV{USER} || 'not telling me who you are!' );
-msg("Operating system is $OSNAME");
+msg( 'Operating system is' . $OSNAME );
 
 # Determine number of cpus
 my $num_cores = num_cpu();
@@ -160,15 +155,17 @@ if ( index( 'version 5', $signalp_version ) == $NON_EXIST ) {
 # Build all contigs index
 msg('Builing transcripts index');
 msg("Use $kallisto_version");
-runcmd("kallisto index -i $outdir/all_transcripts.index $transcripts");
+runcmd(   'kallisto index ' . '-i '
+		. "$outdir/all_transcripts.index "
+		. "$transcripts" );
 msg('Done creating index');
 
 # Quantifying reads
 msg('Quantifying reads');
-runcmd(   'kallisto quant' . '-t '
+runcmd(   'kallisto quant ' . '-t '
 		. $cpus . '-i '
 		. "$outdir/all_transcripts.index" . '-o '
-		. "$outdir/kallisto_1"
+		. "$outdir/kallisto_1 "
 		. "$forward_reads $reverse_reads" );
 msg('Done quantifying reads');
 
@@ -177,9 +174,11 @@ run_translation($transcripts);
 
 # STEP 3: Putative toxins identification--------------------------------------
 msg('Putative toxins prediction');
-runcmd(   'hmmcompete --desc --pepreg ' . '--hmm'
-		. "$dbdir/ekenda.hmm " . '--in'
-		. "$outdir/transcripts_prot.fas " . '--out'
+runcmd(   'hmmcompete --desc --pepreg '
+		. '--hmm '
+		. "$dbdir/ekenda.hmm " . '--in '
+		. "$outdir/transcripts_prot.fas "
+		. '--out '
 		. "$outdir/transcripts_hmmcompete_out.txt" );
 
 # Retrieve DNA sequences of AA contigs having a match in hmmcompete
@@ -263,7 +262,7 @@ msg('Done');
 
 # Quantify raw reads using putative transcripts index
 msg('Quantifying putative transcripts');
-runcmd(   'kallisto quant' . '-t '
+runcmd(   'kallisto quant ' . '-t '
 		. $cpus . '-i '
 		. "$outdir/putative_transcripts.index " . '-o '
 		. "$outdir/kallisto_2 "
