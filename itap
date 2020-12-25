@@ -15,7 +15,7 @@ use File::Replace qw( replace );
 use File::Temp qw( tempfile );
 use FindBin qw( $RealBin );
 use Getopt::Declare;
-use IPC::System::Simple qw( capture );
+use IPC::System::Simple qw( capture EXIT_ANY );
 use List::Util qw( any );
 use Pod::Usage;
 use Readonly;
@@ -94,11 +94,12 @@ if ( !defined $outdir ) {
 if ( -d $outdir ) {
 	if ($force) {
 		msg("Re-using existing -o $outdir");
+		remove_tree( $outdir, { safe => 1 } );
 	}
 	else {
-		msg(      "Folder $outdir already exists! Overwriting the directory."
-				. 'If it is not what was intended use --force please' );
-		remove_tree( $outdir, { safe => 1 } );
+			err (
+			"Folder $outdir already exists!. Please change it using -o or use --force"
+			);
 	}
 }
 else {
@@ -112,7 +113,7 @@ msg( 'Written by ' . $AUTHOR );
 msg( 'Homepage is ' . $URL );
 msg( 'Local time is ' . $starttime );
 msg( 'You are', $ENV{USER} || 'not telling me who you are!' );
-msg( 'Operating system is' . $OSNAME );
+msg( 'Operating system is ' . $OSNAME );
 
 # Determine number of cpus
 my $num_cores = num_cpu();
@@ -144,11 +145,11 @@ foreach my $need (@needed_tools) {
 }
 my $kallisto_version   = capture('kallisto version');
 my $hmmcompete_version = capture('hmmcompete -v');
-my $signalp_version    = capture('signalp -version');
+my $signalp_version    = capture( EXIT_ANY, 'signalp -version' );
 
-if ( index( 'version 5', $signalp_version ) == $NON_EXIST ) {
+if ( index( $signalp_version, 'version 5' ) == $NON_EXIST ) {
 		err
-		('SignalP version is not equal or greater than 5.0. Please upgrade');
+		('SignalP version is not equal or greater than 5.0. Please upgrade.');
 }
 
 # STEP 1: Quantify raw reads with all transcripts ----------------------------
@@ -688,9 +689,9 @@ sub msg {
 
 # Print error and exit -------------------------------------------------------
 sub err {
-	my $text = @_;
+	my @text = @_;
 	$quiet = 0;
-	msg($text);
+	msg(@text);
 	exit 2;
 }
 
