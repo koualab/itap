@@ -293,8 +293,6 @@ foreach ( capture("find $outdir -type f -name '*'") ) {
 my $logfile = "$outdir/itap.log";
 msg("Writing log to: $logfile");
 open my $LOG, '>', $logfile or err ('Cannot open logfile');
-print {$LOG} @LOG
-	or croak "Print to $LOG failed: $OS_ERROR";    # Write all buffered lines
 msg('Annotation finished successfully.');
 my $endtime  = localtime;
 my $walltime = $endtime - $starttime;
@@ -671,16 +669,16 @@ sub msg {
 	if ( !$quiet ) {
 		print {*STDERR} $line or croak "print failed: $OS_ERROR";
 	}
-	if ( openhandle( \*LOG ) ) {
+	if ( openhandle($LOG) ) {
 
 		# write out any buffered log lines
 		if (@LOG) {
-			print {*LOG} @LOG or croak "print to log failed: $OS_ERROR";
+			print {$LOG} @LOG or croak "print to log failed: $OS_ERROR";
 			@LOG = ();
 		}
 
 		# write out the current log line
-		print {*LOG} $line or croak "print to log failed: $OS_ERROR";
+		print {$LOG} $line or croak "print to log failed: $OS_ERROR";
 	}
 	else {
 		# buffer this log line for later
