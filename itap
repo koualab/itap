@@ -261,13 +261,14 @@ while ( my $panobj = $panreg->next_seq ) {
 # Input is a Bio::SeqIO sequence object
 process_get_dna_reg( $transcripts, "$outdir/contigs_prot_reg.fas",
 	"$outdir/contigs_dna_reg.fas" );
+move( "$outdir/contigs_prot_reg_new.fas", "$outdir/contigs_prot_reg.fas" );
 
 # STEP 7: Compute TPM for precursors------------------------------------------
 msg('Computing expression level for precursors');
 
 # Build new index from putative transcripts
 msg('Building putative transcripts index');
-runcmd(   'kallisto index' . '-i '
+runcmd(   'kallisto index' . ' -i '
 		. "$outdir/putative_transcripts.index "
 		. "$outdir/contigs_dna_reg.fas" );
 msg('Done');
@@ -325,18 +326,20 @@ sub add_signal_presence {
 		-format => 'fasta'
 	);
 
-	my $temprotreg = replace($protreg);
+	my $new_header;
+	my $temprotreg = tempfile();
 	while ( my $protreg_obj = $protreg->next_seq ) {
 		my $header = $protreg_obj->id . $SPACE . $protreg_obj->desc;
 		if ( any { $_ eq $header } @ids_from_sigp ) {
-			$header = $header . 'SIG=YES';
+			$new_header = $header . ' SIG=YES';
 		}
 		else {
-			$header = $header . 'SIG=NO';
+			$new_header = $header . ' SIG=NO';
 		}
-		print {$temprotreg} $header, "\n", $protreg_obj->seq
+		print {$temprotreg} $new_header, "\n", $protreg_obj->seq
 			or croak "Failed to print to $temprotreg: $OS_ERROR";
 	}
+	copy( $temprotreg, "$outdir/contigs_prot_reg_new.fas" );
 	close $temprotreg or croak "Failed to close file $temprotreg: $OS_ERROR";
 
 	return;
@@ -438,7 +441,7 @@ sub get_dna_reg {
 		-format => 'fasta'
 	);
 	while ( my $protfh_obj = $protfh->next_seq ) {
-		my @arrayid = split m{[_]}msx, $protfh->id;
+		my @arrayid = split m{[_]}msx, $protfh_obj->id;
 		my $sid     = join '_', @arrayid[ 0 .. $#arrayid - 1 ];
 		my $tindex  = index $dna_index->get_Seq_by_id($sid), $protfh_obj->seq;
 		print {$outfh} '>', $protfh_obj->id . $SPACE . $protfh_obj->desc,
