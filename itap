@@ -4,18 +4,20 @@ use strict;
 use warnings;
 
 use Bio::DB::Fasta;
+use Bio::Seq;
 use Bio::SeqIO;
 use Carp qw( croak );
 use Compress::Zlib;
 use Cwd qw( abs_path );
 use English qw( -no_match_vars );
 use File::Basename;
+use File::Copy;
 use File::Path qw( remove_tree );
 use File::Replace qw( replace );
 use File::Temp qw( tempfile );
 use FindBin qw( $RealBin );
 use Getopt::Declare;
-use IPC::System::Simple qw( capture EXIT_ANY );
+use IPC::System::Simple qw( run capture EXIT_ANY );
 use List::Util qw( any );
 use Pod::Usage;
 use Readonly;
@@ -36,12 +38,15 @@ my $AUTHOR  = 'Anicet Ebou <anicet.ebou@gmail.com>';
 my $URL     = 'https://github.com/koualab/itap.git';
 my @LOG;                 # buffer up log lines before we have log file ready
 my $EMPTY = q{};
+my $SPACE = q{ };
 
 # Define constants using Readonly
 Readonly my $HMM_TARGET_REGION   => 4;
 Readonly my $HMM_CLASSIFIER_DESC => 5;
 Readonly my $CODON_LENGTH        => 3;
 Readonly my $NON_EXIST           => -1;
+Readonly my $RWE_FOR_OWNER       => 0700;
+Readonly my $TARGET_REGION_INDEX => 3;
 
 # Define starttime
 my $starttime = localtime;
@@ -95,6 +100,7 @@ if ( -d $outdir ) {
 	if ($force) {
 		msg("Re-using existing -o $outdir");
 		remove_tree( $outdir, { safe => 1 } );
+		mkdir $outdir, $RWE_FOR_OWNER;
 	}
 	else {
 			err (
@@ -104,7 +110,7 @@ if ( -d $outdir ) {
 }
 else {
 	msg("Creating new output folder: $outdir");
-	runcmd("mkdir -p $outdir");
+	mkdir $outdir, $RWE_FOR_OWNER;
 }
 
 # START ----------------------------------------------------------------------
@@ -143,9 +149,9 @@ foreach my $need (@needed_tools) {
 		print_install_msg($need);
 	}
 }
-my $kallisto_version   = capture('kallisto version');
-my $hmmcompete_version = capture('hmmcompete -v');
-my $signalp_version    = capture( EXIT_ANY, 'signalp -version' );
+chomp( my $kallisto_version   = capture('kallisto version') );
+chomp( my $hmmcompete_version = capture('hmmcompete -v') );
+chomp( my $signalp_version    = capture( [ 0 .. 1 ], 'signalp -version' ) );
 
 if ( index( $signalp_version, 'version 5' ) == $NON_EXIST ) {
 		err
@@ -164,8 +170,8 @@ msg('Done creating index');
 # Quantifying reads
 msg('Quantifying reads');
 runcmd(   'kallisto quant ' . '-t '
-		. $cpus . '-i '
-		. "$outdir/all_transcripts.index" . '-o '
+		. $cpus . ' -i '
+		. "$outdir/all_transcripts.index " . '-o '
 		. "$outdir/kallisto_1 "
 		. "$forward_reads $reverse_reads" );
 msg('Done quantifying reads');
@@ -178,7 +184,7 @@ msg('Putative toxins prediction');
 runcmd(   'hmmcompete --desc --pepreg '
 		. '--hmm '
 		. "$dbdir/ekenda.hmm " . '--in '
-		. "$outdir/transcripts_prot.fas "
+		. "$outdir/contigs_prot.fas "
 		. '--out '
 		. "$outdir/transcripts_hmmcompete_out.txt" );
 
@@ -186,20 +192,23 @@ runcmd(   'hmmcompete --desc --pepreg '
 
 ## First, add description of matched families by hmmcompete
 ## to sequence header.
+msg('Adding description of matched families');
 my %fields = add_desc_to_ids("$outdir/transcripts_hmmcompete_out.txt");
 
 ## Second, get DNA sequences using ids of putatives sequences
 ## from hmmcompete result.
+msg('Getting DNA sequences using ids of putatives sequences');
 open my $precdna, '>', "$outdir/contigs_dna.fas"
 	or croak "Open $outdir/contigs_dna.fas file failed: $OS_ERROR";
-get_dna_seq( %fields, $transcripts, $precdna );
+get_dna_seq( $transcripts, $precdna, \%fields );
 close $precdna or croak "Close $precdna failed: $OS_ERROR";
 
 # STEP 4: Extract/extend matching sequences-----------------------------------
 # Extract matching region from hmmcompete.out and extend sequence
+msg('Extracting matching region and extending sequence');
 open my $extseq, '>', "$outdir/contigs_prot_reg.fas"
 	or croak "Open $outdir/contigs_prot_reg.fas file failed: $OS_ERROR";
-extract_seq( %fields, "$outdir/transcripts_prot.fas", $extseq );
+extract_seq( \%fields, "$outdir/contigs_prot.fas", $extseq );
 close $extseq or croak "Close $extseq failed: $OS_ERROR";
 
 # STEP 5: Annotating sequences------------------------------------------------
@@ -211,9 +220,16 @@ runcmd(   'signalp '
 		. '-fasta '
 		. "$outdir/contigs_prot_reg.fas "
 		. '-org euk '
+		. '-verbose=false '
 		. '-format short '
 		. '-prefix contigs_prot_reg '
 		. '-gff3' );
+move( "$FindBin::RealBin/contigs_prot_reg.gff3",
+	"$outdir/contigs_prot_reg.gff3" );
+move(
+	"$FindBin::RealBin/contigs_prot_reg_summary.signalp5",
+	"$outdir/contigs_prot_reg_summary.signalp5"
+);
 msg('Done searching signal sequences');
 
 msg('Adding signal sequence presence to sequence header');
@@ -221,30 +237,22 @@ add_signal_presence( "$outdir/contigs_prot_reg.gff3",
 	"$outdir/contigs_prot_reg.fas" );
 msg('Done adding signal presence');
 
+mkdir "$outdir/famaln", $RWE_FOR_OWNER;
+
 # Split fasta file into families
 my $panreg = Bio::SeqIO->new(
 	-file   => "$outdir/contigs_prot_reg.fas",
 	-format => 'fasta'
 );
+
 while ( my $panobj = $panreg->next_seq ) {
-	my @idfields = split m{[|]}msx, $panreg->id;
+	my @idfields = split m{[|]}msx, $panobj->id;
 	my $regid    = $idfields[2];
 	Bio::SeqIO->new(
 		-format => 'fasta',
-		-file   => '>' . $regid . '_fam.fas'
+		-file   => '>' . "$outdir/famaln/$regid" . '_fam.fas'
 	)->write_seq($panobj);
 }
-
-# Make alignment
-my @fam = glob "$outdir/*_fam.fas";
-msg('Aligning sequences');
-foreach my $family (@fam) {
-	my $filename = basename($family);
-	msg("Aligning family $filename");
-	runcmd("mafft --auto $family > $outdir/$filename.aln");
-	msg('Done');
-}
-msg('Done aligning sequences');
 
 # GetDNA region
 # Input is a Bio::SeqIO sequence object
@@ -309,10 +317,6 @@ sub add_signal_presence {
 	my ( $gfffh, $protfile ) = @_;
 	my @ids_from_sigp = parse_gff3($gfffh);
 
-	foreach my $val_id (@ids_from_sigp) {
-		$val_id = $val_id . '#SIGYES';
-	}
-
 	my $protreg = Bio::SeqIO->new(
 		-file   => $protfile,
 		-format => 'fasta'
@@ -320,14 +324,34 @@ sub add_signal_presence {
 
 	my $temprotreg = replace($protreg);
 	while ( my $protreg_obj = $protreg->next_seq ) {
-		if ( any { $_ eq $protreg_obj->id } @ids_from_sigp ) {
-			$protreg_obj->id = $_;
+		my $header = $protreg_obj->id . $SPACE . $protreg_obj->desc;
+		if ( any { $_ eq $header } @ids_from_sigp ) {
+			$header = $header . 'SIG=YES';
 		}
-		print {$temprotreg} $protreg_obj->id, "\n", $protreg_obj->seq
+		else {
+			$header = $header . 'SIG=NO';
+		}
+		print {$temprotreg} $header, "\n", $protreg_obj->seq
 			or croak "Failed to print to $temprotreg: $OS_ERROR";
 	}
 	close $temprotreg or croak "Failed to close file $temprotreg: $OS_ERROR";
 
+	return;
+}
+
+# Parse signalp gff3 output file to retrieve list of sequence ids ------------
+sub parse_gff3 {
+
+	# This subroutine takes a gff3 and return the list of sequences
+	# ids from first column. It's intended to use with signalp 5.0
+	# gff3 output file.
+
+	my ($infile) = @_;
+
+	open my $infh, '<', $infile
+		or croak 'Cannot open file ' . $infile . ': ' . $OS_ERROR;
+	_parse_input_gff3($infh);
+	close $infh or croak "Cannot close file $infh: $OS_ERROR";
 	return;
 }
 
@@ -354,29 +378,40 @@ sub print_install_msg {
 
 # Return extended sequence with full header ----------------------------------
 sub extract_seq {
-	my ( %hash, $protfile, $outfh ) = @_;
+	my $hashref  = shift;
+	my $protfile = shift;
+	my $outfh    = shift;
 
-	keys %hash;
+	keys %{$hashref};
 	my $inprot = Bio::DB::Fasta->new($protfile);
 
-	while ( my ( $key, $value ) = each %hash ) {
-		my @pats = split m{[|]}msx, $value;    # split to get original seq id
-		print {$outfh} '>', join( q{|}, $key, $pats[0], $pats[2] ), "\n",
-			extend_str( $inprot->get_Seq_by_id($key)->seq, $pats[1] ), "\n",
+	while ( my ( $key, $value ) = each %{$hashref} ) {
+		my $pattern = ( split $SPACE, $value )[$TARGET_REGION_INDEX];
+		print {$outfh} '>', $value, "\n",
+			extend_str( $inprot->get_Seq_by_id($key)->seq, $pattern ), "\n",
 			or croak
-			"Print retrieving id of sequences to $outfh failed: $OS_ERROR";
+			"Extending sequences failed. See extract_seq sub: $OS_ERROR";
 	}
 	return;
 }
 
 # Get DNA sequence using ids from contigs region file ------------------------
 sub get_dna_seq {
-	my ( %hash, $contig_file, $outfh ) = @_;
+
+	my $contig_file = shift;
+	my $outfh       = shift;
+	my $refhash     = shift;
+
+	# Works with %hash as a hash reference
 	my $inx = Bio::DB::Fasta->new($contig_file);
 
-	foreach my $id ( keys %hash ) {    # Retrieving dna seq for each prot id
-		my @k = split m{[|]}msx, $id;
-		print {$outfh} ">$k[0]", "\n", $inx->get_Seq_by_id( $k[0] )->seq, "\n"
+	foreach my $id ( keys %{$refhash} ) {
+		my @k = split m{[_]}msx, $id;
+
+		# Use $#array -1 as shortcut to avoid perl critic for number 4
+		my $seqid = join '_', @k[ 0 .. $#k - 1 ];
+		print {$outfh} '>' . $seqid, "\n", $inx->get_Seq_by_id($seqid)->seq,
+			"\n"
 			or croak "Print to $outfh failed: $OS_ERROR";
 	}
 	return;
@@ -403,11 +438,11 @@ sub write_output {
 
 # Subroutine to get DNA region corresponding to AA region --------------------
 sub process_get_dna_reg {
-	my ( $self, $dnafile, $protfile, $outfile ) = @_;
+	my ( $dnafile, $protfile, $outfile ) = @_;
 	my $dnaind = Bio::DB::Fasta->new($dnafile);
 	open my $outfh, '>', $outfile
 		or croak 'Failed to open' . $outfile . ': ' . $OS_ERROR;
-	_get_dna_reg( $dnaind, "$outdir/contigs.prot.reg", $outfh );
+	_get_dna_reg( $dnaind, "$outdir/contigs_prot_reg.fas", $outfh );
 	close $outfh or croak "Failed to close $outfh: $OS_ERROR";
 	return;
 }
@@ -416,17 +451,17 @@ sub process_get_dna_reg {
 sub _get_dna_reg {
 
 	# Private method for process_get_dna_reg
-	my ( $self, $dna_index, $protfile, $outfh ) = @_;
+	my ( $dna_index, $protfile, $outfh ) = @_;
 	my $protfh = Bio::SeqIO->new(
 		-file   => $protfile,
 		-format => 'fasta'
 	);
 	while ( my $protfh_obj = $protfh->next_seq ) {
-		my @tid    = split m{#}msx, $protfh_obj->desc;
-		my $tindex = index $dna_index->get_Seq_by_id( $tid[0] ),
+		my $tindex = index $dna_index->get_Seq_by_id( $protfh_obj->id ),
 			$protfh_obj->seq;
-		print {$outfh} ">$tid[0]\n",
-			substr $dna_index->get_Seq_by_id( $tid[0] ),
+		print {$outfh} '>', $protfh_obj->id . $SPACE . $protfh_obj->desc,
+			"\n",
+			substr $dna_index->get_Seq_by_id( $protfh_obj->id ),
 			$tindex * $CODON_LENGTH, length( $protfh->seq ) * $CODON_LENGTH
 			or croak "Print to $outfh failed: $OS_ERROR";
 	}
@@ -438,43 +473,27 @@ sub add_desc_to_ids {
 
 	# Add Family description to sequence header. Take as input
 	# a hmmcompete output file.
-	my $infile = @_;
+	my ($infile) = @_;
 	my %seqs_header;
 	my $textfile = Text::CSV->new( { sep_char => "\t" } );
 
 	open my $infh, '<', $infile or croak "Cannot open $infile: $OS_ERROR";
 	$textfile->getline($infh);
 	while ( my $row = $textfile->getline($infh) ) {
-		my $rhmm = $row->[$HMM_CLASSIFIER_DESC];
-		$rhmm =~ tr/ /_/s;
-		$seqs_header{ $row->[0] } = join q{|}, $row->[1],
-			$row->[$HMM_TARGET_REGION], $rhmm;
+		$seqs_header{ $row->[0] } = join $SPACE, $row->[0],
+			'FAM=' . $row->[1],
+			'FAMDESC=' . $row->[$HMM_CLASSIFIER_DESC],
+			$row->[$HMM_TARGET_REGION];
 	}
 	close $infh or croak " Close failed: $OS_ERROR";
 	return %seqs_header;
-}
-
-# Parse signalp gff3 output file to retrieve list of sequence ids ------------
-sub parse_gff3 {
-
-	# This subroutine takes a gff3 and return the list of sequences
-	# ids from first column. It's intended to use with signalp 5.0
-	# gff3 output file.
-
-	my ( $self, $infile ) = @_;
-
-	open my $infh, '<', $infile
-		or croak 'Cannot open file' . $infile . ': ' . $OS_ERROR;
-	_parse_input_gff3($infh);
-	close $infh or croak "Cannot close file $infh: $OS_ERROR";
-	return;
 }
 
 # Private method for parse_gff3 ----------------------------------------------
 sub _parse_input_gff3 {
 
 	# Private method for parse_gff3
-	my ( $self, $infh ) = @_;
+	my ($infh) = @_;
 	my ( @fields, @ids );
 	while ( my $line = <$infh> ) {
 		if ( $line =~ /^#/msx ) {
@@ -506,16 +525,16 @@ sub extend_str {
 	# Look for M and * in left string and * in right string
 	my $rindx = index $rstr, q{*};
 	my $lindm = index $lstr, 'M';
-	my $lindx = rindex $lstr,
-		q{*};    # use rindex to find last occurence of char
 
-	if ( $lindm > $lindx
-		)        # Case a Methionine is closer to begin of pattern than a Stop
-	{
+	# use rindex to find last occurence of char
+	my $lindx = rindex $lstr, q{*};
+
+	# Case a Methionine is closer to begin of pattern than a Stop
+	if ( $lindm > $lindx ) {
 		$l = $lindm;
 	}
 	elsif ( $lindm < $lindx )
-	{            # Case a Stop is closer to begin of pattern than a Methionine
+	{    # Case a Stop is closer to begin of pattern than a Methionine
 		$l = $lindx + 1;    # + 1 to avoid display of * in sequence
 	}
 	else {
@@ -547,7 +566,7 @@ sub find_exe {
 # Subroutine to run translation taking into account file compression ---------
 sub run_translation {
 
-	my $infh  = @_;
+	my ($infh) = @_;
 	my $outfh = tempfile();
 	my $alphabet;
 	my $buffer;
@@ -613,31 +632,31 @@ sub run_translation {
 
 # Translate a DNA sequence file into 6 ORF -----------------------------------
 sub translate {
-	my ( $seqobj, $outfile ) = @_;
+	my ( $sequence_obj, $outfile ) = @_;
 	open my $seqout, '>', $outfile or croak "open file failed: $OS_ERROR";
-	_do_translation( $seqobj, $seqout );
+	_do_translation( $sequence_obj, $seqout );
 	close $seqout or croak "Close file failed: $OS_ERROR";
 	return;
 }
 
 # Private method for translate subroutine ------------------------------------
 sub _do_translation {
-	my ( $self, $seqobj, $seqout ) = @_;
+	my ( $seqobj, $seqout ) = @_;
 
 	while ( my $seqio = $seqobj->next_seq ) {
 
 		# orf1
-		print {$seqout} '>', $seqio->id, '|orf1', "\n",
+		print {$seqout} '>', $seqio->id, '_orf1', "\n",
 			$seqio->translate()->seq, "\n"
 			or croak "print failed: $OS_ERROR";
 
 		# orf2
-		print {$seqout} '>', $seqio->id, '|orf2', "\n",
+		print {$seqout} '>', $seqio->id, '_orf2', "\n",
 			$seqio->translate( -frame => 1 )->seq, "\n"
 			or croak "print failed: $OS_ERROR";
 
 		# orf3
-		print {$seqout} '>', $seqio->id, '|orf3', "\n",
+		print {$seqout} '>', $seqio->id, '_orf3', "\n",
 			$seqio->translate( -frame => 2 )->seq, "\n"
 			or croak "print failed: $OS_ERROR";
 
@@ -645,17 +664,17 @@ sub _do_translation {
 		my $revcomp = $seqio->revcom;
 
 		# orf 4
-		print {$seqout} '>', $seqio->id, '|orf4', "\n",
+		print {$seqout} '>', $seqio->id, '_orf4', "\n",
 			$revcomp->translate()->seq, "\n"
 			or croak "print failed: $OS_ERROR";
 
 		# orf 5
-		print {$seqout} '>', $seqio->id, '|orf5', "\n",
+		print {$seqout} '>', $seqio->id, '_orf5', "\n",
 			$revcomp->translate( -frame => 1 )->seq, "\n"
 			or croak "print failed: $OS_ERROR";
 
 		# orf 6
-		print {$seqout} '>', $seqio->id, '|orf6', "\n",
+		print {$seqout} '>', $seqio->id, '_orf6', "\n",
 			$revcomp->translate( -frame => 2 )->seq, "\n"
 			or croak "print failed: $OS_ERROR";
 	}
