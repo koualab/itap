@@ -246,8 +246,11 @@ my $panreg = Bio::SeqIO->new(
 );
 
 while ( my $panobj = $panreg->next_seq ) {
-	my @idfields = split m{[|]}msx, $panobj->id;
-	my $regid    = $idfields[2];
+	my $seqheader = $panobj->id . $SPACE . $panobj->desc;
+	my $regid;
+	if ( $seqheader =~ m/(?<=FAM=)(.*?)(?=\s)/msx ) {
+		$regid = $1;
+	}
 	Bio::SeqIO->new(
 		-format => 'fasta',
 		-file   => '>' . "$outdir/famaln/$regid" . '_fam.fas'
@@ -350,29 +353,8 @@ sub parse_gff3 {
 
 	open my $infh, '<', $infile
 		or croak 'Cannot open file ' . $infile . ': ' . $OS_ERROR;
-	_parse_input_gff3($infh);
+	parse_input_gff3($infh);
 	close $infh or croak "Cannot close file $infh: $OS_ERROR";
-	return;
-}
-
-# Print useful error for user missing some tools -----------------------------
-sub print_install_msg {
-	my $tool = @_;
-	if ( $tool eq 'kallisto' ) {
-			err (
-			  'Kallisto not found. Installation instruction can be found at '
-			. 'https://github.com/patcherlab/kallisto.git' );
-	}
-	elsif ( $tool eq 'hmmcompete' ) {
-			err (
-			'Hmmcompete not found. Installation instruction can be found at '
-			. 'https://github.com/koualab/hmmcompete.git' );
-	}
-	elsif ( $tool eq 'signalp' ) {
-			err (
-			  'SignalP not found. Installation instruction can be found at '
-			. 'http://www.cbs.dtu.dk/services/SignalP/portable.php' );
-	}
 	return;
 }
 
@@ -382,13 +364,12 @@ sub extract_seq {
 	my $protfile = shift;
 	my $outfh    = shift;
 
-	keys %{$hashref};
 	my $inprot = Bio::DB::Fasta->new($protfile);
 
 	while ( my ( $key, $value ) = each %{$hashref} ) {
-		my $pattern = ( split $SPACE, $value )[$TARGET_REGION_INDEX];
-		print {$outfh} '>', $value, "\n",
-			extend_str( $inprot->get_Seq_by_id($key)->seq, $pattern ), "\n",
+		my @val = split m{[#]}msx, $value;
+		print {$outfh} '>', $val[0], "\n",
+			extend_str( $inprot->get_Seq_by_id($key)->seq, $val[1] ), "\n",
 			or croak
 			"Extending sequences failed. See extract_seq sub: $OS_ERROR";
 	}
@@ -442,13 +423,13 @@ sub process_get_dna_reg {
 	my $dnaind = Bio::DB::Fasta->new($dnafile);
 	open my $outfh, '>', $outfile
 		or croak 'Failed to open' . $outfile . ': ' . $OS_ERROR;
-	_get_dna_reg( $dnaind, "$outdir/contigs_prot_reg.fas", $outfh );
+	get_dna_reg( $dnaind, "$outdir/contigs_prot_reg.fas", $outfh );
 	close $outfh or croak "Failed to close $outfh: $OS_ERROR";
 	return;
 }
 
 # Private method for process_get_dna_reg -------------------------------------
-sub _get_dna_reg {
+sub get_dna_reg {
 
 	# Private method for process_get_dna_reg
 	my ( $dna_index, $protfile, $outfh ) = @_;
@@ -457,11 +438,12 @@ sub _get_dna_reg {
 		-format => 'fasta'
 	);
 	while ( my $protfh_obj = $protfh->next_seq ) {
-		my $tindex = index $dna_index->get_Seq_by_id( $protfh_obj->id ),
-			$protfh_obj->seq;
+		my @arrayid = split m{[_]}msx, $protfh->id;
+		my $sid     = join '_', @arrayid[ 0 .. $#arrayid - 1 ];
+		my $tindex  = index $dna_index->get_Seq_by_id($sid), $protfh_obj->seq;
 		print {$outfh} '>', $protfh_obj->id . $SPACE . $protfh_obj->desc,
 			"\n",
-			substr $dna_index->get_Seq_by_id( $protfh_obj->id ),
+			substr $dna_index->get_Seq_by_id($sid),
 			$tindex * $CODON_LENGTH, length( $protfh->seq ) * $CODON_LENGTH
 			or croak "Print to $outfh failed: $OS_ERROR";
 	}
@@ -474,23 +456,24 @@ sub add_desc_to_ids {
 	# Add Family description to sequence header. Take as input
 	# a hmmcompete output file.
 	my ($infile) = @_;
+
 	my %seqs_header;
 	my $textfile = Text::CSV->new( { sep_char => "\t" } );
-
 	open my $infh, '<', $infile or croak "Cannot open $infile: $OS_ERROR";
 	$textfile->getline($infh);
 	while ( my $row = $textfile->getline($infh) ) {
-		$seqs_header{ $row->[0] } = join $SPACE, $row->[0],
-			'FAM=' . $row->[1],
-			'FAMDESC=' . $row->[$HMM_CLASSIFIER_DESC],
-			$row->[$HMM_TARGET_REGION];
+		my $new_header = join $SPACE, $row->[0], 'FAM=' . $row->[1],
+			'FAMDESC=' . $row->[$HMM_CLASSIFIER_DESC];
+		my $seq_desc = $row->[$HMM_TARGET_REGION];
+		$seqs_header{ $row->[0] } = $new_header . q{#} . $seq_desc;
 	}
 	close $infh or croak " Close failed: $OS_ERROR";
+
 	return %seqs_header;
 }
 
 # Private method for parse_gff3 ----------------------------------------------
-sub _parse_input_gff3 {
+sub parse_input_gff3 {
 
 	# Private method for parse_gff3
 	my ($infh) = @_;
@@ -551,6 +534,27 @@ sub extend_str {
 	my $extseq = substr( $lstr, $l ) . $pat . substr $rstr, 0, $r;
 
 	return $extseq;
+}
+
+# Print useful error for user missing some tools -----------------------------
+sub print_install_msg {
+	my $tool = @_;
+	if ( $tool eq 'kallisto' ) {
+			err (
+			  'Kallisto not found. Installation instruction can be found at '
+			. 'https://github.com/patcherlab/kallisto.git' );
+	}
+	elsif ( $tool eq 'hmmcompete' ) {
+			err (
+			'Hmmcompete not found. Installation instruction can be found at '
+			. 'https://github.com/koualab/hmmcompete.git' );
+	}
+	elsif ( $tool eq 'signalp' ) {
+			err (
+			  'SignalP not found. Installation instruction can be found at '
+			. 'http://www.cbs.dtu.dk/services/SignalP/portable.php' );
+	}
+	return;
 }
 
 # Find executable subroutine -------------------------------------------------
@@ -739,7 +743,7 @@ sub num_cpu {
 # POD HELP -------------------------------------------------------------------
 __END__
 
-=for stopwords ekenda.hmm itap transcriptome tsc nucleotides NGS ouput contigs
+=for stopwords Koua ekenda.hmm itap transcriptome tsc nucleotides NGS ouput contigs
 =for stopwords kallisto signalp blastp blastx hmmcompete Anicet Ebou MERCHANTABILITY
 
 =head1 NAME
@@ -819,8 +823,7 @@ This documentation refers to itap version 0.1.0
 
 =head1 DEPENDENCIES
 
-I<itap> needs kallisto, signalp, blastp, blastx, diamond, 
-hmmcompete to properly work.
+I<itap> needs kallisto, signalp, and hmmcompete to properly work.
 
 =head1 LICENSE AND COPYRIGHT
 
@@ -863,5 +866,6 @@ None known to the best of my knowledge. Please report them to the author.
 =head1 AUTHOR
 
 Anicet Ebou <anicet.ebou@gmail.com>
+Dominique Koua <koua.dominique@gmail.com>
 
 =cut
