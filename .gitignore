@@ -4,5 +4,4 @@
 # tests
 .tidyall.d/*
 ITAP/*
-db/*
 test/*

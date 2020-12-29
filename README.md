@@ -36,11 +36,13 @@ git clone https://github.com/koualab/itap.git $HOME/itap
 sudo cp bin/itap /usr/local/bin
 itap -v 
 ```
+  
 
 ## Test
 
 * Type `itap -help` and it should output its help screen.
 * Type `itap -version` and you should see an output like itap version xxx (Tue Dec 29 14:17:51 2020).
+  
 
 
 ## Invoking itap
@@ -48,6 +50,7 @@ itap -v
 ```
 itap -t transcripts.fa.gz -f reads_R1.fq.gz -r reads_R2.fq.gz
 ```
+  
 
 ## Output files
 
@@ -56,56 +59,59 @@ itap -t transcripts.fa.gz -f reads_R1.fq.gz -r reads_R2.fq.gz
 
 ```
 General:
-    --transcripts, -t  Specify transcriptome file [required]
-	--forward_reads, -f  Specify forward reads file [required]
-	--reverse_reads, -r  Specify reverse reads file [required]
+    --transcripts, -t    Specify transcriptome file [required]
+    --forward_reads, -f  Specify forward reads file [required]
+    --reverse_reads, -r  Specify reverse reads file [required]
 
 Outputs:
 	--outdir, -o  Specify output folder name
-	--dbdir Specify path to databases folder
-	--force Force reuse of output folder
+	--dbdir       Specify path to databases folder
+	--force       Force reuse of output folder
 
 Setup:
-	--hmm   Specify the path to personal hmm lib
-	--quiet Decrease verbosity
+	--hmm         Specify the path to personal hmm lib
+	--quiet       Decrease verbosity
 
 Computation:
-	--cpus  Specify number of threads
+	--cpus        Specify number of threads
 
 Standard meta-options:
 	--version, -v   Print program version and exit
-	--usage, -u Print program usage and exit
-	--man   Print man page
-	--help, -h  Print help and exit
+	--usage, -u     Print program usage and exit
+	--man           Print man page
+	--help, -h      Print help and exit
 
 ```
-
+  
+  
 ## Bugs
 
 Submit problems or requests to the [Issue Tracker](https://github.com/itap/issues).
+
+  
 
 
 ## Dependencies
 
 ### Mandatory
 
-* **BioPerl**
-  Used for I/O fasta files.
+* **BioPerl**  
+  Used for I/O fasta files.  
   *Stajich et al, The Bioperl toolkit: Perl modules for the life sciences. Genome Res. 2002 Oct;12(10):1611-8.*
 
-* **hmmcompete**
-  Used for precursors sequences identification and classification.
+* **hmmcompete**  
+  Used for precursors sequences identification and classification.  
   *Koua, D.; Kuhn-Nentwig, L. Spider Neurotoxins, Short Linear Cationic Peptides and Venom Protein Classification Improved by an Automated Competition between Exhaustive Profile HMM Classifiers. Toxins 2017, 9, 245.*
 
-* **SignalP**
-  Used to find signal peptide in precursors sequences.
+* **SignalP**  
+  Used to find signal peptide in precursors sequences.  
   *Almagro Armenteros  et al, SignalP 5.0 improves signal peptide predictions using deep neural networks. Nat Biotechnol 37, 420–423 (2019)*
 
 ## Licence
 
 GPL v3
 
-## Author
+## Authors
 
 * Anicet Ebou
 * Dominique Koua
