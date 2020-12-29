@@ -2,7 +2,9 @@
 # databases
 # results
 # tests
+# vscode
 .tidyall.d/*
 ITAP/*
 test/*
 .vscode/*
+t/*
