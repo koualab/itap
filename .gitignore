@@ -8,3 +8,6 @@ ITAP/*
 test/*
 .vscode/*
 t/*
+.perltidyrc
+.tidyallrc
+tidyall
