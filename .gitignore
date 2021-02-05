@@ -3,11 +3,11 @@
 # results
 # tests
 # vscode
-.tidyall.d/*
-ITAP/*
-test/*
-.vscode/*
-t/*
 .perltidyrc
+.tidyall.d/*
 .tidyallrc
+.vscode/*
+ITAP/*
+t/*
+test/*
 tidyall

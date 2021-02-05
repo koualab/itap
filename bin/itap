@@ -11,6 +11,7 @@ use Cwd qw( abs_path );
 use English qw( -no_match_vars );
 use File::Basename;
 use File::Copy;
+use File::Log;
 use File::Path qw( remove_tree );
 use File::Temp qw( tempfile );
 use FindBin qw( $RealBin );
@@ -33,9 +34,8 @@ my $BINDIR  = "$FindBin::RealBin/../binaries/$OSNAME";
 my $EXE     = $FindBin::RealScript;
 my $AUTHOR  = 'Anicet Ebou <anicet.ebou@gmail.com>';
 my $URL     = 'https://github.com/koualab/itap.git';
-my @LOG;    # buffer up log lines before we have log file ready
-my $EMPTY = q{};
-my $SPACE = q{ };
+my $EMPTY   = q{};
+my $SPACE   = q{ };
 
 # Define constants using Readonly
 Readonly my $HMM_TARGET_REGION   => 4;
@@ -53,24 +53,24 @@ my $args = Getopt::Declare->new(<<'EOSPEC') || exit 1;
     
 	[strict]
 
-	-t <transcripts:if>		Specify transcriptome file [required]
+	-t <transcripts:if>	Specify transcriptome file [required]
 	-f <forward_reads:if>	Specify forward reads file [required]
 	-r <reverse_reads:if>	Specify reverse reads file [required]
 	-o <outdir:s>		Specify output folder name
-	--dbdir <dbdir:s>			Specify path to databases folder
-	--force				Force reuse of output folder
-	--hmm <hmm:of>			Specify the path to personal hmm lib
-	--quiet				Decrease verbosity
-	--cpus <cpus:+i>		Specify number of threads
+	--dbdir <dbdir:s>	Specify path to databases folder
+	--force			Force reuse of output folder
+	--hmm <hmm:of>		Specify the path to personal hmm lib
+	--quiet			Decrease verbosity
+	--cpus <cpus:+i>	Specify number of threads
 
 	# Standard meta-options
-	-v[ersion]			Print program version and exit
-	                		{ $self->version(0); }
-	-u[sage]			Print program usage and exit
-	                		{ $self->usage(0); }
-	--man				Print man page
-	            			{ pod2usage( -exitval => 0, -verbose => 2 ); }
-	-h[elp]				Print help and exit
+	-v[ersion]		Print program version and exit
+	            	{ $self->version(0); }
+	-u[sage]		Print program usage and exit
+	            	{ $self->usage(0); }
+	--man			Print man page
+	        		{ pod2usage( -exitval => 0, -verbose => 2 ); }
+	-h[elp]			Print help and exit
 EOSPEC
 
 my $transcripts   = $args->{'-t'};
@@ -101,7 +101,7 @@ if ( -d $outdir ) {
 	}
 	else {
 			err (
-			"Folder $outdir already exists!. Please change it using -o or use --force"
+			"Folder $outdir already exist!. Please change it using -o or use --force"
 			);
 	}
 }
@@ -109,6 +109,12 @@ else {
 	msg("Creating new output folder: $outdir");
 	mkdir $outdir, $RWE_FOR_OWNER;
 }
+
+# Setup log file
+my $log = File::Log->new(
+	logFileName     => "$outdir/itap.log",
+	logFileDateTime => 0,
+);
 
 # START ----------------------------------------------------------------------
 msg( 'This is ' . $EXE . $::VERSION );
@@ -298,16 +304,13 @@ foreach ( capture("find $outdir -type f -name '*'") ) {
 }
 
 # Write to log file
-my $logfile = "$outdir/itap.log";
-msg("Writing log to: $logfile");
-open my $LOG, '>', $logfile or err ('Cannot open logfile');
 msg('Annotation finished successfully.');
 my $endtime  = localtime;
 my $walltime = $endtime - $starttime;
 my $pretty   = sprintf '%.2f minutes', $walltime->minutes;
 msg("Walltime used: $pretty");
 msg( $walltime % 2 ? 'Share and enjoy!' : 'Thank you, come again.' );
-close $LOG or croak "Close $logfile file failed: $OS_ERROR";
+$log->close();
 
 # SUBROUTINES ----------------------------------------------------------------
 
@@ -322,21 +325,31 @@ sub add_signal_presence {
 
 	open my $outfh, '>', "$outdir/contigs_prot_reg_new.fas"
 		or croak "Cannot open outfile: $OS_ERROR";
-	foreach my $protid (@protids) {
-		if ( any { $_ eq $protid } @ids_from_sigp ) {
-			print {$outfh} '>' . $protreg->header($protid) . ' SIG=YES',
-				"\n", $protreg->get_Seq_by_id($protid)->seq, "\n"
-				or croak "Failed to print to: $OS_ERROR";
-		}
-		else {
-			print {$outfh} '>' . $protreg->header($protid) . ' SIG=NO', "\n",
-				$protreg->get_Seq_by_id($protid)->seq, "\n"
-				or croak "Failed to print to : $OS_ERROR";
-		}
-	}
+	_addsigpres( $outfh, @protids, @ids_from_sigp, $protreg );
 	close $outfh or croak "Failed to close file: $OS_ERROR";
 
 	return;
+}
+
+sub _addsigpres {
+
+	my ( $ofh, @ids, @sid, $preg ) = @_;
+
+	foreach my $protid (@ids) {
+		if ( any { $_ eq $protid } @sid ) {
+			print {$ofh} '>' . $preg->header($protid) . ' SIG=YES',
+				"\n", $preg->get_Seq_by_id($protid)->seq, "\n"
+				or croak "Failed to print to: $OS_ERROR";
+		}
+		else {
+			print {$ofh} '>' . $preg->header($protid) . ' SIG=NO', "\n",
+				$preg->get_Seq_by_id($protid)->seq, "\n"
+				or croak "Failed to print to : $OS_ERROR";
+		}
+	}
+
+	return;
+
 }
 
 # Parse signalp gff3 output file to retrieve list of sequence ids ------------
@@ -695,21 +708,14 @@ sub msg {
 	my $line = '[' . $t->hms . "] @_\n";
 	if ( !$quiet ) {
 		print {*STDERR} $line or croak "print failed: $OS_ERROR";
+		$log->msg($line);
 	}
-	if ( openhandle($LOG) ) {
-
-		# write out any buffered log lines
-		if (@LOG) {
-			print {$LOG} @LOG or croak "print to log failed: $OS_ERROR";
-			@LOG = ();
-		}
-
-		# write out the current log line
-		print {$LOG} $line or croak "print to log failed: $OS_ERROR";
+	elsif ( $quiet == 2 ) {
+		print {*STDERR} $line or croak "print failed: $OS_ERROR";
+		$log->exp($line);
 	}
 	else {
-		# buffer this log line for later
-		push @LOG, $line;
+		$log->msg($line);
 	}
 	return;
 }
@@ -717,7 +723,7 @@ sub msg {
 # Print error and exit -------------------------------------------------------
 sub err {
 	my @text = @_;
-	$quiet = 0;
+	$quiet = 2;
 	msg(@text);
 	exit 2;
 }
