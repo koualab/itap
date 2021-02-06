@@ -1,0 +1,27 @@
+[14:17:26] This is itap0.1.0
+[14:17:26] Written by Anicet Ebou <anicet.ebou@gmail.com>
+[14:17:26] Homepage is https://github.com/koualab/itap.git
+[14:17:26] Local time is Sat Feb  6 14:17:26 2021
+[14:17:26] You are sinfo
+[14:17:26] Operating system is linux
+[14:17:26] System has 4 cores.
+[14:17:26] We will use maximum of 3 cores.
+[14:17:26] Your command is: ./itap -t ../test/LYCTA_alldna.fasta -f ../test/SDT_11_R1.fastq.gz -r ../test/SDT_11_R2.fastq.gz --cpus 3
+[14:17:26] Found kallisto
+[14:17:26] Found signalp
+[14:17:26] Found hmmcompete
+[14:17:26] Builing transcripts index
+[14:17:26] Use kallisto, version 0.46.1
+[14:17:26] Running: kallisto index -i ITAP/all_transcripts.index ../test/LYCTA_alldna.fasta
+
+[build] loading fasta file ../test/LYCTA_alldna.fasta
+[build] k-mer length: 31
+[build] warning: clipped off poly-A tail (longer than 10)
+        from 1162 target sequences
+[build] counting k-mers ... [ITAP ERROR]: (14:17:28) Could not run command: kallisto index -i ITAP/all_transcripts.index ../test/LYCTA_alldna.fasta
+
+-----------USER INFORMATIONS-----------
+Program: itap 0.1.0
+User: sinfo
+OS: linux
+---------------------------------------

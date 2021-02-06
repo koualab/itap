@@ -11,6 +11,7 @@ use Cwd qw( abs_path );
 use English qw( -no_match_vars );
 use File::Basename;
 use File::Copy;
+use File::HomeDir;
 use File::Log;
 use File::Path qw( remove_tree );
 use File::Temp qw( tempfile );
@@ -95,25 +96,32 @@ if ( !defined $outdir ) {
 # Check existence of output folder
 if ( -d $outdir ) {
 	if ($force) {
-		msg("Re-using existing -o $outdir");
+		print {*STDOUT} '[ '
+			. localtime->hms . ' ]'
+			. "Re-using existing -o $outdir"
+			or croak "Print failed: $OS_ERROR";
 		remove_tree( $outdir, { safe => 1 } );
 		mkdir $outdir, $RWE_FOR_OWNER;
 	}
 	else {
-			err (
-			"Folder $outdir already exist!. Please change it using -o or use --force"
-			);
+		print {*STDERR}
+			"[ITAP ERROR]: Choosen output folder '$outdir' already exist! Please change it using -o or use --force\n"
+			or croak "Print failed: $OS_ERROR";
+		exit 1;
 	}
 }
 else {
-	msg("Creating new output folder: $outdir");
+	print {*STDOUT} '[ '
+		. localtime->hms . ' ]'
+		. "Creating new output folder: $outdir"
+		or croak "Print failed: $OS_ERROR";
 	mkdir $outdir, $RWE_FOR_OWNER;
 }
 
 # Setup log file
 my $log = File::Log->new(
-	logFileName     => "$outdir/itap.log",
-	logFileDateTime => 0,
+	logFileName => "$outdir/itap.log",
+	logFileMode => '>',
 );
 
 # START ----------------------------------------------------------------------
@@ -311,6 +319,7 @@ my $pretty   = sprintf '%.2f minutes', $walltime->minutes;
 msg("Walltime used: $pretty");
 msg( $walltime % 2 ? 'Share and enjoy!' : 'Thank you, come again.' );
 $log->close();
+move( File::HomeDir->my_home . '/itap.log', "$outdir/itap.log" );
 
 # SUBROUTINES ----------------------------------------------------------------
 
@@ -707,24 +716,43 @@ sub msg {
 	my $t    = localtime;
 	my $line = '[' . $t->hms . "] @_\n";
 	if ( !$quiet ) {
-		print {*STDERR} $line or croak "print failed: $OS_ERROR";
-		$log->msg($line);
+		print {*STDOUT} $line or croak "Print failed: $OS_ERROR";
+		$log->msg( 2, $line );
 	}
-	elsif ( $quiet == 2 ) {
-		print {*STDERR} $line or croak "print failed: $OS_ERROR";
-		$log->exp($line);
-	}
-	else {
-		$log->msg($line);
+	elsif ($quiet) {
+		$log->msg( 2, $line );
 	}
 	return;
 }
 
 # Print error and exit -------------------------------------------------------
 sub err {
-	my @text = @_;
-	$quiet = 2;
-	msg(@text);
+
+	my (@text) = @_;
+
+	my $t    = localtime;
+	my $line = '(' . $t->hms . ") @text\n";
+
+	# Display error to terminal for user information
+	print {*STDOUT}
+		"[ITAP ERROR]: @text See itap.log for more informations\n"
+		or croak "Print failed: $OS_ERROR";
+
+	# STDERR is printed to log file by default
+	# So below line goes directly into log file
+	print {*STDERR} "[ITAP ERROR]: $line\n"
+		or croak "Print failed: $OS_ERROR";
+	print {*STDERR} "-----------USER INFORMATIONS-----------\n"
+		or croak "Print failed: $OS_ERROR";
+	print {*STDERR} 'Program: ' . $EXE . $SPACE . $VERSION . "\n"
+		or croak "Print failed: $OS_ERROR";
+	print {*STDERR} 'User: ' . $ENV{USER} . "\n"
+		or croak "Print failed: $OS_ERROR";
+	print {*STDERR} 'OS: ' . $OSNAME . "\n"
+		or croak "Print failed: $OS_ERROR";
+	print {*STDERR} '---------------------------------------'
+		or croak "Print failed: $OS_ERROR";
+
 	exit 2;
 }
 
