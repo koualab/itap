@@ -118,8 +118,7 @@ if ( -d $outdir ) {
 	}
 }
 else {
-	if ( !$quiet )
-	{
+	if ( !$quiet ) {
 		print {*STDOUT} '['
 			. localtime->hms . '] '
 			. "Creating new output folder: '$outdir'\n"
