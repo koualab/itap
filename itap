@@ -332,7 +332,6 @@ write_output( $kh1_ref, $kh2_ref, $ffo );
 close $ffo or croak "Close failed: $OS_ERROR";
 msg('Done writing files');
 
-
 # Write to log file
 msg('Annotation finished successfully.');
 msg("Final output file is $itap_outfile");
