@@ -62,8 +62,8 @@ itap -t transcripts.fa.gz -f reads_R1.fq.gz -r reads_R2.fq.gz
 ```
 General:
 	--transcripts, -t    Specify transcriptome file [required]
-    --forward_reads, -f  Specify forward reads file [required]
-    --reverse_reads, -r  Specify reverse reads file [required]
+	--forward_reads, -f  Specify forward reads file [required]
+	--reverse_reads, -r  Specify reverse reads file [required]
 
 Outputs:
 	--outdir, -o  Specify output folder name
