@@ -11,14 +11,13 @@ use Cwd qw( abs_path );
 use English qw( -no_match_vars );
 use File::Basename;
 use File::Copy;
-use File::HomeDir;
 use File::Log;
 use File::Path qw( remove_tree );
+use File::Spec;
 use File::Temp qw( tempfile );
 use FindBin qw( $RealBin );
 use Getopt::Declare;
 use IPC::System::Simple qw( capture );
-use List::Util qw( any );
 use Pod::Usage;
 use Readonly;
 use Scalar::Util qw( openhandle );
@@ -37,6 +36,7 @@ my $AUTHOR  = 'Anicet Ebou <anicet.ebou@gmail.com>';
 my $URL     = 'https://github.com/koualab/itap.git';
 my $EMPTY   = q{};
 my $SPACE   = q{ };
+my $SHARP   = q{#};
 
 # Define constants using Readonly
 Readonly my $HMM_TARGET_REGION   => 4;
@@ -85,47 +85,52 @@ my $outdir        = $args->{'-o'};
 my $hmm           = $args->{'--hmm'};
 
 # Set an ENV variable for database path or ./db/ path of program root folder
-if ( !defined( $dbdir = $args->{'--dbdir'} ) ) {
-	$dbdir = $ENV{'ITAPDB'} || abs_path("$FindBin::RealBin/./db");
+if ( !defined $dbdir ) {
+	$dbdir = $ENV{'ITAPDB'}
+		|| abs_path( File::Spec->catdir( $FindBin::RealBin, 'db' ) );
+}
+elsif ( defined $dbdir ) {
+	$dbdir = File::Spec->catfile($dbdir);
 }
 
 if ( !defined $outdir ) {
-	$outdir = 'ITAP';
+	$outdir = File::Spec->catdir('ITAP');
 }
 
 # Check existence of output folder
 if ( -d $outdir ) {
 	if ($force) {
-		print {*STDOUT} '[ '
-			. localtime->hms . ' ]'
-			. "Re-using existing -o $outdir"
+		print {*STDOUT} '['
+			. localtime->hms . '] '
+			. "Re-using existing -o $outdir\n"
 			or croak "Print failed: $OS_ERROR";
 		remove_tree( $outdir, { safe => 1 } );
 		mkdir $outdir, $RWE_FOR_OWNER;
 	}
 	else {
 		print {*STDERR}
-			"[ITAP ERROR]: Choosen output folder '$outdir' already exist! Please change it using -o or use --force\n"
+			"[ITAP ERROR]: Choosen output folder '$outdir' already exist!"
+			. " Please change it using -o or use --force to overwrite its content\n"
 			or croak "Print failed: $OS_ERROR";
 		exit 1;
 	}
 }
 else {
-	print {*STDOUT} '[ '
-		. localtime->hms . ' ]'
-		. "Creating new output folder: $outdir"
+	print {*STDOUT} '['
+		. localtime->hms . '] '
+		. "Creating new output folder: '$outdir'\n"
 		or croak "Print failed: $OS_ERROR";
 	mkdir $outdir, $RWE_FOR_OWNER;
 }
 
 # Setup log file
 my $log = File::Log->new(
-	logFileName => "$outdir/itap.log",
+	logFileName => File::Spec->catfile( $outdir, 'itap.log' ),
 	logFileMode => '>',
 );
 
 # START ----------------------------------------------------------------------
-msg( 'This is ' . $EXE . $::VERSION );
+msg( 'This is ' . $EXE . $SPACE . $VERSION );
 msg( 'Written by ' . $AUTHOR );
 msg( 'Homepage is ' . $URL );
 msg( 'Local time is ' . $starttime );
@@ -142,7 +147,7 @@ elsif ( $cpus == 0 ) {
 	$cpus = $num_cores;
 }
 elsif ( $cpus > $num_cores ) {
-	msg("Option --cpu asked for $cpus cores, but system only has $num_cores");
+	msg("Option --cpu asked for $cpus cores, but system has only $num_cores");
 	$cpus = $num_cores;
 }
 msg("We will use maximum of $cpus cores.");
@@ -174,17 +179,17 @@ if ( index( $signalp_version, 'version 5' ) == $NON_EXIST ) {
 msg('Builing transcripts index');
 msg("Use $kallisto_version");
 runcmd(   'kallisto index ' . '-i '
-		. "$outdir/all_transcripts.index "
-		. "$transcripts" );
+		. File::Spec->catfile( $outdir, 'all_transcripts.index' )
+		. " $transcripts" );
 msg('Done creating index');
 
 # Quantifying reads
 msg('Quantifying reads');
 runcmd(   'kallisto quant ' . '-t '
 		. $cpus . ' -i '
-		. "$outdir/all_transcripts.index " . '-o '
-		. "$outdir/kallisto_1 "
-		. "$forward_reads $reverse_reads" );
+		. File::Spec->catfile( $outdir, 'all_transcripts.index' ) . ' -o '
+		. File::Spec->catfile( $outdir, 'kallisto_1' )
+		. " $forward_reads $reverse_reads" );
 msg('Done quantifying reads');
 
 # STEP 2: Translate transcriptome to proteins---------------------------------
@@ -194,32 +199,39 @@ run_translation($transcripts);
 msg('Putative toxins prediction');
 runcmd(   'hmmcompete --desc --pepreg '
 		. '--hmm '
-		. "$dbdir/ekenda.hmm " . '--in '
-		. "$outdir/contigs_prot.fas "
-		. '--out '
-		. "$outdir/transcripts_hmmcompete_out.txt" );
+		. File::Spec->catfile( $dbdir, 'ekenda.hmm' )
+		. ' --in '
+		. File::Spec->catfile( $outdir, 'contigs_prot.fas' )
+		. ' --out '
+		. File::Spec->catfile( $outdir, 'transcripts_hmmcompete_out.txt' ) );
 
 # Retrieve DNA sequences of AA contigs having a match in hmmcompete
 
 ## First, add description of matched families by hmmcompete
 ## to sequence header.
 msg('Adding description of matched families');
-my %fields = add_desc_to_ids("$outdir/transcripts_hmmcompete_out.txt");
+my %fields
+	= add_desc_to_ids(
+	File::Spec->catfile( $outdir, 'transcripts_hmmcompete_out.txt' ) );
 
 ## Second, get DNA sequences using ids of putatives sequences
 ## from hmmcompete result.
 msg('Getting DNA sequences using ids of putatives sequences');
-open my $precdna, '>', "$outdir/contigs_dna.fas"
-	or croak "Open $outdir/contigs_dna.fas file failed: $OS_ERROR";
+my $contigs_dna_file = File::Spec->catfile( $outdir, 'contigs_dna.fas' );
+open my $precdna, '>', $contigs_dna_file
+	or croak "Opening $contigs_dna_file file failed: $OS_ERROR";
 get_dna_seq( $transcripts, $precdna, \%fields );
 close $precdna or croak "Close $precdna failed: $OS_ERROR";
 
 # STEP 4: Extract/extend matching sequences-----------------------------------
 # Extract matching region from hmmcompete.out and extend sequence
 msg('Extracting matching region and extending sequence');
-open my $extseq, '>', "$outdir/contigs_prot_reg.fas"
-	or croak "Open $outdir/contigs_prot_reg.fas file failed: $OS_ERROR";
-extract_seq( \%fields, "$outdir/contigs_prot.fas", $extseq );
+my $contigs_protreg_file
+	= File::Spec->catfile( $outdir, 'contigs_prot_reg.fas' );
+open my $extseq, '>', $contigs_protreg_file
+	or croak "Open $contigs_protreg_file file failed: $OS_ERROR";
+extract_seq( \%fields, File::Spec->catfile( $outdir, 'contigs_prot.fas' ),
+	$extseq );
 close $extseq or croak "Close $extseq failed: $OS_ERROR";
 
 # STEP 5: Annotating sequences------------------------------------------------
@@ -229,25 +241,30 @@ msg('Searching signal sequence');
 msg("Use $signalp_version");
 runcmd(   'signalp '
 		. '-fasta '
-		. "$outdir/contigs_prot_reg.fas "
-		. '-org euk '
+		. $contigs_protreg_file
+		. ' -org euk '
 		. '-verbose=false '
 		. '-format short '
 		. '-prefix contigs_prot_reg '
 		. '-gff3' );
-move( "$FindBin::RealBin/contigs_prot_reg.gff3",
-	"$outdir/contigs_prot_reg.gff3" );
 move(
-	"$FindBin::RealBin/contigs_prot_reg_summary.signalp5",
-	"$outdir/contigs_prot_reg_summary.signalp5"
+	File::Spec->catfile( $FindBin::RealBin, 'contigs_prot_reg.gff3' ),
+	File::Spec->catfile( $outdir,           'contigs_prot_reg.gff3' )
 );
+move(
+	File::Spec->catfile(
+		$FindBin::RealBin, 'contigs_prot_reg_summary.signalp5'
+	),
+	File::Spec->catfile( $outdir, 'contigs_prot_reg_summary.signalp5' )
+);
+
 msg('Done searching signal sequences');
 
-mkdir "$outdir/famaln", $RWE_FOR_OWNER;
+mkdir File::Spec->catfile( $outdir, 'famaln' ), $RWE_FOR_OWNER;
 
 # Split fasta file into families
 my $panreg = Bio::SeqIO->new(
-	-file   => "$outdir/contigs_prot_reg.fas",
+	-file   => $contigs_protreg_file,
 	-format => 'fasta'
 );
 
@@ -259,20 +276,24 @@ while ( my $panobj = $panreg->next_seq ) {
 	}
 	Bio::SeqIO->new(
 		-format => 'fasta',
-		-file   => '>' . "$outdir/famaln/$regid" . '_fam.fas'
+		-file   => '>'
+			. File::Spec->catfile( $outdir, 'famaln', $regid . '_fam.fas' )
 	)->write_seq($panobj);
 }
 
 msg('Adding signal sequence presence to sequence header');
-add_signal_presence( "$outdir/contigs_prot_reg.gff3",
-	"$outdir/contigs_prot_reg.fas" );
+add_signal_presence( File::Spec->catfile( $outdir, 'contigs_prot_reg.gff3' ),
+	$contigs_protreg_file );
 msg('Done adding signal presence');
 
 # GetDNA region
 # Input is a Bio::SeqIO sequence object
-process_get_dna_reg( $transcripts, "$outdir/contigs_prot.fas",
-	"$outdir/contigs_prot_reg_new.fas",
-	"$outdir/contigs_dna_reg.fas" );
+process_get_dna_reg(
+	$transcripts,
+	File::Spec->catfile( $outdir, 'contigs_prot.fas' ),
+	File::Spec->catfile( $outdir, 'contigs_prot_reg_new.fas' ),
+	File::Spec->catfile( $outdir, 'contigs_dna_reg.fas' )
+);
 
 # STEP 7: Compute TPM for precursors------------------------------------------
 msg('Computing expression level for precursors');
@@ -280,46 +301,47 @@ msg('Computing expression level for precursors');
 # Build new index from putative transcripts
 msg('Building putative transcripts index');
 runcmd(   'kallisto index' . ' -i '
-		. "$outdir/putative_transcripts.index "
-		. "$outdir/contigs_dna_reg.fas" );
-msg('Done');
+		. File::Spec->catfile( $outdir, 'putative_transcripts.index' )
+		. $SPACE
+		. File::Spec->catfile( $outdir, 'contigs_dna_reg.fas' ) );
+msg('Done building putative transcripts index');
 
 # Quantify raw reads using putative transcripts index
 msg('Quantifying putative transcripts');
 runcmd(   'kallisto quant ' . '-t '
 		. $cpus . ' -i '
-		. "$outdir/putative_transcripts.index " . '-o '
-		. "$outdir/kallisto_2 "
-		. "$forward_reads $reverse_reads" );
+		. File::Spec->catfile( $outdir, 'putative_transcripts.index' )
+		. ' -o '
+		. File::Spec->catdir( $outdir, 'kallisto_2' )
+		. " $forward_reads $reverse_reads" );
 msg('Done computing expression level for precursors');
 
 # STEP 8: Writing output stats------------------------------------------------
 msg('Writing output stats');
 
-my $kh1_ref = hashify( "$outdir/kallisto_1/abundance.tsv", 'target_id' );
-my $kh2_ref = hashify( "$outdir/kallisto_2/abundance.tsv", 'target_id' );
-open my $ffo, '>', "$outdir/itap_output.tsv"
-	or croak "Open $outdir/itap_output.tsv file failed: $OS_ERROR";
+my $kh1_ref
+	= hashify( File::Spec->catfile( $outdir, 'kallisto_1', 'abundance.tsv' ),
+	'target_id' );
+my $kh2_ref
+	= hashify( File::Spec->catfile( $outdir, 'kallisto_2', 'abundance.tsv' ),
+	'target_id' );
+my $itap_outfile = File::Spec->catfile( $outdir, 'itap_output.tsv' );
+open my $ffo, '>', $itap_outfile
+	or croak "Open $itap_outfile file failed: $OS_ERROR";
 write_output( $kh1_ref, $kh2_ref, $ffo );
 close $ffo or croak "Close failed: $OS_ERROR";
 msg('Done writing files');
 
-# Some final log output
-msg('Output files:');
-foreach ( capture("find $outdir -type f -name '*'") ) {
-	chomp;
-	msg($_);
-}
 
 # Write to log file
 msg('Annotation finished successfully.');
+msg("Final output file is $itap_outfile");
 my $endtime  = localtime;
 my $walltime = $endtime - $starttime;
 my $pretty   = sprintf '%.2f minutes', $walltime->minutes;
 msg("Walltime used: $pretty");
 msg( $walltime % 2 ? 'Share and enjoy!' : 'Thank you, come again.' );
 $log->close();
-move( File::HomeDir->my_home . '/itap.log', "$outdir/itap.log" );
 
 # SUBROUTINES ----------------------------------------------------------------
 
@@ -329,12 +351,10 @@ sub add_signal_presence {
 	my ( $gfffh, $protfile ) = @_;
 	my @ids_from_sigp = parse_gff3($gfffh);
 
-	my $protreg = Bio::DB::Fasta->new($protfile);
-	my @protids = $protreg->get_all_primary_ids;
-
-	open my $outfh, '>', "$outdir/contigs_prot_reg_new.fas"
+	open my $outfh, '>',
+		File::Spec->catfile( $outdir, 'contigs_prot_reg_new.fas' )
 		or croak "Cannot open outfile: $OS_ERROR";
-	_addsigpres( $outfh, @protids, @ids_from_sigp, $protreg );
+	_addsigpres( $outfh, $protfile, @ids_from_sigp );
 	close $outfh or croak "Failed to close file: $OS_ERROR";
 
 	return;
@@ -342,18 +362,31 @@ sub add_signal_presence {
 
 sub _addsigpres {
 
-	my ( $ofh, @ids, @sid, $preg ) = @_;
+	my ( $ofh, $prot, @ids ) = @_;
+
+	my $protreg = Bio::DB::Fasta->new($prot);
+
+	my $protobj = Bio::SeqIO->new(
+		-file   => $prot,
+		-format => 'fasta'
+	);
+
+	my %sequences;
+
+	while ( my $pseq = $protobj->next_seq ) {
+		$sequences{ $pseq->id } = $pseq->seq;
+	}
 
 	foreach my $protid (@ids) {
-		if ( any { $_ eq $protid } @sid ) {
-			print {$ofh} '>' . $preg->header($protid) . ' SIG=YES',
-				"\n", $preg->get_Seq_by_id($protid)->seq, "\n"
-				or croak "Failed to print to: $OS_ERROR";
+		if ( exists $sequences{$protid} ) {
+			print {$ofh} '>' . $protreg->header($protid) . ' SIG=YES',
+				"\n", $protreg->get_Seq_by_id($protid)->seq, "\n"
+				or croak "Print failed: $OS_ERROR";
 		}
 		else {
-			print {$ofh} '>' . $preg->header($protid) . ' SIG=NO', "\n",
-				$preg->get_Seq_by_id($protid)->seq, "\n"
-				or croak "Failed to print to : $OS_ERROR";
+			print {$ofh} '>' . $protreg->header($protid) . ' SIG=NO', "\n",
+				$protreg->get_Seq_by_id($protid)->seq, "\n"
+				or croak "Print failed : $OS_ERROR";
 		}
 	}
 
@@ -370,11 +403,20 @@ sub parse_gff3 {
 
 	my ($infile) = @_;
 
+	my ( @fields, @ids );
 	open my $infh, '<', $infile
 		or croak 'Cannot open file ' . $infile . ': ' . $OS_ERROR;
-	parse_input_gff3($infh);
-	close $infh or croak "Cannot close file $infh: $OS_ERROR";
-	return;
+	while ( my $line = <$infh> ) {
+		@fields = split /\t/msx, $line;
+		push @ids, $fields[0];
+	}
+	close $infh
+		or croak "Cannot close file [sub parse_gff3] $infh: $OS_ERROR";
+
+	# Remove comment line before returning array
+	shift @ids;
+
+	return @ids;
 }
 
 # Return extended sequence with full header ----------------------------------
@@ -389,8 +431,7 @@ sub extract_seq {
 		my @val = split m{[#]}msx, $value;
 		print {$outfh} '>', $val[0], "\n",
 			extend_str( $inprot->get_Seq_by_id($key)->seq, $val[1] ), "\n",
-			or croak
-			"Extending sequences failed. See extract_seq sub: $OS_ERROR";
+			or croak "Print failed [sub extract_seq]: $OS_ERROR";
 	}
 	return;
 }
@@ -412,7 +453,7 @@ sub get_dna_seq {
 		my $seqid = substr $id, 0, $posk;
 		print {$outfh} '>' . $seqid, "\n", $inx->get_Seq_by_id($seqid)->seq,
 			"\n"
-			or croak "Print to $outfh failed: $OS_ERROR";
+			or croak "Print to '$outfh' failed [sub get_dna_seq]: $OS_ERROR";
 	}
 	return;
 }
@@ -421,9 +462,13 @@ sub get_dna_seq {
 sub write_output {
 	my ( $hashref1, $hashref2, $outfh ) = @_;
 
-	print {$outfh} "sequence_id\traw_tpm\ttranscripts_tpm\tsequence\n"
+	print {$outfh}
+		"sequence_id\tfamily\traw_tpm\ttranscripts_tpm\tsequence\n"
 		or croak "Print to $outfh failed: $OS_ERROR";
 
+	my $seqfile = Bio::DB::Fasta->new(
+		File::Spec->catfile( $outdir, 'contigs_prot_reg_new.fas' ) );
+	my $fam;
 	foreach my $k2 ( keys %{$hashref2} ) {
 
 		# $k1 is like LYCTA_DN12353_2_23_32
@@ -432,9 +477,15 @@ sub write_output {
 		my $matind = rindex $k2, '_';
 		my $matkey = substr $k2, 0, $matind;
 
-		print {$outfh} $matkey, "\t", $hashref1->{$matkey}->{'tpm'}, "\t",
-			$hashref2->{$k2}->{'tpm'}, "\n"
-			or croak "Print to stats file failed: $OS_ERROR";
+		if ( $seqfile->header($k2) =~ /FAM=(.*)(?=\s)/msx ) {
+			$fam = $1;
+		}
+
+		print {$outfh} $matkey, "\t", $fam, "\t",
+			$hashref1->{$matkey}->{'tpm'}, "\t",
+			$hashref2->{$k2}->{'tpm'},     "\t",
+			$seqfile->get_Seq_by_id($k2)->seq, "\n"
+			or croak "Printfailed [sub write_output]: $OS_ERROR";
 	}
 	return;
 }
@@ -445,7 +496,8 @@ sub process_get_dna_reg {
 	open my $outfh, '>', $outfile
 		or croak "Cannot open file $outfile: $OS_ERROR";
 	get_dna_reg( $dnafile, $protfile, $protreg, $outfh );
-	close $outfh or croak "Cannot close file: $OS_ERROR";
+	close $outfh
+		or croak "Cannot close file [process_get_dna_reg]: $OS_ERROR";
 	return;
 }
 
@@ -471,7 +523,7 @@ sub get_dna_reg {
 			length( $protrfh->get_Seq_by_id($prid)->seq ) * $CODON_LENGTH;
 
 		print {$outfh} '>', $prid, "\n", $dnaseq, "\n"
-			or croak "Cannot print: $OS_ERROR";
+			or croak "Print failed [get_dna_reg]: $OS_ERROR";
 	}
 	return;
 }
@@ -485,7 +537,8 @@ sub add_desc_to_ids {
 
 	my %seqs_header;
 	my $textfile = Text::CSV->new( { sep_char => "\t" } );
-	open my $infh, '<', $infile or croak "Cannot open $infile: $OS_ERROR";
+	open my $infh, '<', $infile
+		or croak "Cannot open $infile [sub add_desc_to_ids]: $OS_ERROR";
 	$textfile->getline($infh);
 	while ( my $row = $textfile->getline($infh) ) {
 		my $new_header = join $SPACE, $row->[0], 'FAM=' . $row->[1],
@@ -493,25 +546,9 @@ sub add_desc_to_ids {
 		my $seq_desc = $row->[$HMM_TARGET_REGION];
 		$seqs_header{ $row->[0] } = $new_header . q{#} . $seq_desc;
 	}
-	close $infh or croak " Close failed: $OS_ERROR";
+	close $infh or croak " Close failed [sub add_desc_to_ids]: $OS_ERROR";
 
 	return %seqs_header;
-}
-
-# Private method for parse_gff3 ----------------------------------------------
-sub parse_input_gff3 {
-
-	# Private method for parse_gff3
-	my ($infh) = @_;
-	my ( @fields, @ids );
-	while ( my $line = <$infh> ) {
-		if ( $line =~ /^#/msx ) {
-			next;
-		}
-		@fields = split /\t/msx, $line;
-		push @ids, $fields[0];
-	}
-	return @ids;
 }
 
 # Extend AA sequences to sequence with start and stop codon ------------------
@@ -617,7 +654,7 @@ sub run_translation {
 
 		# Translating
 		$seqin = Bio::SeqIO->new(
-			-file   => "$outdir/$outfh",
+			-file   => File::Spec->catfile( $outdir, $outfh ),
 			-format => 'fasta'
 		);
 
@@ -633,7 +670,8 @@ sub run_translation {
 		}
 		else {
 			msg('Translating transcripts');
-			translate( $seqin, "$outdir/contigs_prot.fas" );
+			translate( $seqin,
+				File::Spec->catfile( $outdir, 'contigs_prot.fas' ) );
 			msg('Done translating');
 		}
 	}
@@ -650,11 +688,13 @@ sub run_translation {
 		}
 		else {
 			msg('Translating transcripts');
-			translate( $seqin, "$outdir/contigs_prot.fas" );
+			translate( $seqin,
+				File::Spec->catfile( $outdir, 'contigs_prot.fas' ) );
 			msg('Done translating');
 		}
 	}
-	close $outfh or croak "Close $outfh file failed: $OS_ERROR";
+	close $outfh
+		or croak "Close $outfh file failed [sub run_translation]: $OS_ERROR";
 
 	return;
 
@@ -663,9 +703,10 @@ sub run_translation {
 # Translate a DNA sequence file into 6 ORF -----------------------------------
 sub translate {
 	my ( $sequence_obj, $outfile ) = @_;
-	open my $seqout, '>', $outfile or croak "open file failed: $OS_ERROR";
+	open my $seqout, '>', $outfile
+		or croak "open file failed [sub translate]: $OS_ERROR";
 	do_translation( $sequence_obj, $seqout );
-	close $seqout or croak "Close file failed: $OS_ERROR";
+	close $seqout or croak "Close file failed [sub translate]: $OS_ERROR";
 	return;
 }
 
@@ -676,37 +717,37 @@ sub do_translation {
 	while ( my $seqio = $seqobj->next_seq ) {
 
 		# orf1
-		print {$seqout} '>', $seqio->id, '_orf1', "\n",
+		print {$seqout} '>', $seqio->id, '_frame=1', "\n",
 			$seqio->translate()->seq, "\n"
-			or croak "print failed: $OS_ERROR";
+			or croak "print failed [sub do_translation]: $OS_ERROR";
 
 		# orf2
-		print {$seqout} '>', $seqio->id, '_orf2', "\n",
+		print {$seqout} '>', $seqio->id, '_frame=2', "\n",
 			$seqio->translate( -frame => 1 )->seq, "\n"
-			or croak "print failed: $OS_ERROR";
+			or croak "print failed [sub do_translation]: $OS_ERROR";
 
 		# orf3
-		print {$seqout} '>', $seqio->id, '_orf3', "\n",
+		print {$seqout} '>', $seqio->id, '_frame=3', "\n",
 			$seqio->translate( -frame => 2 )->seq, "\n"
-			or croak "print failed: $OS_ERROR";
+			or croak "print failed [sub do_translation]: $OS_ERROR";
 
 		# calculate sequence rev comp
 		my $revcomp = $seqio->revcom;
 
 		# orf 4
-		print {$seqout} '>', $seqio->id, '_orf4', "\n",
+		print {$seqout} '>', $seqio->id, '_frame=4', "\n",
 			$revcomp->translate()->seq, "\n"
-			or croak "print failed: $OS_ERROR";
+			or croak "print failed [sub do_translation]: $OS_ERROR";
 
 		# orf 5
-		print {$seqout} '>', $seqio->id, '_orf5', "\n",
+		print {$seqout} '>', $seqio->id, '_frame=5', "\n",
 			$revcomp->translate( -frame => 1 )->seq, "\n"
-			or croak "print failed: $OS_ERROR";
+			or croak "print failed: [sub do_translation] $OS_ERROR";
 
 		# orf 6
-		print {$seqout} '>', $seqio->id, '_orf6', "\n",
+		print {$seqout} '>', $seqio->id, '_frame=6', "\n",
 			$revcomp->translate( -frame => 2 )->seq, "\n"
-			or croak "print failed: $OS_ERROR";
+			or croak "print failed [sub do_translation]: $OS_ERROR";
 	}
 	return;
 }
@@ -716,7 +757,7 @@ sub msg {
 	my $t    = localtime;
 	my $line = '[' . $t->hms . "] @_\n";
 	if ( !$quiet ) {
-		print {*STDOUT} $line or croak "Print failed: $OS_ERROR";
+		print {*STDOUT} $line or croak "Print failed [sub msg]: $OS_ERROR";
 		$log->msg( 2, $line );
 	}
 	elsif ($quiet) {
@@ -736,29 +777,29 @@ sub err {
 	# Display error to terminal for user information
 	print {*STDOUT}
 		"[ITAP ERROR]: @text See itap.log for more informations\n"
-		or croak "Print failed: $OS_ERROR";
+		or croak "Print failed [sub err]: $OS_ERROR";
 
 	# STDERR is printed to log file by default
 	# So below line goes directly into log file
-	print {*STDERR} "[ITAP ERROR]: $line\n"
-		or croak "Print failed: $OS_ERROR";
+	print {*STDERR} "\n\n[ITAP ERROR]: $line\n"
+		or croak "Print failed [sub err]: $OS_ERROR";
 	print {*STDERR} "-----------USER INFORMATIONS-----------\n"
-		or croak "Print failed: $OS_ERROR";
+		or croak "Print failed [sub err]: $OS_ERROR";
 	print {*STDERR} 'Program: ' . $EXE . $SPACE . $VERSION . "\n"
-		or croak "Print failed: $OS_ERROR";
+		or croak "Print failed [sub err]: $OS_ERROR";
 	print {*STDERR} 'User: ' . $ENV{USER} . "\n"
-		or croak "Print failed: $OS_ERROR";
+		or croak "Print failed [sub err]: $OS_ERROR";
 	print {*STDERR} 'OS: ' . $OSNAME . "\n"
-		or croak "Print failed: $OS_ERROR";
+		or croak "Print failed [sub err]: $OS_ERROR";
 	print {*STDERR} '---------------------------------------'
-		or croak "Print failed: $OS_ERROR";
+		or croak "Print failed [sub err]: $OS_ERROR";
 
 	exit 2;
 }
 
 # Run command subroutine -----------------------------------------------------
 sub runcmd {
-	my @cmd = @_;
+	my (@cmd) = @_;
 	msg( 'Running:', @cmd );
 	system(@cmd) == 0 or err ( 'Could not run command:', @cmd );
 	return 1;

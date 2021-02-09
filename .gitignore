@@ -8,6 +8,5 @@
 .tidyallrc
 .vscode/*
 ITAP/*
-t/*
 test/*
 tidyall

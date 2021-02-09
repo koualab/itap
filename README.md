@@ -4,7 +4,7 @@
 
 ## Introduction
 
-Venom gland transcriptome annotation is the process of identifying putatives toxin-like peptides in a set a transcriptomic sequences, and labelling them with family, presence/absence signal information. itap is a software tool to annotate spider venom gland transcriptome and will suport in future cone, scorpions and other well-known venomous animal venom gland transcriptome. itap produces standards-compliant output files.
+Venom gland transcriptome annotation is the process of identifying putatives toxin-like peptides in a set a transcriptomic sequences, and labelling them with family, presence/absence signal information. itap (Improved Transcriptome Annotation Pipeline) is a software tool to annotate spider venom gland transcriptome and will suport in next release cone, scorpions and other well-known venomous animal venom gland transcriptome. itap produces standards-compliant output files.
 
 ## Installation
 
@@ -43,7 +43,7 @@ itap -v
 ## Test
 
 * Type `itap -help` and it should output its help screen.
-* Type `itap -version` and you should see an output like itap version xxx (Tue Dec 29 14:17:51 2020).
+* Type `itap -version` and you should see an output like itap version 0.1 (Tue Dec 29 14:17:51 2020).
   
 
 
@@ -61,7 +61,7 @@ itap -t transcripts.fa.gz -f reads_R1.fq.gz -r reads_R2.fq.gz
 
 ```
 General:
-    --transcripts, -t    Specify transcriptome file [required]
+	--transcripts, -t    Specify transcriptome file [required]
     --forward_reads, -f  Specify forward reads file [required]
     --reverse_reads, -r  Specify reverse reads file [required]
 
