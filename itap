@@ -160,15 +160,9 @@ msg("Your command is: @CMDLINE");
 
 # Check needed tools
 my @needed_tools = qw(kallisto signalp hmmcompete);
-foreach my $need (@needed_tools) {
-	my $tool = find_exe($need);
-	if ($tool) {
-		msg("Found $need");
-	}
-	else {
-		print_install_msg($need);
-	}
-}
+
+check_tool(@needed_tools);
+
 chomp( my $kallisto_version   = capture('kallisto version') );
 chomp( my $hmmcompete_version = capture('hmmcompete -v') );
 chomp( my $signalp_version    = capture( [ 0 .. 1 ], 'signalp -version' ) );
@@ -265,25 +259,8 @@ move(
 msg('Done searching signal sequences');
 
 mkdir File::Spec->catfile( $outdir, 'famaln' ), $RWE_FOR_OWNER;
+split_by_fam($contigs_protreg_file);
 
-# Split fasta file into families
-my $panreg = Bio::SeqIO->new(
-	-file   => $contigs_protreg_file,
-	-format => 'fasta'
-);
-
-while ( my $panobj = $panreg->next_seq ) {
-	my $seqheader = $panobj->id . $SPACE . $panobj->desc;
-	my $regid;
-	if ( $seqheader =~ m/(?<=FAM=)(.*?)(?=\s)/msx ) {
-		$regid = $1;
-	}
-	Bio::SeqIO->new(
-		-format => 'fasta',
-		-file   => '>'
-			. File::Spec->catfile( $outdir, 'famaln', $regid . '_fam.fas' )
-	)->write_seq($panobj);
-}
 
 msg('Adding signal sequence presence to sequence header');
 add_signal_presence( File::Spec->catfile( $outdir, 'contigs_prot_reg.gff3' ),
@@ -463,6 +440,32 @@ sub get_dna_seq {
 	return;
 }
 
+# Split fasta file by families ----------------------------------------------
+sub split_by_fam {
+
+	my ($file) = @_;
+
+	# Split fasta file into families
+	my $panreg = Bio::SeqIO->new(
+		-file   => $file,
+		-format => 'fasta'
+	);
+
+	while ( my $panobj = $panreg->next_seq ) {
+		my $seqheader = $panobj->id . $SPACE . $panobj->desc;
+		my $regid;
+		if ( $seqheader =~ m/(?<=FAM=)(.*?)(?=\s)/msx ) {
+			$regid = $1;
+		}
+		Bio::SeqIO->new(
+			-format => 'fasta',
+			-file   => '>'
+				. File::Spec->catfile( $outdir, 'famaln', $regid . '_fam.fas' )
+		)->write_seq($panobj);
+	}
+
+	return;
+}
 # Subroutine to process output file to create final output file --------------
 sub write_output {
 	my ( $hashref1, $hashref2, $outfh ) = @_;
@@ -622,6 +625,25 @@ sub print_install_msg {
 			  'SignalP not found. Installation instruction can be found at '
 			. 'http://www.cbs.dtu.dk/services/SignalP/portable.php' );
 	}
+	return;
+}
+
+# Check needed tools --------------------------------------------------------
+
+sub check_tool {
+
+	my (@programs) = @_;
+
+	foreach my $need (@programs) {
+		my $tool = find_exe($need);
+		if ($tool) {
+			msg("Found $need");
+		}
+		else {
+			print_install_msg($need);
+		}
+	}
+
 	return;
 }
 
