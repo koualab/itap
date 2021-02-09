@@ -38,7 +38,7 @@ my $EMPTY   = q{};
 my $SPACE   = q{ };
 my $SHARP   = q{#};
 
-# Define constants using Readonly
+# Define constants
 Readonly my $HMM_TARGET_REGION   => 4;
 Readonly my $HMM_CLASSIFIER_DESC => 5;
 Readonly my $CODON_LENGTH        => 3;
@@ -100,10 +100,12 @@ if ( !defined $outdir ) {
 # Check existence of output folder
 if ( -d $outdir ) {
 	if ($force) {
-		print {*STDOUT} '['
-			. localtime->hms . '] '
-			. "Re-using existing -o $outdir\n"
-			or croak "Print failed: $OS_ERROR";
+		if ( !$quiet ) {
+			print {*STDOUT} '['
+				. localtime->hms . '] '
+				. "Re-using existing -o $outdir\n"
+				or croak "Print failed: $OS_ERROR";
+		}
 		remove_tree( $outdir, { safe => 1 } );
 		mkdir $outdir, $RWE_FOR_OWNER;
 	}
@@ -116,10 +118,13 @@ if ( -d $outdir ) {
 	}
 }
 else {
-	print {*STDOUT} '['
-		. localtime->hms . '] '
-		. "Creating new output folder: '$outdir'\n"
-		or croak "Print failed: $OS_ERROR";
+	if ( !$quiet )
+	{
+		print {*STDOUT} '['
+			. localtime->hms . '] '
+			. "Creating new output folder: '$outdir'\n"
+			or croak "Print failed: $OS_ERROR";
+	}
 	mkdir $outdir, $RWE_FOR_OWNER;
 }
 
@@ -286,8 +291,7 @@ add_signal_presence( File::Spec->catfile( $outdir, 'contigs_prot_reg.gff3' ),
 	$contigs_protreg_file );
 msg('Done adding signal presence');
 
-# GetDNA region
-# Input is a Bio::SeqIO sequence object
+# Get DNA region
 process_get_dna_reg(
 	$transcripts,
 	File::Spec->catfile( $outdir, 'contigs_prot.fas' ),
@@ -325,11 +329,14 @@ my $kh1_ref
 my $kh2_ref
 	= hashify( File::Spec->catfile( $outdir, 'kallisto_2', 'abundance.tsv' ),
 	'target_id' );
+
 my $itap_outfile = File::Spec->catfile( $outdir, 'itap_output.tsv' );
+
 open my $ffo, '>', $itap_outfile
 	or croak "Open $itap_outfile file failed: $OS_ERROR";
 write_output( $kh1_ref, $kh2_ref, $ffo );
 close $ffo or croak "Close failed: $OS_ERROR";
+
 msg('Done writing files');
 
 # Write to log file
@@ -471,7 +478,7 @@ sub write_output {
 	foreach my $k2 ( keys %{$hashref2} ) {
 
 		# $k1 is like LYCTA_DN12353_2_23_32
-		# $k2 is like LYCTA_DN12353_2_23_32_orf3
+		# $k2 is like LYCTA_DN12353_2_23_32_frame=2
 		# $matkey is extracting $k1 from $k2
 		my $matind = rindex $k2, '_';
 		my $matkey = substr $k2, 0, $matind;
@@ -484,7 +491,7 @@ sub write_output {
 			$hashref1->{$matkey}->{'tpm'}, "\t",
 			$hashref2->{$k2}->{'tpm'},     "\t",
 			$seqfile->get_Seq_by_id($k2)->seq, "\n"
-			or croak "Printfailed [sub write_output]: $OS_ERROR";
+			or croak "Print failed [sub write_output]: $OS_ERROR";
 	}
 	return;
 }
@@ -494,14 +501,14 @@ sub process_get_dna_reg {
 	my ( $dnafile, $protfile, $protreg, $outfile ) = @_;
 	open my $outfh, '>', $outfile
 		or croak "Cannot open file $outfile: $OS_ERROR";
-	get_dna_reg( $dnafile, $protfile, $protreg, $outfh );
+	_get_dna_reg( $dnafile, $protfile, $protreg, $outfh );
 	close $outfh
 		or croak "Cannot close file [process_get_dna_reg]: $OS_ERROR";
 	return;
 }
 
 # Private method for process_get_dna_reg -------------------------------------
-sub get_dna_reg {
+sub _get_dna_reg {
 
 	my ( $dnafile, $protfile, $protreg, $outfh ) = @_;
 
@@ -545,7 +552,7 @@ sub add_desc_to_ids {
 		my $seq_desc = $row->[$HMM_TARGET_REGION];
 		$seqs_header{ $row->[0] } = $new_header . q{#} . $seq_desc;
 	}
-	close $infh or croak " Close failed [sub add_desc_to_ids]: $OS_ERROR";
+	close $infh or croak "Close failed [sub add_desc_to_ids]: $OS_ERROR";
 
 	return %seqs_header;
 }
@@ -704,13 +711,13 @@ sub translate {
 	my ( $sequence_obj, $outfile ) = @_;
 	open my $seqout, '>', $outfile
 		or croak "open file failed [sub translate]: $OS_ERROR";
-	do_translation( $sequence_obj, $seqout );
+	_do_translation( $sequence_obj, $seqout );
 	close $seqout or croak "Close file failed [sub translate]: $OS_ERROR";
 	return;
 }
 
 # Private method for translate subroutine ------------------------------------
-sub do_translation {
+sub _do_translation {
 	my ( $seqobj, $seqout ) = @_;
 
 	while ( my $seqio = $seqobj->next_seq ) {
@@ -830,9 +837,9 @@ itap - Fast and accurate annotation of venom gland transcriptome
 
 =head1 SYNOPSIS
 
-itap --tsc trans.fa.gz --fwd reads_R1.fq.gz --rev reads_R2.fq.gz -out itap_out
+itap -t trans.fa.gz -f reads_R1.fq.gz -r reads_R2.fq.gz --out itap_out
 
-itap -tsc trans.fa.gz -fwd reads_R1.fq.gz -rev reads_R2.fq.gz --hmm lib.hmm
+itap -t trans.fa.gz -f reads_R1.fq.gz -r reads_R2.fq.gz --hmm lib.hmm
 
 
 
@@ -849,21 +856,21 @@ for manual validation.
 
 =head1 USAGE
 
-itap [options] -tsc transcripts.fa -fwd reads_R1.fq -rev reads_R2.fq
+itap [options] -t transcripts.fa -f reads_R1.fq -r reads_R2.fq
 
 =head1 REQUIRED ARGUMENTS
 
 =over
 
-=item -t[sc]    <file>
+=item -t    <file>
 
 Specify input transcripts file
 
-=item -f[wd]    <file>
+=item -f    <file>
 
 Specify input forward reads file
 
-=item -r[ev]    <file>
+=item -r    <file>
 
 Specify input reverse reads file
 
@@ -884,6 +891,14 @@ HMM file for putative toxin classification, default is ekenda.hmm
 =item  --quiet
 
 Decrease program verbosity, default set to false
+
+=item  --man      
+
+Print this man page
+
+=item  -u[sage]    
+
+Print current program usage and exit
 
 =item  -v[ersion]    
 
