@@ -8,37 +8,33 @@ Venom gland transcriptome annotation is the process of identifying putatives tox
 
 ## Installation
 
-### Ubuntu/Debian/Mint
+### Linux or MAC based OS
 
 ```
-sudo apt-get update
-sudo apt-get install libdatetime-perl bioperl
-sudo cpan Bio::Perl Text::CSV::Hashify Readonly File::Copy Getopt::Declare
+# Install perl packages
+sudo cpanm Bio::Perl Text::CSV::Hashify Readonly File::Copy Getopt::Declare File::Spec
+
+# Install kallisto
+See https://pachterlab.github.io/kallisto/download
+
+# Install hmmsearch
+See https://hmmer.org
+
+# Install hmmcompete
+See https://www.mdpi.com/2072-6651/9/8/245/s1
+or https://github.com/koualab/hmmcompete
+
+# Download itap
 git clone https://github.com/koualab/itap.git $HOME/itap
-sudo cp bin/itap /usr/local/bin
-itap -v 
-```
 
-### Centos/Fedora/RHEL
+# Copy itap to bin folder and hmm db to db folder
+sudo cp itap /usr/local/bin
+sudo mkdir /usr/share/itap/db
+sudo cp itap/db/* /usr/share/itap/db
 
+# Add path to $PATH
+echo "$PATH:/usr/share/itap/db/" >> ~/.bashrc
 ```
-sudo yum update
-sudo yum install libdatetime-perl bioperl
-sudo cpanm Bio::Perl Text::CSV::Hashify Readonly File::Copy 
-git clone https://github.com/koualab/itap.git $HOME/itap
-sudo cp bin/itap /usr/local/bin
-itap -v 
-```
-
-### MacOS
-
-```
-sudo cpan Time::Piece Bio::Perl
-git clone https://github.com/koualab/itap.git $HOME/itap
-sudo cp bin/itap /usr/local/bin
-itap -v 
-```
-  
 
 ## Test
 

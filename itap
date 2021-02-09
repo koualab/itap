@@ -62,7 +62,7 @@ my $args = Getopt::Declare->new(<<'EOSPEC') || exit 1;
 	--force			Force reuse of output folder
 	--hmm <hmm:of>		Specify the path to personal hmm lib
 	--quiet			Decrease verbosity
-	--cpus <cpus:+i>	Specify number of threads
+	--cpus <cpus:+i>	Specify number of threads	
 
 	# Standard meta-options
 	-v[ersion]		Print program version and exit
@@ -72,6 +72,7 @@ my $args = Getopt::Declare->new(<<'EOSPEC') || exit 1;
 	--man			Print man page
 	        		{ pod2usage( -exitval => 0, -verbose => 2 ); }
 	-h[elp]			Print help and exit
+
 EOSPEC
 
 my $transcripts   = $args->{'-t'};
