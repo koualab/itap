@@ -261,7 +261,6 @@ msg('Done searching signal sequences');
 mkdir File::Spec->catfile( $outdir, 'famaln' ), $RWE_FOR_OWNER;
 split_by_fam($contigs_protreg_file);
 
-
 msg('Adding signal sequence presence to sequence header');
 add_signal_presence( File::Spec->catfile( $outdir, 'contigs_prot_reg.gff3' ),
 	$contigs_protreg_file );
@@ -460,12 +459,14 @@ sub split_by_fam {
 		Bio::SeqIO->new(
 			-format => 'fasta',
 			-file   => '>'
-				. File::Spec->catfile( $outdir, 'famaln', $regid . '_fam.fas' )
+				. File::Spec->catfile( $outdir, 'famaln',
+				$regid . '_fam.fas' )
 		)->write_seq($panobj);
 	}
 
 	return;
 }
+
 # Subroutine to process output file to create final output file --------------
 sub write_output {
 	my ( $hashref1, $hashref2, $outfh ) = @_;
