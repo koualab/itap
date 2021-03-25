@@ -14,7 +14,7 @@ use File::Copy;
 use File::Log;
 use File::Path qw( remove_tree );
 use File::Spec;
-use File::Temp qw( tempfile );
+use File::Temp qw( tempfile tempdir );
 use FindBin qw( $RealBin );
 use Getopt::Declare;
 use IPC::System::Simple qw( capture );
@@ -26,13 +26,13 @@ use Text::CSV::Hashify;
 use Time::Piece;
 use Time::Seconds;
 
-our $VERSION = '0.1.0';
+our $VERSION = '0.1.1';
 
 # Global variables
 my @CMDLINE = ( $PROGRAM_NAME, @ARGV );
 my $BINDIR  = "$FindBin::RealBin/../binaries/$OSNAME";
 my $EXE     = $FindBin::RealScript;
-my $AUTHOR  = 'Anicet Ebou <anicet.ebou@gmail.com>';
+my $AUTHOR  = 'Anicet Ebou <anicet.ebou@gmail.com> and Dominique Koua.';
 my $URL     = 'https://github.com/koualab/itap.git';
 my $EMPTY   = q{};
 my $SPACE   = q{ };
@@ -134,6 +134,9 @@ my $log = File::Log->new(
 	logFileMode => '>',
 );
 
+# Setup temp dir
+my $tmpdir = tempdir( CLEANUP => 1);
+
 # START ----------------------------------------------------------------------
 msg( 'This is ' . $EXE . $SPACE . $VERSION );
 msg( 'Written by ' . $AUTHOR );
@@ -178,7 +181,7 @@ if ( index( $signalp_version, 'version 5' ) == $NON_EXIST ) {
 msg('Builing transcripts index');
 msg("Use $kallisto_version");
 runcmd(   'kallisto index ' . '-i '
-		. File::Spec->catfile( $outdir, 'all_transcripts.index' )
+		. File::Spec->catfile( $tmpdir, 'all_transcripts.index' )
 		. " $transcripts" );
 msg('Done creating index');
 
@@ -186,8 +189,8 @@ msg('Done creating index');
 msg('Quantifying reads');
 runcmd(   'kallisto quant ' . '-t '
 		. $cpus . ' -i '
-		. File::Spec->catfile( $outdir, 'all_transcripts.index' ) . ' -o '
-		. File::Spec->catfile( $outdir, 'kallisto_1' )
+		. File::Spec->catfile( $tmpdir, 'all_transcripts.index' ) . ' -o '
+		. File::Spec->catfile( $tmpdir, 'kallisto_1' )
 		. " $forward_reads $reverse_reads" );
 msg('Done quantifying reads');
 
@@ -196,13 +199,14 @@ run_translation($transcripts);
 
 # STEP 3: Putative toxins identification--------------------------------------
 msg('Putative toxins prediction');
+
 runcmd(   'hmmcompete --desc --pepreg '
 		. '--hmm '
 		. File::Spec->catfile( $dbdir, 'ekenda.hmm' )
 		. ' --in '
-		. File::Spec->catfile( $outdir, 'contigs_prot.fas' )
+		. File::Spec->catfile( $tmpdir, 'contigs_prot.fas' )
 		. ' --out '
-		. File::Spec->catfile( $outdir, 'transcripts_hmmcompete_out.txt' ) );
+		. File::Spec->catfile( $tmpdir, 'transcripts_hmmcompete_out.txt' ) );
 
 # Retrieve DNA sequences of AA contigs having a match in hmmcompete
 
@@ -211,12 +215,12 @@ runcmd(   'hmmcompete --desc --pepreg '
 msg('Adding description of matched families');
 my %fields
 	= add_desc_to_ids(
-	File::Spec->catfile( $outdir, 'transcripts_hmmcompete_out.txt' ) );
+	File::Spec->catfile( $tmpdir, 'transcripts_hmmcompete_out.txt' ) );
 
 ## Second, get DNA sequences using ids of putatives sequences
 ## from hmmcompete result.
 msg('Getting DNA sequences using ids of putatives sequences');
-my $contigs_dna_file = File::Spec->catfile( $outdir, 'contigs_dna.fas' );
+my $contigs_dna_file = File::Spec->catfile( $tmpdir, 'contigs_dna.fas' );
 open my $precdna, '>', $contigs_dna_file
 	or croak "Opening $contigs_dna_file file failed: $OS_ERROR";
 get_dna_seq( $transcripts, $precdna, \%fields );
@@ -226,10 +230,10 @@ close $precdna or croak "Close $precdna failed: $OS_ERROR";
 # Extract matching region from hmmcompete.out and extend sequence
 msg('Extracting matching region and extending sequence');
 my $contigs_protreg_file
-	= File::Spec->catfile( $outdir, 'contigs_prot_reg.fas' );
+	= File::Spec->catfile( $tmpdir, 'contigs_prot_reg.fas' );
 open my $extseq, '>', $contigs_protreg_file
 	or croak "Open $contigs_protreg_file file failed: $OS_ERROR";
-extract_seq( \%fields, File::Spec->catfile( $outdir, 'contigs_prot.fas' ),
+extract_seq( \%fields, File::Spec->catfile( $tmpdir, 'contigs_prot.fas' ),
 	$extseq );
 close $extseq or croak "Close $extseq failed: $OS_ERROR";
 
@@ -248,31 +252,31 @@ runcmd(   'signalp '
 		. '-gff3' );
 move(
 	File::Spec->catfile( $FindBin::RealBin, 'contigs_prot_reg.gff3' ),
-	File::Spec->catfile( $outdir,           'contigs_prot_reg.gff3' )
+	File::Spec->catfile( $tmpdir,           'contigs_prot_reg.gff3' )
 );
 move(
 	File::Spec->catfile(
 		$FindBin::RealBin, 'contigs_prot_reg_summary.signalp5'
 	),
-	File::Spec->catfile( $outdir, 'contigs_prot_reg_summary.signalp5' )
+	File::Spec->catfile( $tmpdir, 'contigs_prot_reg_summary.signalp5' )
 );
 
 msg('Done searching signal sequences');
 
-mkdir File::Spec->catfile( $outdir, 'famaln' ), $RWE_FOR_OWNER;
+mkdir File::Spec->catfile( $tmpdir, 'famaln' ), $RWE_FOR_OWNER;
 split_by_fam($contigs_protreg_file);
 
 msg('Adding signal sequence presence to sequence header');
-add_signal_presence( File::Spec->catfile( $outdir, 'contigs_prot_reg.gff3' ),
+add_signal_presence( File::Spec->catfile( $tmpdir, 'contigs_prot_reg.gff3' ),
 	$contigs_protreg_file );
 msg('Done adding signal presence');
 
 # Get DNA region
 process_get_dna_reg(
 	$transcripts,
-	File::Spec->catfile( $outdir, 'contigs_prot.fas' ),
-	File::Spec->catfile( $outdir, 'contigs_prot_reg_new.fas' ),
-	File::Spec->catfile( $outdir, 'contigs_dna_reg.fas' )
+	File::Spec->catfile( $tmpdir, 'contigs_prot.fas' ),
+	File::Spec->catfile( $tmpdir, 'contigs_prot_reg_new.fas' ),
+	File::Spec->catfile( $tmpdir, 'contigs_dna_reg.fas' )
 );
 
 # STEP 7: Compute TPM for precursors------------------------------------------
@@ -281,18 +285,18 @@ msg('Computing expression level for precursors');
 # Build new index from putative transcripts
 msg('Building putative transcripts index');
 runcmd(   'kallisto index' . ' -i '
-		. File::Spec->catfile( $outdir, 'putative_transcripts.index' )
+		. File::Spec->catfile( $tmpdir, 'putative_transcripts.index' )
 		. $SPACE
-		. File::Spec->catfile( $outdir, 'contigs_dna_reg.fas' ) );
+		. File::Spec->catfile( $tmpdir, 'contigs_dna_reg.fas' ) );
 msg('Done building putative transcripts index');
 
 # Quantify raw reads using putative transcripts index
 msg('Quantifying putative transcripts');
 runcmd(   'kallisto quant ' . '-t '
 		. $cpus . ' -i '
-		. File::Spec->catfile( $outdir, 'putative_transcripts.index' )
+		. File::Spec->catfile( $tmpdir, 'putative_transcripts.index' )
 		. ' -o '
-		. File::Spec->catdir( $outdir, 'kallisto_2' )
+		. File::Spec->catdir( $tmpdir, 'kallisto_2' )
 		. " $forward_reads $reverse_reads" );
 msg('Done computing expression level for precursors');
 
@@ -300,10 +304,10 @@ msg('Done computing expression level for precursors');
 msg('Writing output stats');
 
 my $kh1_ref
-	= hashify( File::Spec->catfile( $outdir, 'kallisto_1', 'abundance.tsv' ),
+	= hashify( File::Spec->catfile( $tmpdir, 'kallisto_1', 'abundance.tsv' ),
 	'target_id' );
 my $kh2_ref
-	= hashify( File::Spec->catfile( $outdir, 'kallisto_2', 'abundance.tsv' ),
+	= hashify( File::Spec->catfile( $tmpdir, 'kallisto_2', 'abundance.tsv' ),
 	'target_id' );
 
 my $itap_outfile = File::Spec->catfile( $outdir, 'itap_output.tsv' );
@@ -334,7 +338,7 @@ sub add_signal_presence {
 	my @ids_from_sigp = parse_gff3($gfffh);
 
 	open my $outfh, '>',
-		File::Spec->catfile( $outdir, 'contigs_prot_reg_new.fas' )
+		File::Spec->catfile( $tmpdir, 'contigs_prot_reg_new.fas' )
 		or croak "Cannot open outfile: $OS_ERROR";
 	_addsigpres( $outfh, $protfile, @ids_from_sigp );
 	close $outfh or croak "Failed to close file: $OS_ERROR";
@@ -460,7 +464,7 @@ sub split_by_fam {
 		Bio::SeqIO->new(
 			-format => 'fasta',
 			-file   => '>'
-				. File::Spec->catfile( $outdir, 'famaln',
+				. File::Spec->catfile( $tmpdir, 'famaln',
 				$regid . '_fam.fas' )
 		)->write_seq($panobj);
 	}
@@ -477,7 +481,7 @@ sub write_output {
 		or croak "Print to $outfh failed: $OS_ERROR";
 
 	my $seqfile = Bio::DB::Fasta->new(
-		File::Spec->catfile( $outdir, 'contigs_prot_reg_new.fas' ) );
+		File::Spec->catfile( $tmpdir, 'contigs_prot_reg_new.fas' ) );
 	my $fam;
 	foreach my $k2 ( keys %{$hashref2} ) {
 
@@ -683,7 +687,7 @@ sub run_translation {
 
 		# Translating
 		$seqin = Bio::SeqIO->new(
-			-file   => File::Spec->catfile( $outdir, $outfh ),
+			-file   => File::Spec->catfile( $tmpdir, $outfh ),
 			-format => 'fasta'
 		);
 
@@ -700,7 +704,7 @@ sub run_translation {
 		else {
 			msg('Translating transcripts');
 			translate( $seqin,
-				File::Spec->catfile( $outdir, 'contigs_prot.fas' ) );
+				File::Spec->catfile( $tmpdir, 'contigs_prot.fas' ) );
 			msg('Done translating');
 		}
 	}
@@ -718,7 +722,7 @@ sub run_translation {
 		else {
 			msg('Translating transcripts');
 			translate( $seqin,
-				File::Spec->catfile( $outdir, 'contigs_prot.fas' ) );
+				File::Spec->catfile( $tmpdir, 'contigs_prot.fas' ) );
 			msg('Done translating');
 		}
 	}
@@ -853,6 +857,7 @@ __END__
 
 =for stopwords Koua ekenda.hmm itap transcriptome tsc nucleotides NGS ouput contigs
 =for stopwords kallisto signalp blastp blastx hmmcompete Anicet Ebou MERCHANTABILITY
+=for Koualab
 
 =head1 NAME
 
@@ -943,7 +948,7 @@ I<itap> needs kallisto, signalp, and hmmcompete to properly work.
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2019-2020 by Anicet Ebou <anicet.ebou@gmail.com>.
+Copyright 2019-2020 Koualab.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -982,6 +987,6 @@ None known to the best of my knowledge. Please report them to the author.
 =head1 AUTHOR
 
 Anicet Ebou <anicet.ebou@gmail.com>
-Dominique Koua <koua.dominique@gmail.com>
+Dominique Koua <dominique.koua@inphb.ci>
 
 =cut
