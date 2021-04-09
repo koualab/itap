@@ -111,6 +111,6 @@ GPL v3
 
 ## Authors
 
-* Anicet Ebou
-* Dominique Koua
+* [Anicet Ebou]((https://orcid.org/0000-0003-4005-177X))
+* [Dominique Koua](https://www.researchgate.net/profile/Dominique_Koua)
 

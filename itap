@@ -135,13 +135,13 @@ my $log = File::Log->new(
 );
 
 # Setup temp dir
-my $tmpdir = tempdir( CLEANUP => 1);
+my $tmpdir = tempdir( CLEANUP => 1 );
 
 # START ----------------------------------------------------------------------
 msg( 'This is ' . $EXE . $SPACE . $VERSION );
 msg( 'Written by ' . $AUTHOR );
 msg( 'Homepage is ' . $URL );
-msg( 'Local time is ' . $starttime );
+msg( 'Local time is ' . $starttime->hms() );
 msg( 'You are', $ENV{USER} || 'not telling me who you are!' );
 msg( 'Operating system is ' . $OSNAME );
 
@@ -311,11 +311,15 @@ my $kh2_ref
 	'target_id' );
 
 my $itap_outfile = File::Spec->catfile( $outdir, 'itap_output.tsv' );
+my $itap_faout   = File::Spec->catfile( $outdir, 'matched_seqs.fa' );
 
 open my $ffo, '>', $itap_outfile
 	or croak "Open $itap_outfile file failed: $OS_ERROR";
-write_output( $kh1_ref, $kh2_ref, $ffo );
+open my $fao, '>', $itap_faout
+	or croak "Open $itap_faout file failed: $OS_ERROR";
+write_output( $kh1_ref, $kh2_ref, $ffo, $fao );
 close $ffo or croak "Close failed: $OS_ERROR";
+close $fao or croak "Close failed: $OS_ERROR";
 
 msg('Done writing files');
 
@@ -474,7 +478,7 @@ sub split_by_fam {
 
 # Subroutine to process output file to create final output file --------------
 sub write_output {
-	my ( $hashref1, $hashref2, $outfh ) = @_;
+	my ( $hashref1, $hashref2, $outfh, $fafh ) = @_;
 
 	print {$outfh}
 		"sequence_id\tfamily\traw_tpm\ttranscripts_tpm\tsequence\n"
@@ -482,12 +486,14 @@ sub write_output {
 
 	my $seqfile = Bio::DB::Fasta->new(
 		File::Spec->catfile( $tmpdir, 'contigs_prot_reg_new.fas' ) );
+	my $pfile = Bio::DB::Fasta->new(
+		File::Spec->catfile( $tmpdir, 'contigs_prot.fas' ) );
 	my $fam;
 	foreach my $k2 ( keys %{$hashref2} ) {
 
 		# $k1 is like LYCTA_DN12353_2_23_32
 		# $k2 is like LYCTA_DN12353_2_23_32_frame=2
-		# $matkey is extracting $k1 from $k2
+		# $matkey is getting $k1 from $k2
 		my $matind = rindex $k2, '_';
 		my $matkey = substr $k2, 0, $matind;
 
@@ -500,6 +506,9 @@ sub write_output {
 			$hashref2->{$k2}->{'tpm'},     "\t",
 			$seqfile->get_Seq_by_id($k2)->seq, "\n"
 			or croak "Print failed [sub write_output]: $OS_ERROR";
+
+		print {$fafh} $matkey, "\n", $pfile->get_Seq_by_id($k2)->seq, "\n"
+			or croak " Print failed [sub write_output]: $OS_ERROR";
 	}
 	return;
 }
