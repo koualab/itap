@@ -32,7 +32,7 @@ our $VERSION = '0.1.1';
 my @CMDLINE = ( $PROGRAM_NAME, @ARGV );
 my $BINDIR  = "$FindBin::RealBin/../binaries/$OSNAME";
 my $EXE     = $FindBin::RealScript;
-my $AUTHOR  = 'Anicet Ebou <anicet.ebou@gmail.com> and Dominique Koua.';
+my $AUTHOR  = 'Anicet Ebou and Dominique Koua.';
 my $URL     = 'https://github.com/koualab/itap.git';
 my $EMPTY   = q{};
 my $SPACE   = q{ };
@@ -325,7 +325,10 @@ msg('Done writing files');
 
 # Write to log file
 msg('Annotation finished successfully.');
-msg("Final output file is $itap_outfile");
+msg('Cleaning around...');
+unlink "$transcripts.index";
+msg('Done cleaning around.');
+msg("Final output files are in $outdir");
 my $endtime  = localtime;
 my $walltime = $endtime - $starttime;
 my $pretty   = sprintf '%.2f minutes', $walltime->minutes;
@@ -486,8 +489,6 @@ sub write_output {
 
 	my $seqfile = Bio::DB::Fasta->new(
 		File::Spec->catfile( $tmpdir, 'contigs_prot_reg_new.fas' ) );
-	my $pfile = Bio::DB::Fasta->new(
-		File::Spec->catfile( $tmpdir, 'contigs_prot.fas' ) );
 	my $fam;
 	foreach my $k2 ( keys %{$hashref2} ) {
 
@@ -507,7 +508,7 @@ sub write_output {
 			$seqfile->get_Seq_by_id($k2)->seq, "\n"
 			or croak "Print failed [sub write_output]: $OS_ERROR";
 
-		print {$fafh} $matkey, "\n", $pfile->get_Seq_by_id($k2)->seq, "\n"
+		print {$fafh} $k2, "\n", $seqfile->get_Seq_by_id($k2)->seq, "\n"
 			or croak " Print failed [sub write_output]: $OS_ERROR";
 	}
 	return;
