@@ -8,7 +8,7 @@ on:
 
 jobs:
   perl:
-    runs-on: macOS-latest
+    runs-on: macos-latest
     steps:
       - name: Set up Perl
       - uses: actions/checkout@v2
@@ -20,7 +20,7 @@ jobs:
         run: perl -V
       
       - name: Install dependencies
-        run: curl -sL https://git.io/cpm | perl - install -g --show-build-log-on-failure
+        run: cpanm --installdeps .
       
       - name: Run tests
-        run: prove -l t
+        run: ./itap -help
