@@ -13,6 +13,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Install libs from apt
+        run: sudo apt-get update && sudo apt-get install libdatetime-perl bioperl
+
       - name: Install perl
         run: brew install perl
       
