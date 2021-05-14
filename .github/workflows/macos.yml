@@ -23,7 +23,7 @@ jobs:
         run: perl -V
       
       - name: Install cpanm
-        run: cpan App:cpanimus
+        run: sudo cpan App:cpanimus
       
       - name: Install dependencies
         run: cpanm --installdeps .
