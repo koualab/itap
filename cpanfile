@@ -1,4 +1,6 @@
 requires "Bio::Perl";
+requires "Bio::DB::Fasta";
+requires "Bio::SeqIO";
 requires "Compress::Zlib";
 requires "File::Log";
 requires "Getopt::Declare";

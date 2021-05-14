@@ -9,15 +9,19 @@ on:
 jobs:
   perl:
     runs-on: windows-latest
+
     steps:
       - name: Set up Perl
       - uses: actions/checkout@v2
         run: |
           choco install strawberryperl
           echo "C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin" >> $GITHUB_PATH
-      - name: perl -V
+      
+      - name: Test perl installation
         run: perl -V
-      - name: Install Dependencies
+
+      - name: Install itap dependencies
         run: cpanm --installdeps .
-      - name: Run Tests
+
+      - name: Run itap tests
         run: ./perl -help

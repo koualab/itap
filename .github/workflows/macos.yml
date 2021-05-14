@@ -28,5 +28,3 @@ jobs:
       - name: Run itap tests
         run: |
            ./itap -help
-           ./itap
-           ./itap -t -f -r
