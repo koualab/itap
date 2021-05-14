@@ -12,11 +12,18 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
       - name: Apt plugins
         run: sudo apt-get update && sudo apt-get install libdatetime-perl bioperl
+      
       - name: perl -V
         run: perl -V
+      
+      - name: Install cpanm
+        run: cpan App:cpanimus
+      
       - name: Install Dependencies
         run: cpanm --installdeps .
+      
       - name: Run Tests
         run: ./itap -help
