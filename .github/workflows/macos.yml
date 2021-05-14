@@ -12,9 +12,6 @@ jobs:
     steps:
       - name: Set up Perl
       - uses: actions/checkout@v2
-
-      - name: install some command-line apps
-        run: apt-get install bioperl
       
       - name: Install perl
         run: brew install perl
