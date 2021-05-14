@@ -26,7 +26,7 @@ jobs:
         run: sudo cpan App::cpanminus
       
       - name: Install dependencies
-        run: cpanm --installdeps .
+        run: sudo cpanm --installdeps .
       
       - name: Run tests
         run: ./itap -help
