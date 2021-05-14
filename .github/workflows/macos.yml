@@ -16,17 +16,17 @@ jobs:
       - name: Install perl
         run: brew install perl
       
-      - name: Test installation
+      - name: Test perl installation
         run: perl -V
       
       - name: Install cpanm
         run: brew install cpanminus
       
-      - name: Install dependencies
+      - name: Install itap dependencies
         run: sudo cpanm --installdeps .
       
-      - name: Run tests
+      - name: Run itap tests
         run: |
-           ./itap -h
+           ./itap -help
            ./itap
            ./itap -t -f -r
