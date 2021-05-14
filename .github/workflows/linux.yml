@@ -23,6 +23,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - name: install some command-line apps
+        run: apt-get install bioperl
       - name: perl -V
         run: perl -V
       - name: Install Dependencies
