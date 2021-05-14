@@ -19,6 +19,9 @@ jobs:
       - name: Test installation
         run: perl -V
       
+      - name: Apt plugins
+        run: apt update && apt install libdatetime-perl bioperl
+      
       - name: Install dependencies
         run: cpanm --installdeps .
       
