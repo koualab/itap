@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      
+
       - name: Install perl
         run: brew install perl
       
@@ -20,7 +20,7 @@ jobs:
         run: perl -V
       
       - name: Install cpanm
-        run: sudo cpan App::cpanminus
+        run: brew install cpanminus
       
       - name: Install dependencies
         run: sudo cpanm --installdeps .
