@@ -21,12 +21,16 @@ use IPC::System::Simple qw( capture );
 use Pod::Usage;
 use Readonly;
 use Scalar::Util qw( openhandle );
+use Term::ANSIColor qw(:constants);
 use Text::CSV;
 use Text::CSV::Hashify;
 use Time::Piece;
 use Time::Seconds;
 
-our $VERSION = '0.1.1';
+our $VERSION = '0.1.2';
+
+# Autoreset terminal colors
+$Term::ANSIColor::AUTORESET = 1;
 
 # Global variables
 my @CMDLINE = ( $PROGRAM_NAME, @ARGV );
@@ -94,11 +98,11 @@ elsif ( defined $dbdir ) {
 	$dbdir = File::Spec->catfile($dbdir);
 }
 
+# Check existence of output folder
 if ( !defined $outdir ) {
 	$outdir = File::Spec->catdir('ITAP');
 }
 
-# Check existence of output folder
 if ( -d $outdir ) {
 	if ($force) {
 		if ( !$quiet ) {
@@ -111,8 +115,8 @@ if ( -d $outdir ) {
 		mkdir $outdir, $RWE_FOR_OWNER;
 	}
 	else {
-		print {*STDERR}
-			"[ITAP ERROR]: Choosen output folder '$outdir' already exist!"
+		print {*STDERR} RED,
+			"[ERROR]: Choosen output folder '$outdir' already exist!"
 			. " Please change it using -o or use --force to overwrite its content\n"
 			or croak "Print failed: $OS_ERROR";
 		exit 1;
@@ -148,6 +152,7 @@ msg( 'Operating system is ' . $OSNAME );
 # Determine number of cpus
 my $num_cores = num_cpu();
 msg("System has $num_cores cores.");
+
 if ( !defined $cpus || $cpus < 0 ) {
 	$cpus = 1;
 }
@@ -509,7 +514,7 @@ sub write_output {
 			or croak "Print failed [sub write_output]: $OS_ERROR";
 
 		print {$fafh} $k2, "\n", $seqfile->get_Seq_by_id($k2)->seq, "\n"
-			or croak " Print failed [sub write_output]: $OS_ERROR";
+			or croak "Print failed [sub write_output]: $OS_ERROR";
 	}
 	return;
 }
@@ -818,13 +823,13 @@ sub err {
 	my $line = '(' . $t->hms . ") @text\n";
 
 	# Display error to terminal for user information
-	print {*STDOUT}
-		"[ITAP ERROR]: @text See itap.log for more informations\n"
+	print {*STDOUT} RED,
+		"[ERROR]: @text \nSee itap.log for more informations\n"
 		or croak "Print failed [sub err]: $OS_ERROR";
 
 	# STDERR is printed to log file by default
 	# So below line goes directly into log file
-	print {*STDERR} "\n\n[ITAP ERROR]: $line\n"
+	print {*STDERR} "\n\n[ERROR]: $line\n"
 		or croak "Print failed [sub err]: $OS_ERROR";
 	print {*STDERR} "-----------USER INFORMATIONS-----------\n"
 		or croak "Print failed [sub err]: $OS_ERROR";

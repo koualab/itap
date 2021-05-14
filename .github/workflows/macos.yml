@@ -1,0 +1,26 @@
+name: macos
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ "**" ]
+
+jobs:
+  perl:
+    runs-on: macOS-latest
+    steps:
+      - name: Set up Perl
+      - uses: actions/checkout@v2
+      
+      - name: Install perl
+        run: brew install perl
+      
+      - name: Test installation
+        run: perl -V
+      
+      - name: Install dependencies
+        run: curl -sL https://git.io/cpm | perl - install -g --show-build-log-on-failure
+      
+      - name: Run tests
+        run: prove -l t

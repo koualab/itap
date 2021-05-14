@@ -1,0 +1,14 @@
+name: Perl Critic
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ "**" ]
+
+jobs:
+  perl:
+    steps:
+      - uses: Difegue/action-perlcritic@master
+      - with:
+          args: --brutal itap

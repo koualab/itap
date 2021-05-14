@@ -1,4 +1,8 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+![Don't judge me](https://img.shields.io/badge/Language-Perl_5-steelblue.svg)
+[![](https://github.com/koualab/itap/workflows/linux/badge.svg)](https://github.com/koualab/itap/actions)
+[![](https://github.com/koualab/itap/workflows/macos/badge.svg)](https://github.com/koualab/itap/actions)
+[![](https://github.com/koualab/itap/workflows/windows/badge.svg)](https://github.com/koualab/itap/actions)
 
 # itap: fast and accurate annotation of venom gland transcriptome
 
