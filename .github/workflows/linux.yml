@@ -26,4 +26,7 @@ jobs:
         run: sudo cpanm --installdeps .
       
       - name: Run Tests
-        run: ./itap -help
+        run: |
+           ./itap -h
+           ./itap
+           ./itap -t -f -r
