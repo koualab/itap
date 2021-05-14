@@ -7,7 +7,7 @@ on:
     branches: [ "**" ]
 
 jobs:
-  perl:
+  job:
     runs-on: macos-latest
     steps:
       - name: Set up Perl
@@ -18,9 +18,6 @@ jobs:
       
       - name: Test installation
         run: perl -V
-      
-      - name: Apt plugins
-        run: sudo apt-get update && apt-get install libdatetime-perl bioperl
       
       - name: Install dependencies
         run: cpanm --installdeps .
