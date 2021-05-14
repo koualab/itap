@@ -20,7 +20,7 @@ jobs:
         run: perl -V
       
       - name: Apt plugins
-        run: apt update && apt install libdatetime-perl bioperl
+        run: sudo apt-get update && apt-get install libdatetime-perl bioperl
       
       - name: Install dependencies
         run: cpanm --installdeps .
