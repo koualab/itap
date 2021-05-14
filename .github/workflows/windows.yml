@@ -22,7 +22,7 @@ jobs:
         run: perl -V
 
       - name: Install itap dependencies
-        run: cpanm --installdeps .
+        run: cpanm --sudo --force --installdeps .
 
       - name: Run itap tests
         run: ./perl -help
